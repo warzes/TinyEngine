@@ -1,0 +1,21 @@
+﻿===============================================================================
+OpenGL
+===============================================================================
+- ResourceUsage у меня не совсем правильный. На самом деле это две вещи первая это DRAW/READ/COPY, вторая STATIC/DYNAMIC/STREAM
+
+- Удалить GeometryBuffer - хватит VertexArray - то есть добавить метод который его создает по всем данным
+
+- Storage Buffer - http://steps3d.narod.ru/tutorials/buffer-storage-tutorial.html
+
+- копирование буферов
+	glBindBuffer(GL_COPY_READ_BUFFER, SourceBuffer);
+	glBindBuffer(GL_COPY_WRITE_BUFFER, DestBuffer);
+	glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, SrcOffset, DstOffset, NumBytes);
+	glBindBuffer(GL_COPY_READ_BUFFER, 0);
+	glBindBuffer(GL_COPY_WRITE_BUFFER, 0);
+
+===============================================================================
+OpenGL
+===============================================================================
+Material и Mesh нельзя копировать, только мовить. Проблема когда на их основе надо создать новый объект, например MeshLibrary - я могу только переместить из входящего объекта все в новый, при этом старый становится невалидным - это может быть ошибкой.
+Сделать метод Copy для копирования всех объектов
