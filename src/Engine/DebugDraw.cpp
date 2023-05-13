@@ -2,13 +2,15 @@
 #include "DebugDraw.h"
 #include "RenderSystem.h"
 //-----------------------------------------------------------------------------
-ShaderProgramRef shaderProgram;
-Uniform uniformProjectionMatrix;
-Uniform uniformColor;
-GPUBufferRef vb;
-VertexArrayRef vao;
-std::map<unsigned, std::vector<glm::vec3>> Points;
-std::map<unsigned, std::vector<glm::vec3>> Lines;
+namespace {
+	ShaderProgramRef shaderProgram;
+	Uniform uniformProjectionMatrix;
+	Uniform uniformColor;
+	GPUBufferRef vb;
+	VertexArrayRef vao;
+	std::map<unsigned, std::vector<glm::vec3>> Points;
+	std::map<unsigned, std::vector<glm::vec3>> Lines;
+}
 //-----------------------------------------------------------------------------
 // TODO: можно оптимизировать, если хранить цвет в вершине, тогда не нужно использовать мап, можно использовать массив который только растет (а сбрасывается только счетчик). но займет больше памяти. хотя и н сильно
 //-----------------------------------------------------------------------------
@@ -585,7 +587,6 @@ void DebugDraw::Flush(const glm::mat4& ViewProj)
 	renderSystem.Bind(shaderProgram);
 	renderSystem.SetUniform(uniformProjectionMatrix, ViewProj);
 	
-
 	//glEnable(GL_DEPTH_TEST);
 	//glDepthFunc(GL_LEQUAL);
 	//glEnable(GL_PROGRAM_POINT_SIZE); // for GL_POINTS
