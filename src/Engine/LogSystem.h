@@ -1,16 +1,13 @@
 #pragma once
 
-#include "HelperSubsystem.h"
-
 struct LogCreateInfo
 {
 	std::string fileName = "../log.txt";
 };
 
-class LogSystem final : public HelperSubsystem
+class LogSystem final
 {
 	friend class EngineDevice;
-	SUBSYSTEMIMPL;
 public:
 	~LogSystem();
 
@@ -20,7 +17,6 @@ public:
 	void Fatal(const std::string& msg);
 
 private:
-	LogSystem() = default;
 	LogSystem(LogSystem&&) = delete;
 	LogSystem(const LogSystem&) = delete;
 	LogSystem& operator=(LogSystem&&) = delete;
@@ -31,3 +27,5 @@ private:
 
 	FILE* m_logFile = nullptr;
 };
+
+LogSystem& GetLogSystem();

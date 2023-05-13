@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "LogSystem.h"
 //-----------------------------------------------------------------------------
+LogSystem gLogSystem;
+//-----------------------------------------------------------------------------
 LogSystem::~LogSystem()
 {
 	destroy();
@@ -26,7 +28,8 @@ void LogSystem::Error(const std::string& msg)
 //-----------------------------------------------------------------------------
 void LogSystem::Fatal(const std::string& msg)
 {
-	HelperSubsystem::ExitRequest();
+	extern void ExitRequest();
+	ExitRequest();
 	Error(msg);
 }
 //-----------------------------------------------------------------------------
@@ -40,8 +43,6 @@ void LogSystem::create(const LogCreateInfo& createInfo)
 		m_logFile = nullptr;
 	}
 #endif
-
-	HelperSubsystem::initHelper();
 }
 //-----------------------------------------------------------------------------
 void LogSystem::destroy()
@@ -53,5 +54,10 @@ void LogSystem::destroy()
 		m_logFile = nullptr;
 	}
 #endif
+}
+//-----------------------------------------------------------------------------
+LogSystem& GetLogSystem()
+{
+	return gLogSystem;
 }
 //-----------------------------------------------------------------------------

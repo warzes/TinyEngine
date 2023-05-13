@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-enum class ImageFormat : uint8_t
+enum class ImagePixelFormat : uint8_t
 {
 	None = 0,
 	R_U8,
@@ -17,9 +17,6 @@ public:
 
 	int width = 0;
 	int height = 0;
-	int nrChannels = 0;
 	stbi_uc* pixelData = nullptr;
-	ImageFormat imageFormat = ImageFormat::RGBA_U8;
-
-	bool isValid = false;
+	ImagePixelFormat imageFormat = ImagePixelFormat::RGBA_U8;
 };
