@@ -5,7 +5,30 @@ LogSystem gLogSystem;
 //-----------------------------------------------------------------------------
 LogSystem::~LogSystem()
 {
-	destroy();
+	Destroy();
+}
+//-----------------------------------------------------------------------------
+void LogSystem::Create(const LogCreateInfo& createInfo)
+{
+#if defined(_WIN32)
+	errno_t fileErr = fopen_s(&m_logFile, createInfo.fileName.c_str(), "w");
+	if (fileErr != 0 || !m_logFile)
+	{
+		Error("LogCreate() failed!!!");
+		m_logFile = nullptr;
+	}
+#endif
+}
+//-----------------------------------------------------------------------------
+void LogSystem::Destroy()
+{
+#if defined(_WIN32)
+	if (m_logFile)
+	{
+		fclose(m_logFile);
+		m_logFile = nullptr;
+	}
+#endif
 }
 //-----------------------------------------------------------------------------
 void LogSystem::Print(const std::string& msg)
@@ -31,29 +54,6 @@ void LogSystem::Fatal(const std::string& msg)
 	extern void ExitRequest();
 	ExitRequest();
 	Error(msg);
-}
-//-----------------------------------------------------------------------------
-void LogSystem::create(const LogCreateInfo& createInfo)
-{
-#if defined(_WIN32)
-	errno_t fileErr = fopen_s(&m_logFile, createInfo.fileName.c_str(), "w");
-	if (fileErr != 0 || !m_logFile)
-	{
-		Error("LogCreate() failed!!!");
-		m_logFile = nullptr;
-	}
-#endif
-}
-//-----------------------------------------------------------------------------
-void LogSystem::destroy()
-{
-#if defined(_WIN32)
-	if (m_logFile)
-	{
-		fclose(m_logFile);
-		m_logFile = nullptr;
-	}
-#endif
 }
 //-----------------------------------------------------------------------------
 LogSystem& GetLogSystem()

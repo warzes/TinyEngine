@@ -12,8 +12,14 @@ enum class ImagePixelFormat : uint8_t
 class STBImageLoader final
 {
 public:
+	STBImageLoader() = delete;
+	STBImageLoader(STBImageLoader&&) = delete;
+	STBImageLoader(const STBImageLoader&) = delete;
 	STBImageLoader(const char* fileName);
 	~STBImageLoader();
+
+	STBImageLoader& operator=(STBImageLoader&&) = delete;
+	STBImageLoader& operator=(const STBImageLoader&) = delete;
 
 	int width = 0;
 	int height = 0;

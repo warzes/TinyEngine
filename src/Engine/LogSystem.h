@@ -12,6 +12,9 @@ public:
 	LogSystem() = default;
 	~LogSystem();
 
+	void Create(const LogCreateInfo& createInfo);
+	void Destroy();
+
 	void Print(const std::string& msg);
 	void Warning(const std::string& msg);
 	void Error(const std::string& msg);
@@ -22,9 +25,6 @@ private:
 	LogSystem(const LogSystem&) = delete;
 	LogSystem& operator=(LogSystem&&) = delete;
 	LogSystem& operator=(const LogSystem&) = delete;
-
-	void create(const LogCreateInfo& createInfo);
-	void destroy();
 
 	FILE* m_logFile = nullptr;
 };
