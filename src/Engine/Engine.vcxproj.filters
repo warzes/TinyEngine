@@ -47,6 +47,9 @@
     <ClCompile Include="Capabilities.cpp">
       <Filter>RenderAPI</Filter>
     </ClCompile>
+    <ClCompile Include="DebugDraw.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -124,6 +127,9 @@
       <Filter>Core\Logging</Filter>
     </ClInclude>
     <ClInclude Include="TinyEngine.h" />
+    <ClInclude Include="DebugDraw.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

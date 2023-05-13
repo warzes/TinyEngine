@@ -95,6 +95,7 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Capabilities.cpp" />
+    <ClCompile Include="DebugDraw.cpp" />
     <ClCompile Include="EngineDevice.cpp" />
     <ClCompile Include="EngineTimestamp.cpp" />
     <ClCompile Include="FileSystem.cpp" />
@@ -120,6 +121,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Capabilities.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="TinyEngine.h" />
     <ClInclude Include="EngineConfiguration.h" />
     <ClInclude Include="EngineDevice.h" />
