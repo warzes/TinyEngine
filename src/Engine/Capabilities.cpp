@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Capabilities.h"
 //-----------------------------------------------------------------------------
 uint32_t Capabilities::maximumTextureDimension;

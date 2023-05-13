@@ -3,7 +3,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="001_Triangle..cpp">
+    <ClCompile Include="001_Triangle.cpp">
       <Filter>BasicExample</Filter>
     </ClCompile>
     <ClCompile Include="004_Quad.cpp">
