@@ -46,6 +46,7 @@
 
 #include "GraphicsResource.h"
 #include "GraphicsSystem.h"
+#include "DebugDraw.h"
 
 #include "Camera.h"
 

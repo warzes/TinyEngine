@@ -13,8 +13,11 @@ extern "C"
 }
 //-----------------------------------------------------------------------------
 #if defined(_DEBUG)
-void APIENTRY glDebugCallback(GLenum source, GLenum type, GLuint /*id*/, GLenum severity, GLsizei /*length*/, const GLchar* message, const void* /*user_param*/) noexcept
+void APIENTRY glDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei /*length*/, const GLchar* message, const void* /*user_param*/) noexcept
 {
+	// ignore non-significant error/warning codes
+	if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
+
 	std::string msgSource;
 	switch (source)
 	{

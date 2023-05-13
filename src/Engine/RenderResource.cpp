@@ -136,8 +136,8 @@ VertexArrayRef RenderSystem::CreateVertexArray(GPUBufferRef vbo, GPUBufferRef ib
 	Bind(resource->ibo);
 
 	glBindVertexArray(m_cache.CurrentVAO); // restore VAO
-	glBindVertexArray(m_cache.CurrentVBO); // restore VBO
-	glBindVertexArray(m_cache.CurrentIBO); // restore IBO
+	glBindBuffer(GL_ARRAY_BUFFER, m_cache.CurrentVBO); // restore current VBO
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_cache.CurrentIBO); // restore current IBO
 
 	return resource;
 }
