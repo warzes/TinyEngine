@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33502.453
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DOC", "DOC", "{DBE8E3A4-9179-4FB8-AF80-43F9DA7D2AB5}"
+	ProjectSection(SolutionItems) = preProject
+		Idea.md = Idea.md
+		Link.md = Link.md
+		OpenGL.md = OpenGL.md
+		Physics.md = Physics.md
+		..\README.md = ..\README.md
+		TODO.md = TODO.md
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExampleTest", "ExampleTest\ExampleTest.vcxproj", "{44B453BE-2C05-4945-B488-B21CB9DB9D55}"
+	ProjectSection(ProjectDependencies) = postProject
+		{43C9EFA0-7F72-49CB-8C2A-9B6C37F46A0F} = {43C9EFA0-7F72-49CB-8C2A-9B6C37F46A0F}
+		{4F0ED3D9-2719-4C82-A1B3-D5557E37B68E} = {4F0ED3D9-2719-4C82-A1B3-D5557E37B68E}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Engine.vcxproj", "{43C9EFA0-7F72-49CB-8C2A-9B6C37F46A0F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "3rdparty", "3rdparty\3rdparty.vcxproj", "{4F0ED3D9-2719-4C82-A1B3-D5557E37B68E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TinyEngine", "TinyEngine", "{61D8FBCC-F024-4119-81E3-5670CEEE03B1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{44B453BE-2C05-4945-B488-B21CB9DB9D55}.Debug|x64.ActiveCfg = Debug|x64
+		{44B453BE-2C05-4945-B488-B21CB9DB9D55}.Debug|x64.Build.0 = Debug|x64
+		{44B453BE-2C05-4945-B488-B21CB9DB9D55}.Release|x64.ActiveCfg = Release|x64
+		{44B453BE-2C05-4945-B488-B21CB9DB9D55}.Release|x64.Build.0 = Release|x64
+		{43C9EFA0-7F72-49CB-8C2A-9B6C37F46A0F}.Debug|x64.ActiveCfg = Debug|x64
+		{43C9EFA0-7F72-49CB-8C2A-9B6C37F46A0F}.Debug|x64.Build.0 = Debug|x64
+		{43C9EFA0-7F72-49CB-8C2A-9B6C37F46A0F}.Release|x64.ActiveCfg = Release|x64
+		{43C9EFA0-7F72-49CB-8C2A-9B6C37F46A0F}.Release|x64.Build.0 = Release|x64
+		{4F0ED3D9-2719-4C82-A1B3-D5557E37B68E}.Debug|x64.ActiveCfg = Debug|x64
+		{4F0ED3D9-2719-4C82-A1B3-D5557E37B68E}.Debug|x64.Build.0 = Debug|x64
+		{4F0ED3D9-2719-4C82-A1B3-D5557E37B68E}.Release|x64.ActiveCfg = Release|x64
+		{4F0ED3D9-2719-4C82-A1B3-D5557E37B68E}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{43C9EFA0-7F72-49CB-8C2A-9B6C37F46A0F} = {61D8FBCC-F024-4119-81E3-5670CEEE03B1}
+		{4F0ED3D9-2719-4C82-A1B3-D5557E37B68E} = {61D8FBCC-F024-4119-81E3-5670CEEE03B1}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {67A29E7D-37A4-4297-8D66-6B6A21464505}
+	EndGlobalSection
+EndGlobal

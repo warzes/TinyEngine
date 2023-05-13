@@ -923,6 +923,7 @@
     <ClInclude Include="tiny_obj_loader.h">
       <Filter>tiny_obj_loader</Filter>
     </ClInclude>
+    <ClInclude Include="glmHeader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="glm\detail\func_common.inl">

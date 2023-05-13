@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="001_Triangle..cpp">
+      <Filter>BasicExample</Filter>
+    </ClCompile>
+    <ClCompile Include="004_Quad.cpp">
+      <Filter>BasicExample</Filter>
+    </ClCompile>
+    <ClCompile Include="002_DinamicVertex.cpp">
+      <Filter>BasicExample</Filter>
+    </ClCompile>
+    <ClCompile Include="003_BufferMapping.cpp">
+      <Filter>BasicExample</Filter>
+    </ClCompile>
+    <ClCompile Include="005_BasicTexture.cpp">
+      <Filter>BasicExample</Filter>
+    </ClCompile>
+    <ClCompile Include="013_OtherMultipleLights.cpp">
+      <Filter>BasicExample</Filter>
+    </ClCompile>
+    <ClCompile Include="016_BasicObjModel.cpp">
+      <Filter>BasicExample</Filter>
+    </ClCompile>
+    <ClCompile Include="017_Framebuffer.cpp">
+      <Filter>BasicExample</Filter>
+    </ClCompile>
+    <ClCompile Include="009_DiffuseLighting.cpp">
+      <Filter>BasicExample</Filter>
+    </ClCompile>
+    <ClCompile Include="010_AmbientLighting.cpp">
+      <Filter>BasicExample</Filter>
+    </ClCompile>
+    <ClCompile Include="011_SpecularLighting.cpp">
+      <Filter>BasicExample</Filter>
+    </ClCompile>
+    <ClCompile Include="012_MultiplePointLights.cpp">
+      <Filter>BasicExample</Filter>
+    </ClCompile>
+    <ClCompile Include="006_Multitexturing.cpp">
+      <Filter>BasicExample</Filter>
+    </ClCompile>
+    <ClCompile Include="007_LightMaps.cpp">
+      <Filter>BasicExample</Filter>
+    </ClCompile>
+    <ClCompile Include="008_AlphaMapping.cpp">
+      <Filter>BasicExample</Filter>
+    </ClCompile>
+    <ClCompile Include="014_NormalMapping.cpp">
+      <Filter>BasicExample</Filter>
+    </ClCompile>
+    <ClCompile Include="015_SpecularMapping.cpp">
+      <Filter>BasicExample</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="001_Triangle.h">
+      <Filter>BasicExample</Filter>
+    </ClInclude>
+    <ClInclude Include="004_Quad.h">
+      <Filter>BasicExample</Filter>
+    </ClInclude>
+    <ClInclude Include="002_DinamicVertex.h">
+      <Filter>BasicExample</Filter>
+    </ClInclude>
+    <ClInclude Include="003_BufferMapping.h">
+      <Filter>BasicExample</Filter>
+    </ClInclude>
+    <ClInclude Include="005_BasicTexture.h">
+      <Filter>BasicExample</Filter>
+    </ClInclude>
+    <ClInclude Include="013_OtherMultipleLights.h">
+      <Filter>BasicExample</Filter>
+    </ClInclude>
+    <ClInclude Include="016_BasicObjModel.h">
+      <Filter>BasicExample</Filter>
+    </ClInclude>
+    <ClInclude Include="017_Framebuffer.h">
+      <Filter>BasicExample</Filter>
+    </ClInclude>
+    <ClInclude Include="009_DiffuseLighting.h">
+      <Filter>BasicExample</Filter>
+    </ClInclude>
+    <ClInclude Include="010_AmbientLighting.h">
+      <Filter>BasicExample</Filter>
+    </ClInclude>
+    <ClInclude Include="011_SpecularLighting.h">
+      <Filter>BasicExample</Filter>
+    </ClInclude>
+    <ClInclude Include="012_MultiplePointLights.h">
+      <Filter>BasicExample</Filter>
+    </ClInclude>
+    <ClInclude Include="006_Multitexturing.h">
+      <Filter>BasicExample</Filter>
+    </ClInclude>
+    <ClInclude Include="007_LightMaps.h">
+      <Filter>BasicExample</Filter>
+    </ClInclude>
+    <ClInclude Include="008_AlphaMapping.h">
+      <Filter>BasicExample</Filter>
+    </ClInclude>
+    <ClInclude Include="014_NormalMapping.h">
+      <Filter>BasicExample</Filter>
+    </ClInclude>
+    <ClInclude Include="015_SpecularMapping.h">
+      <Filter>BasicExample</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="BasicExample">
+      <UniqueIdentifier>{a65151b8-5d72-4aa9-baa5-d855605a6549}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

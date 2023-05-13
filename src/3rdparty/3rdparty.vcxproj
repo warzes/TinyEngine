@@ -97,6 +97,7 @@
   <ItemGroup>
     <ClInclude Include="glad\gl.h" />
     <ClInclude Include="glfw.h" />
+    <ClInclude Include="glmHeader.h" />
     <ClInclude Include="glm\common.hpp" />
     <ClInclude Include="glm\detail\compute_common.hpp" />
     <ClInclude Include="glm\detail\compute_vector_relational.hpp" />

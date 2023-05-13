@@ -13,19 +13,19 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{43c9efa0-7f72-49cb-8c2a-9b6c37f46a0f}</ProjectGuid>
-    <RootNamespace>Engine</RootNamespace>
+    <ProjectGuid>{44B453BE-2C05-4945-B488-B21CB9DB9D55}</ProjectGuid>
+    <RootNamespace>Project</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -44,30 +44,30 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)..\_lib\$(Configuration)\$(PlatformTarget)\</OutDir>
+    <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\_obj\$(Configuration)\$(PlatformTarget)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)..\_lib\$(Configuration)\$(PlatformTarget)\</OutDir>
+    <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\_obj\$(Configuration)\$(PlatformTarget)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdparty\;$(SolutionDir);$(ProjectDir);$(SolutionDir)PhysX5Lib\physx5\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdparty\;$(ProjectDir);$(SolutionDir);$(SolutionDir)PhysX5Lib\physx5\;$(SolutionDir)BounceLib\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
-      <SubSystem>
-      </SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdparty\lib\$(PlatformTarget)\$(Configuration)\;$(SolutionDir)..\_lib\$(Configuration)\$(PlatformTarget)\;$(SolutionDir)PhysX5Lib\physx5Lib\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -76,71 +76,65 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdparty\;$(SolutionDir);$(ProjectDir);$(SolutionDir)PhysX5Lib\physx5\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdparty\;$(ProjectDir);$(SolutionDir);$(SolutionDir)PhysX5Lib\physx5\;$(SolutionDir)BounceLib\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
-      <SubSystem>
-      </SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdparty\lib\$(PlatformTarget)\$(Configuration)\;$(SolutionDir)..\_lib\$(Configuration)\$(PlatformTarget)\;$(SolutionDir)PhysX5Lib\physx5Lib\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Capabilities.cpp" />
-    <ClCompile Include="EngineDevice.cpp" />
-    <ClCompile Include="EngineTimestamp.cpp" />
-    <ClCompile Include="FileSystem.cpp" />
-    <ClCompile Include="GraphicsResource.cpp" />
-    <ClCompile Include="GraphicsSystem.cpp" />
-    <ClCompile Include="Input.cpp" />
-    <ClCompile Include="Log.cpp" />
-    <ClCompile Include="LogSystem.cpp" />
-    <ClCompile Include="OpenGLUtil.cpp" />
-    <ClCompile Include="RenderResource.cpp" />
-    <ClCompile Include="RenderSystem.cpp" />
-    <ClCompile Include="STBImageLoader.cpp" />
+    <ClCompile Include="001_Triangle..cpp" />
+    <ClCompile Include="002_DinamicVertex.cpp" />
+    <ClCompile Include="003_BufferMapping.cpp" />
+    <ClCompile Include="004_Quad.cpp" />
+    <ClCompile Include="005_BasicTexture.cpp" />
+    <ClCompile Include="009_DiffuseLighting.cpp" />
+    <ClCompile Include="006_Multitexturing.cpp" />
+    <ClCompile Include="007_LightMaps.cpp" />
+    <ClCompile Include="008_AlphaMapping.cpp" />
+    <ClCompile Include="014_NormalMapping.cpp" />
+    <ClCompile Include="013_OtherMultipleLights.cpp" />
+    <ClCompile Include="010_AmbientLighting.cpp" />
+    <ClCompile Include="016_BasicObjModel.cpp" />
+    <ClCompile Include="017_Framebuffer.cpp" />
+    <ClCompile Include="011_SpecularLighting.cpp" />
+    <ClCompile Include="012_MultiplePointLights.cpp" />
+    <ClCompile Include="015_SpecularMapping.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AABB.h" />
-    <ClInclude Include="BaseFunc.h" />
-    <ClInclude Include="BaseMacros.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Capabilities.h" />
-    <ClInclude Include="Color.h" />
-    <ClInclude Include="TinyEngine.h" />
-    <ClInclude Include="EngineConfiguration.h" />
-    <ClInclude Include="EngineDevice.h" />
-    <ClInclude Include="EngineTimestamp.h" />
-    <ClInclude Include="FileSystem.h" />
-    <ClInclude Include="GraphicsResource.h" />
-    <ClInclude Include="GraphicsSystem.h" />
-    <ClInclude Include="IApp.h" />
-    <ClInclude Include="Input.h" />
-    <ClInclude Include="Log.h" />
-    <ClInclude Include="LogSystem.h" />
-    <ClInclude Include="MathCoreFunc.h" />
-    <ClInclude Include="OpenGLUtil.h" />
-    <ClInclude Include="RenderResourceEnums.h" />
-    <ClInclude Include="RenderResource.h" />
-    <ClInclude Include="RenderSystem.h" />
-    <ClInclude Include="STBImageLoader.h" />
+    <ClInclude Include="001_Triangle.h" />
+    <ClInclude Include="002_DinamicVertex.h" />
+    <ClInclude Include="003_BufferMapping.h" />
+    <ClInclude Include="004_Quad.h" />
+    <ClInclude Include="005_BasicTexture.h" />
+    <ClInclude Include="009_DiffuseLighting.h" />
+    <ClInclude Include="006_Multitexturing.h" />
+    <ClInclude Include="007_LightMaps.h" />
+    <ClInclude Include="008_AlphaMapping.h" />
+    <ClInclude Include="014_NormalMapping.h" />
+    <ClInclude Include="013_OtherMultipleLights.h" />
+    <ClInclude Include="010_AmbientLighting.h" />
+    <ClInclude Include="016_BasicObjModel.h" />
+    <ClInclude Include="017_Framebuffer.h" />
+    <ClInclude Include="011_SpecularLighting.h" />
+    <ClInclude Include="012_MultiplePointLights.h" />
+    <ClInclude Include="015_SpecularMapping.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="Transform.h" />
-    <ClInclude Include="TranslateToGL.h" />
-    <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

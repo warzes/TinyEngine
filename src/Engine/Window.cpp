@@ -119,3 +119,9 @@ int GetWindowHeight()
 	return gWindow.GetHeight();
 }
 //-----------------------------------------------------------------------------
+float GetWindowSizeAspect()
+{
+	assert(gWindow.GetHeight() > 0);
+	return static_cast<float>(gWindow.GetWidth()) / static_cast<float>(gWindow.GetHeight());
+}
+//-----------------------------------------------------------------------------

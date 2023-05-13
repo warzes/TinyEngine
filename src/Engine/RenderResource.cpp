@@ -15,7 +15,7 @@ bool ShaderSource::LoadFromFile(const std::string& file)
 	// TODO: возможно заменить fstream на file?
 	m_filename = file;
 	//m_path = ; не забыть
-	std::ifstream shaderFile(file);
+	std::ifstream shaderFile(file); // TODO: заменить
 	if( !shaderFile.is_open() )
 	{
 		LogError("Shader file '" + file + "' not found.");

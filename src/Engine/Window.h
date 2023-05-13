@@ -43,3 +43,4 @@ private:
 Window& GetWindow();
 int GetWindowWidth();
 int GetWindowHeight();
+float GetWindowSizeAspect();
