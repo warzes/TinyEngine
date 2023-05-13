@@ -58,7 +58,8 @@ public:
 	// computes the 1D-intersection between two AABBs, on a given axis.
 	bool Intersects1D(const AABB& aabb, uint32_t axis) const
 	{
-		return max[axis] >= aabb.min[axis] && aabb.max[axis] >= min[axis];
+		const glm::length_t laxis = static_cast<glm::length_t>(axis);
+		return max[laxis] >= aabb.min[laxis] && aabb.max[laxis] >= min[laxis];
 	}
 
 	glm::vec3 min = glm::vec3{ std::numeric_limits<float>::max() };
