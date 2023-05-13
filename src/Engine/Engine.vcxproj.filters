@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="EngineDevice.cpp">
+      <Filter>EngineApp</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineTimestamp.cpp">
+      <Filter>EngineApp</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderSystem.cpp">
+      <Filter>RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSystem.cpp">
+      <Filter>Core\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderResource.cpp">
+      <Filter>RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsResource.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsSystem.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="STBImageLoader.cpp">
+      <Filter>Core\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGLUtil.cpp">
+      <Filter>RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="LogSystem.cpp">
+      <Filter>Core\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>Core\Logging</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="EngineConfiguration.h" />
+    <ClInclude Include="EngineDevice.h">
+      <Filter>EngineApp</Filter>
+    </ClInclude>
+    <ClInclude Include="IApp.h">
+      <Filter>EngineApp</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineTimestamp.h">
+      <Filter>EngineApp</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseFunc.h">
+      <Filter>Core\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSystem.h">
+      <Filter>RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseMacros.h">
+      <Filter>Core\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSystem.h">
+      <Filter>Core\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderResource.h">
+      <Filter>RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="TranslateToGL.h">
+      <Filter>RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsResource.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsSystem.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="STBImageLoader.h">
+      <Filter>Core\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGLUtil.h">
+      <Filter>RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Capabilities.h">
+      <Filter>RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderResourceEnums.h">
+      <Filter>RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="AABB.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="MathCoreFunc.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="LogSystem.h">
+      <Filter>Core\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>Core\Logging</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{6159d1ac-8ea5-4a28-84fe-09cddfdded08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderAPI">
+      <UniqueIdentifier>{b36fa40b-183a-4004-8afd-d35a52124126}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{1cb1f8bf-8e20-406d-b837-b752439bf257}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{2a8c4f6e-d82c-4dd6-bfd2-2449dd48662f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Base">
+      <UniqueIdentifier>{790d1004-3233-4c0f-90c0-0d920a5553c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\IO">
+      <UniqueIdentifier>{76c104e4-6468-4944-ba5d-19ade1ff9766}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Logging">
+      <UniqueIdentifier>{7942aaa1-5c3e-4341-85e5-197f6e58eb38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Utilities">
+      <UniqueIdentifier>{2d05c1a6-c05f-4487-b0c0-987f202348cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineApp">
+      <UniqueIdentifier>{b1ba09fd-6b08-4eed-a7b8-9351dc4d300f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Math">
+      <UniqueIdentifier>{7e329fc1-960f-4880-8351-6b63a0b6afe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{c8d3700f-6525-41b4-81f3-2062323e5652}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="World">
+      <UniqueIdentifier>{3a6f6144-7aa6-4144-9d81-6c05e5dca237}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Container">
+      <UniqueIdentifier>{84132ed2-5eb3-4a8f-8dfb-f018f64a2341}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Geometry">
+      <UniqueIdentifier>{3cd8c3ae-3984-4699-bcbd-589f054d1fba}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
