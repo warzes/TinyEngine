@@ -9,7 +9,7 @@ enum class ImagePixelFormat : uint8_t
 	RGBA_U8,
 };
 
-class STBImageLoader
+class STBImageLoader final
 {
 public:
 	STBImageLoader(const char* fileName);

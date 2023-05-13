@@ -9,6 +9,7 @@ class LogSystem final
 {
 	friend class EngineDevice;
 public:
+	LogSystem() = default;
 	~LogSystem();
 
 	void Print(const std::string& msg);
