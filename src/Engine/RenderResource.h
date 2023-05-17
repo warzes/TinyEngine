@@ -215,7 +215,7 @@ public:
 using ShaderProgramRef = std::shared_ptr<ShaderProgram>;
 
 static_assert(sizeof(ShaderProgram) == 8, "ShaderProgram size changed!!!");
-inline bool operator==(ShaderProgramRef Left, ShaderProgramRef Right) noexcept { return *Left == *Right; }
+//inline bool operator==(ShaderProgramRef Left, ShaderProgramRef Right) noexcept { return *Left == *Right; }
 
 class GPUBuffer final : public glObject
 {
@@ -239,7 +239,7 @@ public:
 using GPUBufferRef = std::shared_ptr<GPUBuffer>;
 
 static_assert(sizeof(GPUBuffer) == 20, "GPUBuffer size changed!!!");
-inline bool operator==(GPUBufferRef Left, GPUBufferRef Right) noexcept { return *Left == *Right; }
+//inline bool operator==(GPUBufferRef Left, GPUBufferRef Right) noexcept { return *Left == *Right; }
 
 class VertexArray final : public glObject
 {
@@ -261,7 +261,7 @@ public:
 };
 using VertexArrayRef = std::shared_ptr<VertexArray>;
 static_assert(sizeof(VertexArray) == 48, "VertexArray size changed!!!");
-inline bool operator==(VertexArrayRef Left, VertexArrayRef Right) noexcept { return *Left == *Right; }
+//inline bool operator==(VertexArrayRef Left, VertexArrayRef Right) noexcept { return *Left == *Right; }
 
 class GeometryBuffer final
 {
@@ -313,7 +313,7 @@ public:
 using Texture2DRef = std::shared_ptr<Texture2D>;
 
 static_assert(sizeof(Texture2D) == 20, "Texture2D size changed!!!");
-inline bool operator==(Texture2DRef Left, Texture2DRef Right) noexcept { return *Left == *Right; }
+//inline bool operator==(Texture2DRef Left, Texture2DRef Right) noexcept { return *Left == *Right; }
 
 class Renderbuffer final : public glObject
 {
@@ -338,7 +338,7 @@ public:
 using RenderbufferRef = std::shared_ptr<Renderbuffer>;
 
 static_assert(sizeof(Renderbuffer) == 24, "Renderbuffer size changed!!!");
-inline bool operator==(RenderbufferRef Left, RenderbufferRef Right) noexcept { return *Left == *Right; }
+//inline bool operator==(RenderbufferRef Left, RenderbufferRef Right) noexcept { return *Left == *Right; }
 
 class Framebuffer final : public glObject
 {
@@ -363,7 +363,7 @@ public:
 using FramebufferRef = std::shared_ptr<Framebuffer>;
 
 static_assert(sizeof(Framebuffer) == 80, "Framebuffer size changed!!!");
-inline bool operator==(FramebufferRef Left, FramebufferRef Right) noexcept { return *Left == *Right; }
+//inline bool operator==(FramebufferRef Left, FramebufferRef Right) noexcept { return *Left == *Right; }
 
 #if USE_OPENGL_VERSION == OPENGL40
 class TransformFeedback final : public glObject
@@ -382,6 +382,6 @@ public:
 using TransformFeedbackRef = std::shared_ptr<TransformFeedback>;
 
 static_assert(sizeof(TransformFeedback) == 8, "TransformFeedback size changed!!!");
-inline bool operator==(TransformFeedbackRef Left, TransformFeedbackRef Right) noexcept { return *Left == *Right; }
+//inline bool operator==(TransformFeedbackRef Left, TransformFeedbackRef Right) noexcept { return *Left == *Right; }
 
 #endif // OPENGL40

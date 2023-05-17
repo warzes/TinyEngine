@@ -63,6 +63,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)..\3rdparty\;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <BuildStlModules>false</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -83,6 +84,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(ProjectDir)..\3rdparty\;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <BuildStlModules>false</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -99,6 +101,7 @@
     <ClCompile Include="EngineDevice.cpp" />
     <ClCompile Include="EngineTimestamp.cpp" />
     <ClCompile Include="FileSystem.cpp" />
+    <ClCompile Include="GeometryShapes.cpp" />
     <ClCompile Include="GraphicsResource.cpp" />
     <ClCompile Include="GraphicsSystem.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -122,6 +125,7 @@
     <ClInclude Include="Capabilities.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="DebugDraw.h" />
+    <ClInclude Include="GeometryShapes.h" />
     <ClInclude Include="TinyEngine.h" />
     <ClInclude Include="EngineConfiguration.h" />
     <ClInclude Include="EngineDevice.h" />

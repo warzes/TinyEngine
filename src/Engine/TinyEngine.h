@@ -35,8 +35,10 @@
 
 #include "MathCoreFunc.h"
 #include "Color.h"
-#include "AABB.h"
 #include "Transform.h"
+
+#include "AABB.h"
+#include "GeometryShapes.h"
 
 #include "Window.h"
 #include "Input.h"

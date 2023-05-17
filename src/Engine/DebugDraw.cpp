@@ -17,23 +17,23 @@ namespace {
 void drawGround(float scale)
 { // 10x10
 	// outer
-	for (float i = -scale, c = 0; c <= 20; c += 20, i += c * (scale / 10))
+	for (float i = -scale, c = 0.0f; c <= 20.0f; c += 20.0f, i += c * (scale / 10.0f))
 	{
-		DebugDraw::DrawLine({ -scale, 0, i }, { scale, 0, i }, WHITE); // horiz
-		DebugDraw::DrawLine({ i, 0, -scale }, { i, 0, +scale }, WHITE); // vert
+		DebugDraw::DrawLine({ -scale, 0.0f, i }, { scale, 0.0f, i }, WHITE); // horiz
+		DebugDraw::DrawLine({ i, 0.0f, -scale }, { i, 0.0f, +scale }, WHITE); // vert
 	}
 	// inner
-	for (float i = -scale + scale / 10, c = 1; c < 20; ++c, i += (scale / 10))
+	for (float i = -scale + scale / 10.0f, c = 1.0f; c < 20.0f; ++c, i += (scale / 10.0f))
 	{
-		DebugDraw::DrawLine({ -scale, 0, i }, { +scale, 0, i }, GRAY); // horiz
-		DebugDraw::DrawLine({ i, 0, -scale }, { i, 0, +scale }, GRAY); // vert
+		DebugDraw::DrawLine({ -scale, 0.0f, i }, { +scale, 0.0f, i }, GRAY); // horiz
+		DebugDraw::DrawLine({ i, 0.0f, -scale }, { i, 0.0f, +scale }, GRAY); // vert
 	}
 }
 //-----------------------------------------------------------------------------
 void DrawConeLowres(const glm::vec3& center, const glm::vec3& top, float radius, unsigned rgb)
 {
 	const glm::vec3 diff3 = top - center;
-	DebugDraw::DrawPrism(center, radius ? radius : 1, glm::length(diff3), glm::normalize(diff3), 3, rgb);
+	DebugDraw::DrawPrism(center, radius ? radius : 1.0f, glm::length(diff3), glm::normalize(diff3), 3, rgb);
 }
 //-----------------------------------------------------------------------------
 void DrawCircleWithOrientation(const glm::vec3& center, glm::vec3 dir, float radius, unsigned rgb)
@@ -52,7 +52,7 @@ void DrawCircleWithOrientation(const glm::vec3& center, glm::vec3 dir, float rad
 	//lastPoint = (center + dir);
 
 	{
-		const float radians = (glm::pi<float>() * 2) * (0 + skip / 2.f) / segments;
+		const float radians = (glm::pi<float>() * 2.0f) * (0.0f + (float)skip / 2.0f) / (float)segments;
 		glm::vec3 vs = right * sinf(radians);
 		glm::vec3 vc = dir * cosf(radians);
 		lastPoint = center + vs;
@@ -61,12 +61,13 @@ void DrawCircleWithOrientation(const glm::vec3& center, glm::vec3 dir, float rad
 
 	DebugDraw::DrawLine(lastPoint, (center + (dir * radius * 1.25f)), rgb);
 
+	glm::vec3 vs, vc;
 	for (int i = 0; i <= drawn_segments; ++i)
 	{
-		const float radians = (glm::pi<float>() * 2) * (i + skip / 2.f) / segments;
+		const float radians = (glm::pi<float>() * 2.0f) * ((float)i + (float)skip / 2.0f) / (float)segments;
 
-		glm::vec3 vs = (right * sinf(radians));
-		glm::vec3 vc = (dir * cosf(radians));
+		vs = (right * sinf(radians));
+		vc = (dir * cosf(radians));
 
 		point = (center + vs);
 		point = (point + vc);
@@ -79,25 +80,10 @@ void DrawCircleWithOrientation(const glm::vec3& center, glm::vec3 dir, float rad
 }
 //-----------------------------------------------------------------------------
 
-inline void  orthoVec(glm::vec3* left, glm::vec3* up, glm::vec3 v)
+inline void orthoVec(glm::vec3* left, glm::vec3* up, glm::vec3 v)
 {
-#if 0
-	if ((v.z * v.z) > (0.7f * 0.7f)) {
-		float sqrlen = v.y * v.y + v.z * v.z;
-		float invlen = 1.f / sqrtf(sqrlen);
-		*up = glm::vec3(0, v.z * invlen, -v.y * invlen);
-		*left = glm::vec3(sqrlen * invlen, -v.x * up->z, v.x * up->y);
-	}
-	else {
-		float sqrlen = v.x * v.x + v.y * v.y;
-		float invlen = 1.f / sqrtf(sqrlen);
-		*left = glm::vec3(-v.y * invlen, v.x * invlen, 0);
-		*up = glm::vec3(-v.z * left->y, v.z * left->x, sqrlen * invlen);
-	}
-#else
-	* left = (v.z * v.z) < (v.x * v.x) ? glm::vec3(v.y, -v.x, 0) : glm::vec3(0, -v.z, v.y);
+	* left = (v.z * v.z) < (v.x * v.x) ? glm::vec3(v.y, -v.x, 0.0f) : glm::vec3(0.0f, -v.z, v.y);
 	*up = glm::cross(*left, v);
-#endif
 }
 //-----------------------------------------------------------------------------
 void DebugDraw::DrawPoint(const glm::vec3& from, unsigned rgb)
@@ -113,9 +99,9 @@ void DebugDraw::DrawLine(const glm::vec3& from, const glm::vec3& to, unsigned rg
 //-----------------------------------------------------------------------------
 void DebugDraw::DrawLineDashed(glm::vec3 from, glm::vec3 to, unsigned rgb)
 {
-	glm::vec3 dist = (to - from);
-	glm::vec3 unit = glm::normalize(dist);
-	for (float len = 0, mag = glm::length(dist) / 2; len < mag; ++len)
+	const glm::vec3 dist = (to - from);
+	const glm::vec3 unit = glm::normalize(dist);
+	for (float len = 0.0f, mag = glm::length(dist) / 2.0f; len < mag; ++len)
 	{
 		to = (from + unit);
 		DrawLine(from, to, rgb);
@@ -125,14 +111,14 @@ void DebugDraw::DrawLineDashed(glm::vec3 from, glm::vec3 to, unsigned rgb)
 //-----------------------------------------------------------------------------
 void DebugDraw::DrawAxis(float units)
 {
-	DrawLine(glm::vec3(0, 0, 0), glm::vec3(units, 0, 0), RED);
-	DrawLineDashed(glm::vec3(0, 0, 0), glm::vec3(-units, 0, 0), RED);
+	DrawLine({ 0.0f, 0.0f, 0.0f }, { units, 0.0f, 0.0f }, RED);
+	DrawLineDashed({ 0.0f, 0.0f, 0.0f }, { -units, 0.0f, 0.0f }, RED);
 
-	DrawLine(glm::vec3(0, 0, 0), glm::vec3(0, units, 0), GREEN);
-	DrawLineDashed(glm::vec3(0, 0, 0), glm::vec3(0, -units, 0), GREEN);
+	DrawLine({ 0.0f, 0.0f, 0.0f }, { 0.0f, units, 0.0f }, GREEN);
+	DrawLineDashed({ 0.0f, 0.0f, 0.0f }, { 0.0f, -units, 0.0f }, GREEN);
 
-	DrawLine(glm::vec3(0, 0, 0), glm::vec3(0, 0, units), BLUE);
-	DrawLineDashed(glm::vec3(0, 0, 0), glm::vec3(0, 0, -units), BLUE);
+	DrawLine({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, units }, BLUE);
+	DrawLineDashed({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, -units }, BLUE);
 }
 //-----------------------------------------------------------------------------
 void DebugDraw::DrawGround(float scale)
@@ -143,11 +129,11 @@ void DebugDraw::DrawGround(float scale)
 	}
 	else
 	{
-		drawGround(100);
-		drawGround(10);
-		drawGround(1);
-		drawGround(0.1);
-		drawGround(0.01);
+		drawGround(100.0f);
+		drawGround(10.0f);
+		drawGround(1.0f);
+		drawGround(0.1f);
+		drawGround(0.01f);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -155,6 +141,11 @@ void DebugDraw::DrawGrid(float scale)
 {
 	DrawGround(scale);
 	DrawAxis(scale ? scale : 100.0f);
+}
+//-----------------------------------------------------------------------------
+void DebugDraw::DrawTriangle(const Triangle& tri, unsigned rgb)
+{
+	DrawTriangle(tri.p0, tri.p1, tri.p2, rgb);
 }
 //-----------------------------------------------------------------------------
 void DebugDraw::DrawTriangle(const glm::vec3& pa, const glm::vec3& pb, const glm::vec3& pc, unsigned rgb)
@@ -166,16 +157,17 @@ void DebugDraw::DrawTriangle(const glm::vec3& pa, const glm::vec3& pb, const glm
 //-----------------------------------------------------------------------------
 void DebugDraw::DrawArrow(const glm::vec3& begin, const glm::vec3& end, unsigned rgb)
 {
-	glm::vec3 diff = (end - begin);
-	float len = glm::length(diff), stick_len = len * 2 / 3;
+	const glm::vec3 diff = (end - begin);
+	const float len = glm::length(diff);
+	const float stickLen = len * 2.0f / 3.0f;
 
 	DrawLine(begin, end, rgb);
-	DrawConeLowres((begin + (glm::normalize(diff) * stick_len)), end, len / 6, rgb);
+	DrawConeLowres((begin + (glm::normalize(diff) * stickLen)), end, len / 6.0f, rgb);
 }
 //-----------------------------------------------------------------------------
 void DebugDraw::DrawBounds(const glm::vec3 points[8], unsigned rgb)
 {
-	for (int i = 0; i < 4; ++i)
+	for (unsigned i = 0; i < 4; ++i)
 	{
 		DrawLine(points[i], points[(i + 1) & 3], rgb);
 		DrawLine(points[i], points[4 + i], rgb);
@@ -202,30 +194,63 @@ void DebugDraw::DrawBox(const glm::vec3& c, const glm::vec3& extents, unsigned r
 void DebugDraw::DrawCube(const glm::vec3& center, float radius, unsigned rgb)
 {
 	// draw_prism(center, 1, -1, vec3(0,1,0), 4);
-	float half = radius * 0.5f;
-	glm::vec3 l = glm::vec3(center.x - half, center.y + half, center.z - half); // left-top-far
-	glm::vec3 r = glm::vec3(center.x + half, center.y - half, center.z + half); // right-bottom-near
+	const float half = radius * 0.5f;
+	const glm::vec3 l = { center.x - half, center.y + half, center.z - half }; // left-top-far
+	const glm::vec3 r = { center.x + half, center.y - half, center.z + half }; // right-bottom-near
 
-	DrawLine(l, glm::vec3(r.x, l.y, l.z), rgb);
-	DrawLine(glm::vec3(r.x, l.y, l.z), glm::vec3(r.x, l.y, r.z), rgb);
-	DrawLine(glm::vec3(r.x, l.y, r.z), glm::vec3(l.x, l.y, r.z), rgb);
-	DrawLine(glm::vec3(l.x, l.y, r.z), l, rgb);
-	DrawLine(l, glm::vec3(l.x, r.y, l.z), rgb);
+	DrawLine(l, { r.x, l.y, l.z }, rgb);
+	DrawLine({ r.x, l.y, l.z }, { r.x, l.y, r.z }, rgb);
+	DrawLine({ r.x, l.y, r.z }, { l.x, l.y, r.z }, rgb);
+	DrawLine({ l.x, l.y, r.z }, l, rgb);
+	DrawLine(l, { l.x, r.y, l.z }, rgb);
 
-	DrawLine(r, glm::vec3(l.x, r.y, r.z), rgb);
-	DrawLine(glm::vec3(l.x, r.y, r.z), glm::vec3(l.x, r.y, l.z), rgb);
-	DrawLine(glm::vec3(l.x, r.y, l.z), glm::vec3(r.x, r.y, l.z), rgb);
-	DrawLine(glm::vec3(r.x, r.y, l.z), r, rgb);
-	DrawLine(r, glm::vec3(r.x, l.y, r.z), rgb);
+	DrawLine(r, { l.x, r.y, r.z }, rgb);
+	DrawLine({ l.x, r.y, r.z }, { l.x, r.y, l.z }, rgb);
+	DrawLine({ l.x, r.y, l.z }, { r.x, r.y, l.z }, rgb);
+	DrawLine({ r.x, r.y, l.z }, r, rgb);
+	DrawLine(r, { r.x, l.y, r.z }, rgb);
 
-	DrawLine(glm::vec3(l.x, l.y, r.z), glm::vec3(l.x, r.y, r.z), rgb);
-	DrawLine(glm::vec3(r.x, l.y, l.z), glm::vec3(r.x, r.y, l.z), rgb);
+	DrawLine({ l.x, l.y, r.z }, { l.x, r.y, r.z }, rgb);
+	DrawLine({ r.x, l.y, l.z }, { r.x, r.y, l.z }, rgb);
+}
+//-----------------------------------------------------------------------------
+glm::vec3 transform33(const glm::mat3& mat, const glm::vec3& p) // TODO: ==> glm
+{
+	const float* m = glm::value_ptr(mat); // TODO: проверить
+	float x = (m[0] * p.x) + (m[4] * p.y) + (m[8] * p.z);
+	float y = (m[1] * p.x) + (m[5] * p.y) + (m[9] * p.z);
+	float z = (m[2] * p.x) + (m[6] * p.y) + (m[10] * p.z);
+	return glm::vec3(x, y, z);
+}
+//-----------------------------------------------------------------------------
+void DebugDraw::DrawCube(const glm::vec3& center, const glm::vec3& radius, const glm::mat3& M, unsigned rgb)
+{
+	const glm::vec3 half = radius * 0.5f;
+	const glm::vec3 l = { -half.x, +half.y, -half.z }; // left-top-far
+	const glm::vec3 r = { +half.x, -half.y, +half.z }; // right-bottom-near
+
+	glm::vec3 points[8] = 
+	{
+		{l.x, r.y, r.z},
+		{l.x, r.y, l.z},
+		{r.x, r.y, l.z},
+		{r.x, r.y, r.z},
+		{l.x, l.y, r.z},
+		{l.x, l.y, l.z},
+		{r.x, l.y, l.z},
+		{r.x, l.y, r.z},
+	};
+
+	for (unsigned i = 0; i < 8; ++i)
+		points[i] = (center + transform33(M, points[i]));
+
+	DrawBounds(points, rgb);
 }
 //-----------------------------------------------------------------------------
 void DebugDraw::DrawPlane(const glm::vec3& p, const glm::vec3& n, float scale, unsigned rgb)
 {
 	// if n is too similar to up vector, use right. else use up vector
-	glm::vec3 v1 = glm::cross(n, glm::dot(n, glm::vec3(0, 1, 0)) > 0.8f ? glm::vec3(1, 0, 0) : glm::vec3(0, 1, 0));
+	glm::vec3 v1 = glm::cross(n, glm::dot(n, { 0.0f, 1.0f, 0.0f }) > 0.8f ? glm::vec3(1.0f, 0.0f, 0.0f) : glm::vec3(0.0f, 1.0f, 0.0f));
 	glm::vec3 v2 = glm::cross(n, v1);
 
 	// draw axis
@@ -236,10 +261,10 @@ void DebugDraw::DrawPlane(const glm::vec3& p, const glm::vec3& n, float scale, u
 	// get plane coords
 	v1 = (v1 * scale);
 	v2 = (v2 * scale);
-	glm::vec3 p1 = ((p + v1) + v2);
-	glm::vec3 p2 = ((p - v1) + v2);
-	glm::vec3 p3 = ((p - v1) - v2);
-	glm::vec3 p4 = ((p + v1) - v2);
+	const glm::vec3 p1 = ((p + v1) + v2);
+	const glm::vec3 p2 = ((p - v1) + v2);
+	const glm::vec3 p3 = ((p - v1) - v2);
+	const glm::vec3 p4 = ((p + v1) - v2);
 
 	// draw plane
 	DrawLine(p1, p2, rgb);
@@ -250,17 +275,21 @@ void DebugDraw::DrawPlane(const glm::vec3& p, const glm::vec3& n, float scale, u
 //-----------------------------------------------------------------------------
 void DebugDraw::DrawSphere(const glm::vec3& center, float radius, unsigned rgb)
 {
-	float lod = 6, yp = -radius, rp = 0, y, r, x, z;
-	for (int j = 1; j <= lod / 2; ++j, yp = y, rp = r)
+#if 0
+	float lod = 6.0f, yp = -radius, rp = 0.0f, y, r, x, z;
+#else // new
+	float lod = 8.0f, yp = -radius, rp = 0.0f, y, r, x, z;
+#endif
+	for (int j = 1; j <= (int)(lod / 2.0f); ++j, yp = y, rp = r)
 	{
-		y = j * 2.f / (lod / 2) - 1;
-		r = cosf(y * 3.14159f / 2) * radius;
-		y = sinf(y * 3.14159f / 2) * radius;
+		y = (float)j * 2.0f / (lod / 2.0f) - 1;
+		r = cosf(y * 3.14159f / 2.0f) * radius;
+		y = sinf(y * 3.14159f / 2.0f) * radius;
 
-		float xp = 1, zp = 0;
-		for (int i = 1; i <= lod; ++i, xp = x, zp = z)
+		float xp = 1.0f, zp = 0.0f;
+		for (int i = 1; i <= (int)lod; ++i, xp = x, zp = z)
 		{
-			x = 3.14159f * 2 * i / lod;
+			x = 3.14159f * 2.0f * i / lod;
 			z = sinf(x);
 			x = cosf(x);
 
@@ -502,14 +531,20 @@ void DebugDraw::DrawCircle(const glm::vec3& pos, const glm::vec3& n, float radiu
 	DrawPrism(pos, radius, 0, n, 32, rgb);
 }
 //-----------------------------------------------------------------------------
+void DebugDraw::DrawRing(const glm::vec3& pos, const glm::vec3& n, float radius, unsigned rgb)
+{
+	DrawCircle(pos, n, radius, rgb);
+	DrawCircle(pos, n, radius * 0.9f, rgb);
+}
+//-----------------------------------------------------------------------------
 void DebugDraw::DrawAABB(const glm::vec3& minbb, const glm::vec3& maxbb, unsigned rgb)
 {
 	glm::vec3 points[8], bb[2] = { minbb, maxbb };
 	for (int i = 0; i < 8; ++i)
 	{
 		points[i].x = bb[(i ^ (i >> 1)) & 1].x;
-		points[i].y = bb[(i >> 1) & 1].y;
-		points[i].z = bb[(i >> 2) & 1].z;
+		points[i].y = bb[     (i >> 1)  & 1].y;
+		points[i].z = bb[     (i >> 2)  & 1].z;
 	}
 	DrawBounds/*_corners*/(points, rgb);
 }
@@ -539,8 +574,8 @@ void DebugDraw::DrawPositionDir(const glm::vec3& position, const glm::vec3& dire
 			DrawCircle(ground, up, radius, clr);
 		radius *= 0.9f;
 	}
-}//-----------------------------------------------------------------------------
-
+}
+//-----------------------------------------------------------------------------
 void DebugDraw::DrawNormal(const glm::vec3& pos, const glm::vec3& n)
 {
 	DrawLine(pos, (pos + glm::normalize(n)), YELLOW);
@@ -576,6 +611,50 @@ void DebugDraw::DrawBoid(const glm::vec3& position, glm::vec3 dir)
 	DrawLine(left, position, clr);
 	DrawLine(position, right, clr);
 	DrawLine(right, front, clr);
+}
+//-----------------------------------------------------------------------------
+void DebugDraw::DrawFrustum(const glm::mat4& projview, unsigned rgb)
+{
+	glm::mat4 clipmatrix = glm::inverse(projview);// clip matrix
+
+	// Start with the standard clip volume, then bring it back to world space.
+	const glm::vec3 planes[8] = {
+		{-1,-1,-1}, {+1,-1,-1}, {+1,+1,-1}, {-1,+1,-1}, // near plane
+		{-1,-1,+1}, {+1,-1,+1}, {+1,+1,+1}, {-1,+1,+1}, // far plane
+	};
+
+	glm::vec3 points[8];
+	float wCoords[8];
+
+	// Transform the planes by the inverse clip matrix:
+	for (int i = 0; i < 8; ++i)
+	{
+		// wCoords[i] = matTransformPointXYZW2(&points[i], planes[i], clipmatrix);
+		glm::vec3* out = &points[i], in = planes[i]; 
+		const float* m = glm::value_ptr(clipmatrix);
+		out->x = (m[0] * in.x) + (m[4] * in.y) + (m[8] * in.z) + m[12]; // in.w (vec4) assumed to be 1
+		out->y = (m[1] * in.x) + (m[5] * in.y) + (m[9] * in.z) + m[13];
+		out->z = (m[2] * in.x) + (m[6] * in.y) + (m[10] * in.z) + m[14];
+		wCoords[i] = (m[3] * in.x) + (m[7] * in.y) + (m[11] * in.z) + m[15]; // rw
+
+		// bail if any W ended up as zero.
+		const float epsilon = 1e-9f;
+		if (glm::abs(wCoords[i]) < epsilon) 
+		{
+			return;
+		}
+	}
+
+	// Divide by the W component of each:
+	for (int i = 0; i < 8; ++i) 
+	{
+		points[i].x /= wCoords[i];
+		points[i].y /= wCoords[i];
+		points[i].z /= wCoords[i];
+	}
+
+	// Connect the dots:
+	DrawBounds(points, rgb);
 }
 //-----------------------------------------------------------------------------
 void DebugDraw::Flush(const glm::mat4& ViewProj)
@@ -666,5 +745,51 @@ void DebugDraw::Close()
 	shaderProgram.reset();
 	vb.reset();
 	vao.reset();
+	Points.clear();
+	Lines.clear();
+}
+//-----------------------------------------------------------------------------
+void DebugDraw::DrawDemo()
+{
+	// freeze current frame for (frustum) camera forensics
+	//static mat44 projview_copy;
+	//do_once{
+	//	multiply44x2(projview_copy, camera_get_active()->proj, camera_get_active()->view);
+	//}
+	//ddraw_frustum(projview_copy);
+
+	//DrawGrid();
+
+	glm::vec3 origin = { 0,0,0 };
+	DrawArrow(origin, glm::vec3(-1, 1, 1), ORANGE);
+
+	for (int i = -5; i <= 5; ++i) 
+	{
+		DrawPyramid(glm::vec3(i * 2, 0, 3), 0, i + 5 + 2, YELLOW);
+		DrawPyramid(glm::vec3(i * 2, 0, 6), -2, i + 5 + 2, YELLOW);
+		DrawPyramid(glm::vec3(i * 2, 0, 9), +2, i + 5 + 2, YELLOW);
+	}
+
+#if 1 // @fixme: add positions to these
+	// ddraw_triangle(origin, 1);
+	DrawSquare(origin, 1, YELLOW);
+	DrawPentagon(origin, 1, YELLOW);
+	DrawHexagon(origin, 1, YELLOW);
+	DrawCube(origin, 1, YELLOW);
+	DrawPyramid(origin, 2, 3, YELLOW);
+	DrawPyramid(origin, 2, 16, YELLOW);
+	DrawCone(origin, (origin + glm::vec3(0, 1, 0)), 0.5f, YELLOW);
+	DrawArrow(origin, glm::vec3(0, 1, 0), YELLOW);
+	DrawBone(glm::vec3(0, 0, 0), glm::vec3(3, 3, 3), YELLOW);
+	DrawAABB(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), YELLOW);
+#endif
+
+	DrawPlane(glm::vec3(0, 10, 0), glm::vec3(0, 1, 0), 10, YELLOW);
+	//DrawBoid(vec3(15,0,15), vec3(-15,0,-15) );
+	DrawPosition(glm::vec3(10, 10, 10), 1);
+	DrawPosition(glm::vec3(-10, -10, 10), 1);
+
+	DrawPoint(glm::vec3(-2, 0, -2), YELLOW);
+	DrawSphere(glm::vec3(-3, 0, -3), 1, PURPLE);
 }
 //-----------------------------------------------------------------------------

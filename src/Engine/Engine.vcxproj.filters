@@ -50,6 +50,9 @@
     <ClCompile Include="DebugDraw.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="GeometryShapes.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -114,9 +117,6 @@
     <ClInclude Include="Color.h">
       <Filter>Core\Math</Filter>
     </ClInclude>
-    <ClInclude Include="AABB.h">
-      <Filter>Core\Math</Filter>
-    </ClInclude>
     <ClInclude Include="MathCoreFunc.h">
       <Filter>Core\Math</Filter>
     </ClInclude>
@@ -129,6 +129,12 @@
     <ClInclude Include="TinyEngine.h" />
     <ClInclude Include="DebugDraw.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryShapes.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="AABB.h">
+      <Filter>Core\Geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

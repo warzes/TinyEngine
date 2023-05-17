@@ -2,7 +2,7 @@
 #include "FileSystem.h"
 #include "Log.h"
 //-----------------------------------------------------------------------------
-[[nodiscard]] std::optional<std::vector<uint8_t>> FileSystem::FileToMemory(const std::string& fileName, unsigned int* bytesRead)
+std::optional<std::vector<uint8_t>> FileSystem::FileToMemory(const std::string& fileName, unsigned int* bytesRead)
 {
 	if (fileName.empty())
 	{
@@ -64,14 +64,14 @@
 	return contents;
 }
 //-----------------------------------------------------------------------------
-[[nodiscard]] const char* FileSystem::GetFileExtension(const char* fileName)
+const char* FileSystem::GetFileExtension(const char* fileName)
 {
 	const char* dot = strrchr(fileName, '.');
 	if (!dot || dot == fileName) return nullptr;
 	return dot;
 }
 //-----------------------------------------------------------------------------
-[[nodiscard]] const char* FileSystem::GetFileName(const char* filePath)
+const char* FileSystem::GetFileName(const char* filePath)
 {
 	const char* latestMatch = nullptr;
 	for (; filePath = strpbrk(filePath, "\\/"), filePath != nullptr; latestMatch = filePath++) {}
