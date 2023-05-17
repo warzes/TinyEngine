@@ -97,6 +97,7 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Capabilities.cpp" />
+    <ClCompile Include="Collisions.cpp" />
     <ClCompile Include="DebugDraw.cpp" />
     <ClCompile Include="EngineDevice.cpp" />
     <ClCompile Include="EngineTimestamp.cpp" />
@@ -123,6 +124,7 @@
     <ClInclude Include="BaseMacros.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Capabilities.h" />
+    <ClInclude Include="Collisions.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="GeometryShapes.h" />
@@ -147,6 +149,9 @@
     <ClInclude Include="Transform.h" />
     <ClInclude Include="TranslateToGL.h" />
     <ClInclude Include="Window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Collisions.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

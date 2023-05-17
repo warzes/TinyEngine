@@ -13,6 +13,7 @@
     <ClCompile Include="tiny_obj_loader.cpp">
       <Filter>tiny_obj_loader</Filter>
     </ClCompile>
+    <ClCompile Include="ccd\libccd.c" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="glfw">

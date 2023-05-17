@@ -289,7 +289,7 @@ void DebugDraw::DrawSphere(const glm::vec3& center, float radius, unsigned rgb)
 		float xp = 1.0f, zp = 0.0f;
 		for (int i = 1; i <= (int)lod; ++i, xp = x, zp = z)
 		{
-			x = 3.14159f * 2.0f * i / lod;
+			x = 3.14159f * 2.0f * (float)i / lod;
 			z = sinf(x);
 			x = cosf(x);
 
@@ -327,7 +327,7 @@ void DebugDraw::DrawCapsule(const glm::vec3& from, const glm::vec3& to, float r,
 	lastf = (from + lastf);
 
 	/* step along circle outline and draw lines */
-	enum { step_size = 20 };
+	const int step_size = 20;
 	for (int i = step_size; i <= 360; i += step_size)
 	{
 		/* calculate current rotation */
@@ -359,8 +359,8 @@ void DebugDraw::DrawCapsule(const glm::vec3& from, const glm::vec3& to, float r,
 		for (int j = 1; j < 180 / step_size; j++)
 		{
 			/* angles */
-			float ta = j * step_size;
-			float fa = 360 - (j * step_size);
+			float ta = (float)j * step_size;
+			float fa = 360.0f - ((float)j * step_size);
 
 			/* top half-sphere */
 			ax = (forward * sinf(glm::radians(ta)));
@@ -478,7 +478,7 @@ void DebugDraw::DrawPrism(const glm::vec3& center, float radius, float height, c
 
 	for (int i = 1; i <= segments; ++i)
 	{
-		const float radians = (glm::pi<float>() * 2) * i / segments;
+		const float radians = (glm::pi<float>() * 2) * (float)(i / segments);
 
 		glm::vec3 vs = (left * sinf(radians));
 		glm::vec3 vc = (up * cosf(radians));
@@ -566,7 +566,7 @@ void DebugDraw::DrawPositionDir(const glm::vec3& position, const glm::vec3& dire
 	(position.y < 0 ? DrawLineDashed(ground, position, clr) : DrawLine(ground, position, clr));
 
 	glm::vec3 n = glm::normalize(direction), up = glm::vec3(0, 1, 0);
-	for (int i = 0; i < 10 && i <= fabs(position.y); ++i)
+	for (int i = 0; i < 10 && i <= (int)fabs(position.y); ++i)
 	{
 		if (i < 2 && glm::length(direction))
 			DrawCircleWithOrientation(ground, n, radius, clr);

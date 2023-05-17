@@ -145,3 +145,20 @@ private:
 	mutable bool      m_rotationDirty = true;
 	mutable glm::mat4 m_rotationMatrix{ 1.0f };
 };
+
+/*================================================================================
+// Transform (Non-Uniform Scalar VQS)
+================================================================================*/
+
+/*
+	- This follows a traditional 'VQS' structure for complex object transformations,
+		however it differs from the standard in that it allows for non-uniform
+		scaling in the form of a vec3.
+*/
+// Source: https://www.eurosis.org/cms/files/conf/gameon-asia/gameon-asia2007/R-SESSION/G1.pdf
+struct Vqs
+{
+	glm::vec3 position = glm::vec3(0.0f);
+	glm::quat rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+	glm::vec3 scale = glm::vec3(1.0f);
+};

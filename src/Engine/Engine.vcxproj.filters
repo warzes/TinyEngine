@@ -53,6 +53,9 @@
     <ClCompile Include="GeometryShapes.cpp">
       <Filter>Core\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="Collisions.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -136,6 +139,9 @@
     <ClInclude Include="AABB.h">
       <Filter>Core\Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="Collisions.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -180,5 +186,10 @@
     <Filter Include="Core\Geometry">
       <UniqueIdentifier>{3cd8c3ae-3984-4699-bcbd-589f054d1fba}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Collisions.inl">
+      <Filter>Core\Geometry</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -89,6 +89,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ccd\libccd.c" />
     <ClCompile Include="glad\gl.c" />
     <ClCompile Include="glfw.c" />
     <ClCompile Include="stb.cpp" />

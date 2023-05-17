@@ -13,21 +13,24 @@ struct Sphere
 
 struct Plane
 {
-	glm::vec3 p;
-	glm::vec3 n;
+	union {
+		glm::vec3 p;
+		struct { float a, b, c; };
+	};
+	float d;
 };
 
 struct Capsule
 {
-	glm::vec3 a;
-	glm::vec3 b;
-	float r;
+	glm::vec3 base;
+	float r, height;
 };
 
 struct Ray
 {
 	glm::vec3 p;
 	glm::vec3 d;
+	float len;
 };
 
 struct Triangle
@@ -47,4 +50,18 @@ struct Frustum
 	struct { glm::vec4 l, r, t, b, n, f; };
 	glm::vec4 pl[6];
 	float v[24];
+};
+
+struct Cylinder
+{
+	float r;
+	glm::vec3 base;
+	float height;
+};
+
+struct Cone
+{
+	float r;
+	glm::vec3 base;
+	float height;
 };
