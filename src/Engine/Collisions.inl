@@ -4,83 +4,239 @@
 		return CCDGJKInternal(&a, xa, (_F0), &b, xb, (_F1), r);\
 	}
 
+inline glm::vec4 Plane4(const glm::vec3& p, const glm::vec3& n)
+{
+	return glm::vec4(n, -glm::dot(n, p));
+}
+
 //-----------------------------------------------------------------------------
 // Line/Segment
 //-----------------------------------------------------------------------------
 
-inline Line LineClosestLine(const Line& l, const glm::vec3& p)
+inline glm::vec3 LineClosestPoint(const Line& line, const glm::vec3& point)
 {
-	glm::vec3 cp = LineClosestPoint(l, p);
-	return Line(p, cp);
-}
-
-inline glm::vec3 LineClosestPoint(const Line& l, const glm::vec3& p)
-{
-	const glm::vec3 ab = l.b - l.a;
-	const glm::vec3 pa = p - l.a;
+	const glm::vec3 ab = line.b - line.a;
+	const glm::vec3 pa = point - line.a;
 	float t = glm::dot(pa, ab) / glm::dot(ab, ab);
 	t = glm::clamp(t, 0.0f, 1.0f);
-	glm::vec3 pt = l.a + (ab * t);
+	glm::vec3 pt = line.a + (ab * t);
 	return pt;
 }
 
-inline glm::vec3 LineDirection(const Line& l)
+inline float LineDistance2Point(const Line& line, const glm::vec3& point)
 {
-	return glm::normalize(l.b - l.a);
+	const glm::vec3 ab = (line.a - line.b);
+	const glm::vec3 ap = (line.a - point);
+	const glm::vec3 bp = (line.b - point);
+	// handle cases p proj outside ab
+	const float e = glm::dot(ap, ab); if (e <= 0) return glm::dot(ap, ap);
+	const float f = glm::dot(ab, ab); if (e >= f) return glm::dot(bp, bp);
+	return glm::dot(ap, ap) - (e * e) / f;
 }
 
 //-----------------------------------------------------------------------------
 // Ray
 //-----------------------------------------------------------------------------
 
+inline float RayTestPlane(const Ray& ray, const glm::vec4& plane)
+{
+	const glm::vec3 p(plane.x, plane.y, plane.z);
+	const float n = -(glm::dot(p, ray.p) + plane.w);
+	if (fabs(n) < 0.0001f) return 0.0f;
+	return n / (glm::dot(p, ray.d));
+}
+
+inline float RayTestTriangle(const Ray& ray, const Triangle& tr)
+{
+	/* calculate triangle normal */
+	const glm::vec3 d10 = tr.p1 - tr.p0;
+	const glm::vec3 d20 = tr.p2 - tr.p0;
+	const glm::vec3 d21 = tr.p2 - tr.p1;
+	const glm::vec3 d02 = tr.p0 - tr.p2;
+	const glm::vec3 n = glm::cross(d10, d20);
+
+	/* check for plane intersection */
+	glm::vec4 p = Plane4(tr.p0, n);
+	const float t = RayTestPlane(ray, p);
+	if (t <= 0.0f) return t;
+
+	/* intersection point */
+	glm::vec3 in = ray.d * t;
+	in = in + ray.p;
+
+	/* check if point inside triangle in plane */
+	const glm::vec3 di0 = in - tr.p0;
+	const glm::vec3 di1 = in - tr.p1;
+	const glm::vec3 di2 = in - tr.p2;
+
+	const glm::vec3 in0 = glm::cross(d10, di0);
+	const glm::vec3 in1 = glm::cross(d21, di1);
+	const glm::vec3 in2 = glm::cross(d02, di2);
+
+	if (glm::dot(in0, n) < 0.0f) return -1.0f;
+	if (glm::dot(in1, n) < 0.0f) return -1.0f;
+	if (glm::dot(in2, n) < 0.0f) return -1.0f;
+	return t;
+}
+
+inline bool RayTestSphere(float* t0, float* t1, const Ray& r, const Sphere& s)
+{
+	const glm::vec3 a = s.c - r.p;
+	const float tc = glm::dot(r.d, a);
+	if (tc < 0.0f) return false;
+
+	const float r2 = s.r * s.r;
+	const float d2 = glm::dot(a, a) - tc * tc;
+	if (d2 > r2) return false;
+	const float td = sqrtf(r2 - d2);
+
+	*t0 = tc - td;
+	*t1 = tc + td;
+	return true;
+}
+
+inline bool RayTestAABB(float* t0, float* t1, const Ray& r, const AABB& a)
+{
+	const float t0x = (a.min.x - r.p.x) / r.d.x;
+	const float t0y = (a.min.y - r.p.y) / r.d.y;
+	const float t0z = (a.min.z - r.p.z) / r.d.z;
+	const float t1x = (a.max.x - r.p.x) / r.d.x;
+	const float t1y = (a.max.y - r.p.y) / r.d.y;
+	const float t1z = (a.max.z - r.p.z) / r.d.z;
+
+	const float tminx = std::min(t0x, t1x);
+	const float tminy = std::min(t0y, t1y);
+	const float tminz = std::min(t0z, t1z);
+	const float tmaxx = std::max(t0x, t1x);
+	const float tmaxy = std::max(t0y, t1y);
+	const float tmaxz = std::max(t0z, t1z);
+	if (tminx > tmaxy || tminy > tmaxx)
+		return false;
+
+	*t0 = std::max(tminx, tminy);
+	*t1 = std::min(tmaxy, tmaxx);
+	if (*t0 > tmaxz || tminz > *t1)
+		return false;
+
+	*t0 = std::max(*t0, tminz);
+	*t1 = std::min(*t1, tmaxz);
+	return true;
+}
+
+inline Hit RayHitPlane(const Ray& r, const Plane& p)
+{
+	const glm::vec4 pf = Plane4(p.p, p.n);
+	const float t = RayTestPlane(r, pf);
+	if (t <= 0.0f) return Hit();
+	Hit o;
+	o.hit = 1;
+	o.p = (r.p + (r.d * t));
+	o.t0 = o.t1 = t;
+	o.n = p.n * (-1.0f);
+	return o;
+}
+
+inline Hit RayHitTriangle(const Ray& r, const Triangle& tr)
+{
+	const float t = RayTestTriangle(r, tr);
+	if (t <= 0.0f) return Hit();
+
+	Hit o;
+	o.hit = 1;
+	o.t0 = o.t1 = t;
+	o.p = (r.p + (r.d * t));
+	o.n = glm::normalize(glm::cross((tr.p1 - tr.p0), (tr.p2 - tr.p0)));
+	return o;
+}
+
+inline Hit RayHitSphere(const Ray& r, const Sphere& s)
+{
+	Hit o;
+	if (!RayTestSphere(&o.t0, &o.t1, r, s))
+		return Hit();
+
+	o.hit = 1;
+	o.p = r.p + r.d * std::min(o.t0, o.t1);
+	o.n = glm::normalize((o.p - s.c));
+	return o;
+}
+
+inline Hit RayHitAABB(const Ray& r, const AABB& a)
+{
+	Hit o;
+
+	glm::vec3 pnt, ext, c;
+	float d, min;
+	if (!RayTestAABB(&o.t0, &o.t1, r, a))
+		return Hit();
+
+	o.p = r.p + r.d * std::min(o.t0, o.t1);
+	ext = a.max - a.min;
+	c = a.min + ext * 0.5f;
+	pnt = o.p - c;
+
+	min = fabs(ext.x - fabs(pnt.x));
+	o.n = glm::vec3(1, 0, 0) * glm::sign(pnt.x);
+	d = fabs(ext.y - fabs(pnt.y));
+	if (d < min) 
+	{
+		min = d;
+		o.n = glm::vec3(0, 1, 0) * glm::sign(pnt.y);
+	}
+	d = fabs(ext.z - fabs(pnt.z));
+	if (d < min)
+		o.n = glm::vec3(0, 0, 1) * glm::sign(pnt.z);
+	return o;
+}
+
 //-----------------------------------------------------------------------------
 // Plane
 //-----------------------------------------------------------------------------
 
-// Modified from: https://graphics.stanford.edu/~mdfisher/Code/Engine/Plane.cpp.html
-inline Plane PlaneFromPtNormal(const glm::vec3& pt, const glm::vec3& n)
-{
-
-	glm::vec3 nn = glm::normalize(n);
-	Plane p = { };
-	p.a = nn.x; p.b = nn.y; p.c = nn.z;
-	p.d = -glm::dot(pt, nn);
-	return p;
-}
-
-inline Plane PlaneFromPts(const glm::vec3& a, const glm::vec3& b, const glm::vec3& c)
-{
-	glm::vec3 n = glm::normalize(glm::cross((b - a), (c - a)));
-	return PlaneFromPtNormal(a, n);
-}
-
-inline glm::vec3 PlaneNormal(const Plane& p)
-{
-	return glm::normalize(glm::vec3{ p.a, p.b, p.c });
-}
-
-inline glm::vec3 PlaneClosestPoint(const Plane& p, const glm::vec3& pt)
-{
-	return (pt - (PlaneNormal(p) * PlaneSignedDistance(p, pt)));
-}
-
-inline float PlaneSignedDistance(const Plane& p, const glm::vec3& pt)
-{
-	return (p.a * pt.x + p.b * pt.y + p.c * pt.z + p.d);
-}
-
-inline float PlaneUnsignedDistance(const Plane& p, const glm::vec3& pt)
-{
-	return fabsf(PlaneSignedDistance(p, pt));
-}
-
-inline Plane PlaneNormalized(const Plane& p)
-{
-	float d = sqrtf(p.a * p.a + p.b * p.b + p.c * p.c);
-	Plane pn = {};
-	pn.a = p.a / d; pn.b = p.b / d; pn.c = p.c / d; pn.d = p.d / d;
-	return pn;
-}
+//// Modified from: https://graphics.stanford.edu/~mdfisher/Code/Engine/Plane.cpp.html
+//inline Plane PlaneFromPtNormal(const glm::vec3& pt, const glm::vec3& n)
+//{
+//
+//	glm::vec3 nn = glm::normalize(n);
+//	Plane p = { };
+//	p.a = nn.x; p.b = nn.y; p.c = nn.z;
+//	p.d = -glm::dot(pt, nn);
+//	return p;
+//}
+//
+//inline Plane PlaneFromPts(const glm::vec3& a, const glm::vec3& b, const glm::vec3& c)
+//{
+//	glm::vec3 n = glm::normalize(glm::cross((b - a), (c - a)));
+//	return PlaneFromPtNormal(a, n);
+//}
+//
+//inline glm::vec3 PlaneNormal(const Plane& p)
+//{
+//	return glm::normalize(glm::vec3{ p.a, p.b, p.c });
+//}
+//
+//inline glm::vec3 PlaneClosestPoint(const Plane& p, const glm::vec3& pt)
+//{
+//	return (pt - (PlaneNormal(p) * PlaneSignedDistance(p, pt)));
+//}
+//
+//inline float PlaneSignedDistance(const Plane& p, const glm::vec3& pt)
+//{
+//	return (p.a * pt.x + p.b * pt.y + p.c * pt.z + p.d);
+//}
+//
+//inline float PlaneUnsignedDistance(const Plane& p, const glm::vec3& pt)
+//{
+//	return fabsf(PlaneSignedDistance(p, pt));
+//}
+//
+//inline Plane PlaneNormalized(const Plane& p)
+//{
+//	float d = sqrtf(p.a * p.a + p.b * p.b + p.c * p.c);
+//	Plane pn = {};
+//	pn.a = p.a / d; pn.b = p.b / d; pn.c = p.c / d; pn.d = p.d / d;
+//	return pn;
+//}
 
 //-----------------------------------------------------------------------------
 // Sphere

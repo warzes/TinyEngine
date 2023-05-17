@@ -13,11 +13,8 @@ struct Sphere
 
 struct Plane
 {
-	union {
-		glm::vec3 p;
-		struct { float a, b, c; };
-	};
-	float d;
+	glm::vec3 p;
+	glm::vec3 n;
 };
 
 struct Capsule

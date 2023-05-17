@@ -32,13 +32,22 @@ struct ContactInfo
 // Line/Segment
 //-----------------------------------------------------------------------------
 
-Line LineClosestLine(const Line& l, const glm::vec3& p);
-glm::vec3 LineClosestPoint(const Line& l, const glm::vec3& p);
-glm::vec3 LineDirection(const Line& l);
+glm::vec3 LineClosestPoint(const Line& line, const glm::vec3& point);
+float LineDistance2Point(const Line& line, const glm::vec3& point);
 
 //-----------------------------------------------------------------------------
 // Ray
 //-----------------------------------------------------------------------------
+
+float RayTestPlane(const Ray& ray, const glm::vec4& p4);
+float RayTestTriangle(const Ray& ray, const Triangle& t);
+bool RayTestSphere(float* t0, float* t1, const Ray& r, const Sphere& s);
+bool RayTestAABB(float* t0, float* t1, const Ray& r, const AABB& a);
+
+Hit RayHitPlane(const Ray& r, const Plane& p);
+Hit RayHitTriangle(const Ray& r, const Triangle& t);
+Hit RayHitSphere(const Ray& r, const Sphere& s);
+Hit RayHitAABB(const Ray& r, const AABB& a);
 
 //-----------------------------------------------------------------------------
 // Plane
