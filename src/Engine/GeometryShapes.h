@@ -5,25 +5,43 @@ struct Line
 	glm::vec3 a, b;
 };
 
-struct Sphere
-{
-	glm::vec3 c;
-	float r;
-};
-
 struct Plane
 {
 	glm::vec3 p;
 	glm::vec3 n;
 };
 
-struct Capsule
+struct plane_t
+{
+	union {
+		glm::vec3 p;
+		struct { float a, b, c; };
+	};
+	float d;
+};
+
+class Capsule
+{
+public:
+	glm::vec3 a;
+	glm::vec3 b;
+	float r;
+};
+
+struct capsule_t
 {
 	glm::vec3 base;
 	float r, height;
 };
 
-struct Ray
+class Ray
+{
+public:
+	glm::vec3 p;
+	glm::vec3 d;
+};
+
+struct ray_t
 {
 	glm::vec3 p;
 	glm::vec3 d;

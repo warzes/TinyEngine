@@ -50,9 +50,6 @@
     <ClCompile Include="DebugDraw.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="GeometryShapes.cpp">
-      <Filter>Core\Geometry</Filter>
-    </ClCompile>
     <ClCompile Include="Collisions.cpp">
       <Filter>Core\Geometry</Filter>
     </ClCompile>
@@ -140,6 +137,15 @@
       <Filter>Core\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Collisions.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Temp.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="GJK.h">
       <Filter>Core\Geometry</Filter>
     </ClInclude>
   </ItemGroup>

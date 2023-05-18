@@ -1,8 +1,11 @@
 #pragma once
 
 #include "GeometryShapes.h"
+#include "Sphere.h"
 #include "AABB.h"
 #include "Transform.h"
+#include "Temp.h"
+#include "GJK.h"
 
 struct Hit
 {
@@ -19,6 +22,8 @@ struct Hit
 	union { glm::vec3 n; glm::vec3 normal; };
 };
 
+constexpr Hit NotHit{.hit = 0};
+
 // Contact info
 struct ContactInfo
 {
@@ -32,8 +37,8 @@ struct ContactInfo
 // Line/Segment
 //-----------------------------------------------------------------------------
 
-glm::vec3 LineClosestPoint(const Line& line, const glm::vec3& point);
 float LineDistance2Point(const Line& line, const glm::vec3& point);
+glm::vec3 LineClosestPoint(const Line& line, const glm::vec3& point);
 
 //-----------------------------------------------------------------------------
 // Ray
@@ -53,62 +58,129 @@ Hit RayHitAABB(const Ray& r, const AABB& a);
 // Plane
 //-----------------------------------------------------------------------------
 
-Plane PlaneFromPtNormal(const glm::vec3& pt, const glm::vec3& n);
-Plane PlaneFromPts(const glm::vec3& a, const glm::vec3& b, const glm::vec3& c);
-glm::vec3 PlaneNormal(const Plane& p);
-glm::vec3 PlaneClosestPoint(const Plane& p, const glm::vec3& pt);
-float PlaneSignedDistance(const Plane& p, const glm::vec3& pt);
-float PlaneUnsignedDistance(const Plane& p, const glm::vec3& pt);
-Plane PlaneNormalized(const Plane& p);
-int32_t PlaneVsSphere(const Plane& a, const Vqs& formA, const Sphere& b, const Vqs& formB, ContactInfo* res);
+// libccd
+plane_t PlaneFromPtNormal(const glm::vec3& pt, const glm::vec3& n);
+plane_t PlaneFromPts(const glm::vec3& a, const glm::vec3& b, const glm::vec3& c);
+glm::vec3 PlaneNormal(const plane_t& p);
+glm::vec3 PlaneClosestPoint(const plane_t& p, const glm::vec3& pt);
+float PlaneSignedDistance(const plane_t& p, const glm::vec3& pt);
+float PlaneUnsignedDistance(const plane_t& p, const glm::vec3& pt);
+plane_t PlaneNormalized(const plane_t& p);
+int32_t PlaneVsSphere(const plane_t& a, const Vqs& formA, const Sphere& b, const Vqs& formB, ContactInfo* res);
 
 //-----------------------------------------------------------------------------
 // Sphere
 //-----------------------------------------------------------------------------
+// Alternative 
+// (TODO: mod transform)
+glm::vec3 SphereClosestPoint(const Sphere& s, const glm::vec3& p);
+bool SphereTestAABB(const Sphere& s, const AABB& a);
+bool SphereTestCapsule(const Sphere& s, const Capsule& c);
+bool SphereTestPoly(const Sphere& s, const Poly& p);
+bool SphereTestSphere(const Sphere& a, const Sphere& b);
+Hit SphereHitAABB(const Sphere& s, const AABB& a);
+Hit SphereHitCapsule(Sphere s, const Capsule& c);
+Hit SphereHitSphere(const Sphere& a, const Sphere& b);
+
+// libccd
 int32_t SphereVsSphere(const Sphere& a, const Vqs& formA, const Sphere& b, const Vqs& formB, ContactInfo* res);
 int32_t SphereVsAABB(const Sphere& a, const Vqs& formA, const AABB& b, const Vqs& formB, ContactInfo* res);
 int32_t SphereVsPoly(const Sphere& a, const Vqs& formA, const Poly& b, const Vqs& formB, ContactInfo* res);
 int32_t SphereVsCylinder(const Sphere& a, const Vqs& formA, const Cylinder& b, const Vqs& formB, ContactInfo* res);
 int32_t SphereVsCone(const Sphere& a, const Vqs& formA, const Cone& b, const Vqs& formB, ContactInfo* res);
-int32_t SphereVsCapsule(const Sphere& a, const Vqs& formA, const Capsule& b, const Vqs& formB, ContactInfo* res);
-int32_t SphereVsRay(const Sphere& a, const Vqs& formA, const Ray& b, const Vqs& formB, ContactInfo* res);
+int32_t SphereVsCapsule(const Sphere& a, const Vqs& formA, const capsule_t& b, const Vqs& formB, ContactInfo* res);
+int32_t SphereVsRay(const Sphere& a, const Vqs& formA, const ray_t& b, const Vqs& formB, ContactInfo* res);
 
-// Alternative (TODO: mod transform)
-bool SphereTestSphere(const Sphere& a, const Sphere& b);
-Hit SphereHitSphere(const Sphere& a, const Sphere& b);
+//-----------------------------------------------------------------------------
+// AABB
+//-----------------------------------------------------------------------------
+// Alternative 
+// (TODO: mod transform)
+float AABBDistance2Point(const AABB& a, const glm::vec3& p);
+glm::vec3 AABBClosestPoint(const AABB& a, const glm::vec3& p);
+bool AABBContainsPoint(const AABB& a, const glm::vec3& p);
+bool AABBTestAABB(const AABB& a, const AABB& b);
+bool AABBTestCapsule(const AABB& a, const Capsule& c);
+bool AABBTestPoly(const AABB& a, const Poly& p);
+bool AABBTestSphere(const AABB& a, const Sphere& s);
+Hit AABBHitAABB(const AABB& a, const AABB& b);
+Hit AABBHitCapsule(const AABB& a, const Capsule& c);
+Hit AABBHitSphere(const AABB& a, const Sphere& s);
 
 //-----------------------------------------------------------------------------
 // Box
 //-----------------------------------------------------------------------------
+// libccd
 int32_t AABBVsAABB(const AABB& a, const Vqs& formA, const AABB& b, const Vqs& formB, ContactInfo* res);
 int32_t AABBVsSphere(const AABB& a, const Vqs& formA, const Sphere& b, const Vqs& formB, ContactInfo* res);
 int32_t AABBVsPoly(const AABB& a, const Vqs& formA, const Poly& b, const Vqs& formB, ContactInfo* res);
 int32_t AABBVsCylinder(const AABB& a, const Vqs& formA, const Cylinder& b, const Vqs& formB, ContactInfo* res);
 int32_t AABBVsCone(const AABB& a, const Vqs& formA, const Cone& b, const Vqs& formB, ContactInfo* res);
-int32_t AABBVsCapsule(const AABB& a, const Vqs& formA, const Capsule& b, const Vqs& formB, ContactInfo* res);
-int32_t AABBVsRay(const AABB& a, const Vqs& formA, const Ray& b, const Vqs& formB, ContactInfo* res);
+int32_t AABBVsCapsule(const AABB& a, const Vqs& formA, const capsule_t& b, const Vqs& formB, ContactInfo* res);
+int32_t AABBVsRay(const AABB& a, const Vqs& formA, const ray_t& b, const Vqs& formB, ContactInfo* res);
 
 //-----------------------------------------------------------------------------
 // Capsule
 //-----------------------------------------------------------------------------
-int32_t CapsuleVsAABB(const Capsule& a, const Vqs& formA, const AABB& b, const Vqs& formB, ContactInfo* res);
-int32_t CapsuleVsSphere(const Capsule& a, const Vqs& formA, const Sphere& b, const Vqs& formB, ContactInfo* res);
-int32_t CapsuleVsPoly(const Capsule& a, const Vqs& formA, const Poly& b, const Vqs& formB, ContactInfo* res);
-int32_t CapsuleVsCylinder(const Capsule& a, const Vqs& formA, const Cylinder& b, const Vqs& formB, ContactInfo* res);
-int32_t CapsuleVsCone(const Capsule& a, const Vqs& formA, const Cone& b, const Vqs& formB, ContactInfo* res);
-int32_t CapsuleVsCapsule(const Capsule& a, const Vqs& formA, const Capsule& b, const Vqs& formB, ContactInfo* res);
-int32_t CapsuleVsRay(const Capsule& a, const Vqs& formA, const Ray& b, const Vqs& formB, ContactInfo* res);
+
+// Alternative 
+// (TODO: mod transform)
+float CapsuleDistance2Point(const Capsule& c, const glm::vec3& p);
+glm::vec3 CapsuleClosestPoint(const Capsule& c, const glm::vec3& p);
+bool CapsuleTestAABB(const Capsule& c, const AABB& a);
+bool CapsuleTestCapsule(const Capsule& a, const Capsule& b);
+bool CapsuleTestPoly(const Capsule& c, const Poly& p);
+bool CapsuleTestSphere(const Capsule& c, const Sphere& s);
+Hit CapsuleHitAABB(const Capsule& c, const AABB& a);
+Hit CapsuleHitCapsule(const Capsule& a, const Capsule& b);
+Hit CapsuleHitSphere(const Capsule& c, const Sphere& s);
+
+// libccd
+int32_t CapsuleVsAABB(const capsule_t& a, const Vqs& formA, const AABB& b, const Vqs& formB, ContactInfo* res);
+int32_t CapsuleVsSphere(const capsule_t& a, const Vqs& formA, const Sphere& b, const Vqs& formB, ContactInfo* res);
+int32_t CapsuleVsPoly(const capsule_t& a, const Vqs& formA, const Poly& b, const Vqs& formB, ContactInfo* res);
+int32_t CapsuleVsCylinder(const capsule_t& a, const Vqs& formA, const Cylinder& b, const Vqs& formB, ContactInfo* res);
+int32_t CapsuleVsCone(const capsule_t& a, const Vqs& formA, const Cone& b, const Vqs& formB, ContactInfo* res);
+int32_t CapsuleVsCapsule(const capsule_t& a, const Vqs& formA, const capsule_t& b, const Vqs& formB, ContactInfo* res);
+int32_t CapsuleVsRay(const capsule_t& a, const Vqs& formA, const ray_t& b, const Vqs& formB, ContactInfo* res);
 
 //-----------------------------------------------------------------------------
 // Poly
 //-----------------------------------------------------------------------------
+
+// Alternative 
+/* poly: query */
+bool PolyTestSphere(const Poly& p, const Sphere& s);
+bool PolyTestAABB(const Poly& p, const AABB& a);
+bool PolyTestCapsule(const Poly& p, const Capsule& c);
+bool PolyTestPoly(const Poly& a, const Poly& b);
+
+/* poly: query transformed */
+bool PolyTestSphereTransform(const Poly& p, const glm::vec3& pos3, mat33 rot33, const Sphere& s);
+bool PolyTestAABBTransform(const Poly& p, const glm::vec3& apos3, mat33 arot33, const AABB& a);
+bool PolyTestCapsuleTransform(const Poly& p, const glm::vec3& pos3, mat33 rot33, const Capsule& c);
+bool PolyTestPolyTransform(const Poly& a, const glm::vec3& apos3, mat33 arot33, const Poly& b, const glm::vec3& bpos3, mat33 brot33);
+
+/* poly: gjk result */
+bool PolyHitSphere(gjk_result* res, const Poly& p, const Sphere& s);
+bool PolyHitAABB(gjk_result* res, const Poly& p, const AABB& a);
+bool PolyHitCapsule(gjk_result* res, const Poly& p, const Capsule& c);
+bool PolyHitPoly(gjk_result* res, const Poly& a, const Poly& b);
+
+/* poly: gjk result transformed */
+bool PolyHitSphereTransform(gjk_result* res, const Poly& p, const glm::vec3& pos3, mat33 rot33, const Sphere& s);
+bool PolyHitAABBTransform(gjk_result* res, const Poly& p, const glm::vec3& pos3, mat33 rot33, const AABB& a);
+bool PolyHitCapsuleTransform(gjk_result* res, const Poly& p, const glm::vec3& pos3, mat33 rot33, const Capsule& c);
+bool PolyHitPolyTransform(gjk_result* res, const Poly& a, const glm::vec3& at3, mat33 ar33, const Poly& b, const glm::vec3& bt3, mat33 br33);
+
+// libccd
 int32_t PolyVsPoly(const Poly& a, const Vqs& formA, const Poly& b, const Vqs& formB, ContactInfo* res);
 int32_t PolyVsSphere(const Poly& a, const Vqs& formA, const Sphere& b, const Vqs& formB, ContactInfo* res);
 int32_t PolyVsAABB(const Poly& a, const Vqs& formA, const AABB& b, const Vqs& formB, ContactInfo* res);
 int32_t PolyVsCylinder(const Poly& a, const Vqs& formA, const Cylinder& b, const Vqs& formB, ContactInfo* res);
 int32_t PolyVsCone(const Poly& a, const Vqs& formA, const Cone& b, const Vqs& formB, ContactInfo* res);
-int32_t PolyVsCapsule(const Poly& a, const Vqs& formA, const Capsule& b, const Vqs& formB, ContactInfo* res);
-int32_t PolyVsRay(const Poly& a, const Vqs& formA, const Ray& b, const Vqs& formB, ContactInfo* res);
+int32_t PolyVsCapsule(const Poly& a, const Vqs& formA, const capsule_t& b, const Vqs& formB, ContactInfo* res);
+int32_t PolyVsRay(const Poly& a, const Vqs& formA, const ray_t& b, const Vqs& formB, ContactInfo* res);
 
 //-----------------------------------------------------------------------------
 // Cylinder
@@ -118,8 +190,8 @@ int32_t CylinderVsSphere(const Cylinder& a, const Vqs& formA, const Sphere& b, c
 int32_t CylinderVsAABB(const Cylinder& a, const Vqs& formA, const AABB& b, const Vqs& formB, ContactInfo* res);
 int32_t CylinderVsPoly(const Cylinder& a, const Vqs& formA, const Poly& b, const Vqs& formB, ContactInfo* res);
 int32_t CylinderVsCone(const Cylinder& a, const Vqs& formA, const Cone& b, const Vqs& formB, ContactInfo* res);
-int32_t CylinderVsCapsule(const Cylinder& a, const Vqs& formA, const Capsule& b, const Vqs& formB, ContactInfo* res);
-int32_t CylinderVsRay(const Cylinder& a, const Vqs& formA, const Ray& b, const Vqs& formB, ContactInfo* res);
+int32_t CylinderVsCapsule(const Cylinder& a, const Vqs& formA, const capsule_t& b, const Vqs& formB, ContactInfo* res);
+int32_t CylinderVsRay(const Cylinder& a, const Vqs& formA, const ray_t& b, const Vqs& formB, ContactInfo* res);
 
 //-----------------------------------------------------------------------------
 // Cone
@@ -129,8 +201,16 @@ int32_t ConeVsSphere(const Cone& a, const Vqs& formA, const Sphere& b, const Vqs
 int32_t ConeVsAABB(const Cone& a, const Vqs& formA, const AABB& b, const Vqs& formB, ContactInfo* res);
 int32_t ConeVsPoly(const Cone& a, const Vqs& formA, const Poly& b, const Vqs& formB, ContactInfo* res);
 int32_t ConeVsCylinder(const Cone& a, const Vqs& formA, const Cylinder& b, const Vqs& formB, ContactInfo* res);
-int32_t ConeVsCapsule(const Cone& a, const Vqs& formA, const Capsule& b, const Vqs& formB, ContactInfo* res);
-int32_t ConeVsRay(const Cone& a, const Vqs& formA, const Ray& b, const Vqs& formB, ContactInfo* res);
+int32_t ConeVsCapsule(const Cone& a, const Vqs& formA, const capsule_t& b, const Vqs& formB, ContactInfo* res);
+int32_t ConeVsRay(const Cone& a, const Vqs& formA, const ray_t& b, const Vqs& formB, ContactInfo* res);
+
+
+//-----------------------------------------------------------------------------
+// Frustum
+//-----------------------------------------------------------------------------
+Frustum FrustumBuild(mat44 projview);
+bool FrustumTestSphere(const Frustum& f, const Sphere& s);
+bool FrustumTestAABB(const Frustum& f, const AABB& a);
 
 //-----------------------------------------------------------------------------
 // Support Functions

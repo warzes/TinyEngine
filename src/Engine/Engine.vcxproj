@@ -102,7 +102,6 @@
     <ClCompile Include="EngineDevice.cpp" />
     <ClCompile Include="EngineTimestamp.cpp" />
     <ClCompile Include="FileSystem.cpp" />
-    <ClCompile Include="GeometryShapes.cpp" />
     <ClCompile Include="GraphicsResource.cpp" />
     <ClCompile Include="GraphicsSystem.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -128,6 +127,9 @@
     <ClInclude Include="Color.h" />
     <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="GeometryShapes.h" />
+    <ClInclude Include="GJK.h" />
+    <ClInclude Include="Sphere.h" />
+    <ClInclude Include="Temp.h" />
     <ClInclude Include="TinyEngine.h" />
     <ClInclude Include="EngineConfiguration.h" />
     <ClInclude Include="EngineDevice.h" />
