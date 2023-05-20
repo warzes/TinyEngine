@@ -58,7 +58,7 @@ inline void transformT(glm::vec3* r, const glm::vec3& v, const float* r33, const
 	for (int i = 0; i < 3; ++i) 
 	{
 		float p = i[&v.x] - i[&t3.x];
-		i[&r->x] = p * r33[0 * 3 + i];
+		i[&r->x]  = p * r33[0 * 3 + i];
 		i[&r->x] += p * r33[1 * 3 + i];
 		i[&r->x] += p * r33[2 * 3 + i];
 	}

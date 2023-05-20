@@ -113,15 +113,15 @@ inline int gjk(gjk_simplex* s, const gjk_support* sup, glm::vec3* dv)
 	case 2:
 	{
 		/* -------------------- Line ----------------------- */
-		glm::vec3 a = s->v[0].p;
-		glm::vec3 b = s->v[1].p;
+		const glm::vec3& a = s->v[0].p;
+		const glm::vec3& b = s->v[1].p;
 
 		/* compute barycentric coordinates */
-		glm::vec3 ab = a - b;
-		glm::vec3 ba = b - a;
+		const glm::vec3 ab = a - b;
+		const glm::vec3 ba = b - a;
 
-		float u = glm::dot(b, ba);
-		float v = glm::dot(a, ab);
+		const float u = glm::dot(b, ba);
+		const float v = glm::dot(a, ab);
 		if (v <= 0.0f)
 		{
 			/* region A */
@@ -145,26 +145,26 @@ inline int gjk(gjk_simplex* s, const gjk_support* sup, glm::vec3* dv)
 	case 3: 
 	{
 		/* -------------------- Triangle ----------------------- */
-		glm::vec3 a = s->v[0].p;
-		glm::vec3 b = s->v[1].p;
-		glm::vec3 c = s->v[2].p;
+		const glm::vec3& a = s->v[0].p;
+		const glm::vec3& b = s->v[1].p;
+		const glm::vec3& c = s->v[2].p;
 
-		glm::vec3 ab = a - b;
-		glm::vec3 ba = b - a;
-		glm::vec3 bc = b - c;
-		glm::vec3 cb = c - b;
-		glm::vec3 ca = c - a;
-		glm::vec3 ac = a - c;
+		const glm::vec3 ab = a - b;
+		const glm::vec3 ba = b - a;
+		const glm::vec3 bc = b - c;
+		const glm::vec3 cb = c - b;
+		const glm::vec3 ca = c - a;
+		const glm::vec3 ac = a - c;
 
 		/* compute barycentric coordinates */
-		float u_ab = glm::dot(b, ba);
-		float v_ab = glm::dot(a, ab);
+		const float u_ab = glm::dot(b, ba);
+		const float v_ab = glm::dot(a, ab);
 
-		float u_bc = glm::dot(c, cb);
-		float v_bc = glm::dot(b, bc);
+		const float u_bc = glm::dot(c, cb);
+		const float v_bc = glm::dot(b, bc);
 
-		float u_ca = glm::dot(a, ac);
-		float v_ca = glm::dot(c, ca);
+		const float u_ca = glm::dot(a, ac);
+		const float v_ca = glm::dot(c, ca);
 
 		if (v_ab <= 0.0f && u_ca <= 0.0f) 
 		{
@@ -190,14 +190,14 @@ inline int gjk(gjk_simplex* s, const gjk_support* sup, glm::vec3* dv)
 			break;
 		}
 		/* calculate fractional area */
-		glm::vec3 n = glm::cross(ba, ca);
-		glm::vec3 n1 = glm::cross(b, c);
-		glm::vec3 n2 = glm::cross(c, a);
-		glm::vec3 n3 = glm::cross(a, b);
+		const glm::vec3 n  = glm::cross(ba, ca);
+		const glm::vec3 n1 = glm::cross(b, c);
+		const glm::vec3 n2 = glm::cross(c, a);
+		const glm::vec3 n3 = glm::cross(a, b);
 
-		float u_abc = glm::dot(n1, n);
-		float v_abc = glm::dot(n2, n);
-		float w_abc = glm::dot(n3, n);
+		const float u_abc = glm::dot(n1, n);
+		const float v_abc = glm::dot(n2, n);
+		const float w_abc = glm::dot(n3, n);
 
 		if (u_ab > 0.0f && v_ab > 0.0f && w_abc <= 0.0f)
 		{
@@ -237,42 +237,43 @@ inline int gjk(gjk_simplex* s, const gjk_support* sup, glm::vec3* dv)
 	case 4:
 	{
 		/* -------------------- Tetrahedron ----------------------- */
-		glm::vec3 a = s->v[0].p;
-		glm::vec3 b = s->v[1].p;
-		glm::vec3 c = s->v[2].p;
-		glm::vec3 d = s->v[3].p;
+		const glm::vec3& a = s->v[0].p;
+		const glm::vec3& b = s->v[1].p;
+		const glm::vec3& c = s->v[2].p;
+		const glm::vec3& d = s->v[3].p;
 
-		glm::vec3 ab = a - b;
-		glm::vec3 ba = b - a;
-		glm::vec3 bc = b - c;
-		glm::vec3 cb = c - b;
-		glm::vec3 ca = c - a;
-		glm::vec3 ac = a - c;
-		glm::vec3 db = d - b;
-		glm::vec3 bd = b - d;
-		glm::vec3 dc = d - c;
-		glm::vec3 cd = c - d;
-		glm::vec3 da = d - a;
-		glm::vec3 ad = a - d;
+		const glm::vec3 ab = a - b;
+		const glm::vec3 ba = b - a;
+		const glm::vec3 bc = b - c;
+		const glm::vec3 cb = c - b;
+		const glm::vec3 ca = c - a;
+		const glm::vec3 ac = a - c;
+
+		const glm::vec3 db = d - b;
+		const glm::vec3 bd = b - d;
+		const glm::vec3 dc = d - c;
+		const glm::vec3 cd = c - d;
+		const glm::vec3 da = d - a;
+		const glm::vec3 ad = a - d;
 
 		/* compute barycentric coordinates */
-		float u_ab = glm::dot(b, ba);
-		float v_ab = glm::dot(a, ab);
+		const float u_ab = glm::dot(b, ba);
+		const float v_ab = glm::dot(a, ab);
 
-		float u_bc = glm::dot(c, cb);
-		float v_bc = glm::dot(b, bc);
+		const float u_bc = glm::dot(c, cb);
+		const float v_bc = glm::dot(b, bc);
 
-		float u_ca = glm::dot(a, ac);
-		float v_ca = glm::dot(c, ca);
+		const float u_ca = glm::dot(a, ac);
+		const float v_ca = glm::dot(c, ca);
 
-		float u_bd = glm::dot(d, db);
-		float v_bd = glm::dot(b, bd);
+		const float u_bd = glm::dot(d, db);
+		const float v_bd = glm::dot(b, bd);
 
-		float u_dc = glm::dot(c, cd);
-		float v_dc = glm::dot(d, dc);
+		const float u_dc = glm::dot(c, cd);
+		const float v_dc = glm::dot(d, dc);
 
-		float u_ad = glm::dot(d, da);
-		float v_ad = glm::dot(a, ad);
+		const float u_ad = glm::dot(d, da);
+		const float v_ad = glm::dot(a, ad);
 
 		/* check verticies for closest point */
 		if (v_ab <= 0.0f && u_ca <= 0.0f && v_ad <= 0.0f) 
@@ -312,36 +313,36 @@ inline int gjk(gjk_simplex* s, const gjk_support* sup, glm::vec3* dv)
 		glm::vec3 n2 = glm::cross(b, a);
 		glm::vec3 n3 = glm::cross(a, d);
 
-		float u_adb = glm::dot(n1, n);
-		float v_adb = glm::dot(n2, n);
-		float w_adb = glm::dot(n3, n);
+		const float u_adb = glm::dot(n1, n);
+		const float v_adb = glm::dot(n2, n);
+		const float w_adb = glm::dot(n3, n);
 
 		n = glm::cross(ca, da);
 		n1 = glm::cross(c, d);
 		n2 = glm::cross(d, a);
 		n3 = glm::cross(a, c);
 
-		float u_acd = glm::dot(n1, n);
-		float v_acd = glm::dot(n2, n);
-		float w_acd = glm::dot(n3, n);
+		const float u_acd = glm::dot(n1, n);
+		const float v_acd = glm::dot(n2, n);
+		const float w_acd = glm::dot(n3, n);
 
 		n = glm::cross(bc, dc);
 		n1 = glm::cross(b, d);
 		n2 = glm::cross(d, c);
 		n3 = glm::cross(c, b);
 
-		float u_cbd = glm::dot(n1, n);
-		float v_cbd = glm::dot(n2, n);
-		float w_cbd = glm::dot(n3, n);
+		const float u_cbd = glm::dot(n1, n);
+		const float v_cbd = glm::dot(n2, n);
+		const float w_cbd = glm::dot(n3, n);
 
 		n = glm::cross(ba, ca);
 		n1 = glm::cross(b, c);
 		n2 = glm::cross(c, a);
 		n3 = glm::cross(a, b);
 
-		float u_abc = glm::dot(n1, n);
-		float v_abc = glm::dot(n2, n);
-		float w_abc = glm::dot(n3, n);
+		const float u_abc = glm::dot(n1, n);
+		const float v_abc = glm::dot(n2, n);
+		const float w_abc = glm::dot(n3, n);
 
 		/* check edges for closest point */
 		if (w_abc <= 0.0f && v_adb <= 0.0f && u_ab > 0.0f && v_ab > 0.0f)
@@ -402,12 +403,12 @@ inline int gjk(gjk_simplex* s, const gjk_support* sup, glm::vec3* dv)
 			break;
 		}
 		/* calculate fractional volume (volume can be negative!) */
-		float denom = glm::dot(glm::cross(cb, ab), db);        // box3(cb, ab, db)
-		float volume = (denom == 0) ? 1.0f : 1.0f / denom;
-		float u_abcd = glm::dot(glm::cross(c, d), b) * volume; // box3(c, d, b)
-		float v_abcd = glm::dot(glm::cross(c, a), d) * volume; // box3(c, a, d)
-		float w_abcd = glm::dot(glm::cross(d, a), b) * volume; // box3(d, a, b)
-		float x_abcd = glm::dot(glm::cross(b, a), c) * volume; // box3(b, a, c)
+		const float denom = glm::dot(glm::cross(cb, ab), db);        // box3(cb, ab, db)
+		const float volume = (denom == 0.0f) ? 1.0f : 1.0f / denom;
+		const float u_abcd = glm::dot(glm::cross(c, d), b) * volume; // box3(c, d, b)
+		const float v_abcd = glm::dot(glm::cross(c, a), d) * volume; // box3(c, a, d)
+		const float w_abcd = glm::dot(glm::cross(d, a), b) * volume; // box3(d, a, b)
+		const float x_abcd = glm::dot(glm::cross(b, a), c) * volume; // box3(b, a, c)
 
 		/* check faces for closest point */
 		if (x_abcd <= 0.0f && u_abc > 0.0f && v_abc > 0.0f && w_abc > 0.0f) 
@@ -480,17 +481,17 @@ inline int gjk(gjk_simplex* s, const gjk_support* sup, glm::vec3* dv)
 	case 2:
 	{
 		/* --------- Line -------- */
-		glm::vec3 a = s->v[0].p * denom * s->bc[0];
-		glm::vec3 b = s->v[1].p * denom * s->bc[1];
+		const glm::vec3 a = s->v[0].p * denom * s->bc[0];
+		const glm::vec3 b = s->v[1].p * denom * s->bc[1];
 		pnt = a + b;
 	}
 	break;
 	case 3: 
 	{
 		/* ------- Triangle ------ */
-		glm::vec3 a = s->v[0].p * denom * s->bc[0];
-		glm::vec3 b = s->v[1].p * denom * s->bc[1];
-		glm::vec3 c = s->v[2].p * denom * s->bc[2];
+		const glm::vec3 a = s->v[0].p * denom * s->bc[0];
+		const glm::vec3 b = s->v[1].p * denom * s->bc[1];
+		const glm::vec3 c = s->v[2].p * denom * s->bc[2];
 
 		pnt = a + b;
 		pnt = pnt + c;
@@ -499,10 +500,10 @@ inline int gjk(gjk_simplex* s, const gjk_support* sup, glm::vec3* dv)
 	case 4:
 	{
 		/* ----- Tetrahedron ----- */
-		glm::vec3 a = s->v[0].p * denom * s->bc[0];
-		glm::vec3 b = s->v[1].p * denom * s->bc[1];
-		glm::vec3 c = s->v[2].p * denom * s->bc[2];
-		glm::vec3 d = s->v[3].p * denom * s->bc[3];
+		const glm::vec3 a = s->v[0].p * denom * s->bc[0];
+		const glm::vec3 b = s->v[1].p * denom * s->bc[1];
+		const glm::vec3 c = s->v[2].p * denom * s->bc[2];
+		const glm::vec3 d = s->v[3].p * denom * s->bc[3];
 
 		pnt = a + b;
 		pnt = pnt + c;
@@ -510,7 +511,7 @@ inline int gjk(gjk_simplex* s, const gjk_support* sup, glm::vec3* dv)
 	} break;
 	}
 
-	float d2 = glm::dot(pnt, pnt);
+	const float d2 = glm::dot(pnt, pnt);
 	if (d2 >= s->D) return 0;
 	s->D = d2;
 
@@ -526,17 +527,17 @@ inline int gjk(gjk_simplex* s, const gjk_support* sup, glm::vec3* dv)
 	case 2: 
 	{
 		/* ------ Line segment ---- */
-		glm::vec3 ba = s->v[1].p - s->v[0].p;
-		glm::vec3 b0 = -(s->v[1].p);
-		glm::vec3 t;  t = glm::cross(ba, b0);
+		const glm::vec3 ba = s->v[1].p - s->v[0].p;
+		const glm::vec3 b0 = -(s->v[1].p);
+		const glm::vec3 t = glm::cross(ba, b0);
 		*dv = glm::cross(t, ba);
 	} break;
 	case 3: 
 	{
 		/* ------- Triangle ------- */
-		glm::vec3 ab = s->v[1].p - s->v[0].p;
-		glm::vec3 ac = s->v[2].p - s->v[0].p;
-		glm::vec3 n;  n = glm::cross(ab, ac);
+		const glm::vec3 ab = s->v[1].p - s->v[0].p;
+		const glm::vec3 ac = s->v[2].p - s->v[0].p;
+		const glm::vec3 n = glm::cross(ab, ac);
 		if (glm::dot(n, s->v[0].p) <= 0.0f)
 			*dv = n;
 		else *dv = -n;
@@ -549,10 +550,9 @@ inline int gjk(gjk_simplex* s, const gjk_support* sup, glm::vec3* dv)
 
 inline gjk_result gjk_analyze(const gjk_simplex* s) 
 {
-	gjk_result r = { 0 }, * res = &r;
-
-	res->iterations = s->iter;
-	res->hit = s->hit;
+	gjk_result res = { 0 };
+	res.iterations = s->iter;
+	res.hit = s->hit;
 
 	/* calculate normalization denominator */
 	float denom = 0;
@@ -565,101 +565,101 @@ inline gjk_result gjk_analyze(const gjk_simplex* s)
 	default: assert(0); break;
 	case 1: {
 		/* Point */
-		res->p0 = s->v[0].a;
-		res->p1 = s->v[0].b;
+		res.p0 = s->v[0].a;
+		res.p1 = s->v[0].b;
 	} break;
 	case 2:
 	{
 		/* Line */
-		float as = denom * s->bc[0];
-		float bs = denom * s->bc[1];
+		const float as = denom * s->bc[0];
+		const float bs = denom * s->bc[1];
 
-		glm::vec3 a = s->v[0].a * as;
-		glm::vec3 b = s->v[1].a * bs;
-		glm::vec3 c = s->v[0].b * as;
-		glm::vec3 d = s->v[1].b * bs;
+		const glm::vec3 a = s->v[0].a * as;
+		const glm::vec3 b = s->v[1].a * bs;
+		const glm::vec3 c = s->v[0].b * as;
+		const glm::vec3 d = s->v[1].b * bs;
 
-		res->p0 = a + b;
-		res->p1 = c + d;
+		res.p0 = a + b;
+		res.p1 = c + d;
 	} break;
 	case 3:
 	{
 		/* Triangle */
-		float as = denom * s->bc[0];
-		float bs = denom * s->bc[1];
-		float cs = denom * s->bc[2];
+		const float as = denom * s->bc[0];
+		const float bs = denom * s->bc[1];
+		const float cs = denom * s->bc[2];
 
-		glm::vec3 a = s->v[0].a * as;
-		glm::vec3 b = s->v[1].a * bs;
-		glm::vec3 c = s->v[2].a * cs;
+		const glm::vec3 a = s->v[0].a * as;
+		const glm::vec3 b = s->v[1].a * bs;
+		const glm::vec3 c = s->v[2].a * cs;
 
-		glm::vec3 d = s->v[0].b * as;
-		glm::vec3 e = s->v[1].b * bs;
-		glm::vec3 f = s->v[2].b * cs;
+		const glm::vec3 d = s->v[0].b * as;
+		const glm::vec3 e = s->v[1].b * bs;
+		const glm::vec3 f = s->v[2].b * cs;
 
-		res->p0 = a + b;
-		res->p0 = res->p0 + c;
+		res.p0 = a + b;
+		res.p0 = res.p0 + c;
 
-		res->p1 = d + e;
-		res->p1 = res->p1 + f;
+		res.p1 = d + e;
+		res.p1 = res.p1 + f;
 	} break;
 	case 4:
 	{
 		/* Tetrahedron */
-		glm::vec3 a = s->v[0].a * denom * s->bc[0];
-		glm::vec3 b = s->v[1].a * denom * s->bc[1];
-		glm::vec3 c = s->v[2].a * denom * s->bc[2];
-		glm::vec3 d = s->v[3].a * denom * s->bc[3];
+		const glm::vec3 a = s->v[0].a * denom * s->bc[0];
+		const glm::vec3 b = s->v[1].a * denom * s->bc[1];
+		const glm::vec3 c = s->v[2].a * denom * s->bc[2];
+		const glm::vec3 d = s->v[3].a * denom * s->bc[3];
 
-		res->p0 = a + b;
-		res->p0 = res->p0 + c;
-		res->p0 = res->p0 + d;
-		res->p1 = res->p0;
+		res.p0 = a + b;
+		res.p0 = res.p0 + c;
+		res.p0 = res.p0 + d;
+		res.p1 = res.p0;
 	} break;
 	}
 
-	if (!res->hit)
+	if (!res.hit)
 	{
 		/* compute distance */
-		glm::vec3 d = res->p1 - res->p0;
-		res->distance_squared = glm::dot(d, d);
+		const glm::vec3 d = res.p1 - res.p0;
+		res.distance_squared = glm::dot(d, d);
 	}
-	else res->distance_squared = 0;
-	return r;
+	else res.distance_squared = 0;
+	return res;
 }
 
 inline gjk_result gjk_quad(float a_radius, float b_radius) 
 {
-	gjk_result r = { 0 }, * res = &r;
-	float radius = a_radius + b_radius;
-	float radius_squared = radius * radius;
-	if (res->distance_squared > GJK_EPSILON &&
-		res->distance_squared > radius_squared) 
+	gjk_result res = { 0 };
+	const float radius = a_radius + b_radius;
+	const float radius_squared = radius * radius;
+	if (res.distance_squared > GJK_EPSILON &&
+		res.distance_squared > radius_squared) 
 	{
-		res->distance_squared -= radius_squared;
+		res.distance_squared -= radius_squared;
 
 		/* calculate normal */
-		glm::vec3 n = res->p1 - res->p0;
-		float l2 = glm::dot(n, n);
+		glm::vec3 n = res.p1 - res.p0;
+		const float l2 = glm::dot(n, n);
 		if (l2 != 0.0f)
 		{
-			float il = gjk_inv_sqrt(l2);
+			const float il = gjk_inv_sqrt(l2);
 			n = n * il;
 		}
-		glm::vec3 da = n * a_radius;
-		glm::vec3 db = n * b_radius;
+		const glm::vec3 da = n * a_radius;
+		const glm::vec3 db = n * b_radius;
 
 		/* calculate new collision points */
-		res->p0 = res->p0 + da;
-		res->p1 = res->p1 - db;
+		res.p0 = res.p0 + da;
+		res.p1 = res.p1 - db;
 	}
 	else 
 	{
-		glm::vec3 p = res->p0 + res->p1;
-		res->p0 = p * 0.5f;
-		res->p1 = res->p0;
-		res->distance_squared = 0;
-		res->hit = 1;
+		const glm::vec3 p = res.p0 + res.p1;
+		res.p0 = p * 0.5f;
+		res.p1 = res.p0;
+		res.distance_squared = 0;
+		res.hit = 1;
 	}
-	return r;
+	return res;
 }
