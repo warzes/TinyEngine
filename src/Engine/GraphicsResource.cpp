@@ -200,9 +200,12 @@ ModelRef GraphicsSystem::loadObjFile(const char* fileName, const char* pathMater
 	{
 		for (size_t i = 0; i < shapes.size(); i++)
 		{
-			if (materials[(size_t)materialIds[i]].diffuse_texname.empty()) continue;
+			const size_t matId = static_cast<size_t>(materialIds[i]);
 
-			std::string diffuseMap = pathMaterialFiles + materials[i].diffuse_texname;
+
+			if (materials[matId].diffuse_texname.empty()) continue;
+
+			std::string diffuseMap = pathMaterialFiles + materials[matId].diffuse_texname;
 			meshes[i].material.diffuseTexture = GetRenderSystem().CreateTexture2D(diffuseMap.c_str(), true);
 		}
 	}
