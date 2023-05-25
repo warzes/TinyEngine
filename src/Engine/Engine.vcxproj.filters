@@ -148,6 +148,9 @@
     <ClInclude Include="GJK.h">
       <Filter>Core\Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="CoreUtilities.h">
+      <Filter>Core\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

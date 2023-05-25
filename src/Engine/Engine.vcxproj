@@ -125,6 +125,7 @@
     <ClInclude Include="Capabilities.h" />
     <ClInclude Include="Collisions.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="CoreUtilities.h" />
     <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="GeometryShapes.h" />
     <ClInclude Include="GJK.h" />

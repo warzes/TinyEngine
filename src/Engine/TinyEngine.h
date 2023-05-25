@@ -40,6 +40,8 @@
 #include "GeometryShapes.h"
 #include "Collisions.h"
 
+#include "CoreUtilities.h"
+
 #include "Window.h"
 #include "Input.h"
 
