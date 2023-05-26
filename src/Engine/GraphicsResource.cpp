@@ -69,6 +69,35 @@ std::vector<glm::vec3> GraphicsSystem::GetVertexInModel(ModelRef model) const
 	return v;
 }
 //-----------------------------------------------------------------------------
+TrianglesInfo GraphicsSystem::GetTrianglesInMesh(const Mesh& mesh) const
+{
+	TrianglesInfo info;
+	info.vertices.resize(mesh.vertices.size());
+	for (size_t i = 0; i < mesh.vertices.size(); i++)
+		info.vertices[i] = mesh.vertices[i].position;
+	info.indexes = mesh.indices;
+	return info;
+}
+//-----------------------------------------------------------------------------
+TrianglesInfo GraphicsSystem::GetTrianglesInModel(ModelRef model) const
+{
+	TrianglesInfo info;
+	unsigned prevIndex = 0;
+	for (size_t i = 0; i < model->subMeshes.size(); i++)
+	{
+		TrianglesInfo infoSubMesh = GetTrianglesInMesh(model->subMeshes[i]);
+
+		info.vertices.insert(info.vertices.end(), infoSubMesh.vertices.begin(), infoSubMesh.vertices.end());
+
+		for (size_t j = 0; j < infoSubMesh.indexes.size(); j++)
+			info.indexes.push_back(infoSubMesh.indexes[j] + prevIndex);
+
+		prevIndex += infoSubMesh.indexes.size();
+	}
+
+	return info;
+}
+//-----------------------------------------------------------------------------
 ModelRef GraphicsSystem::createMeshBuffer(std::vector<Mesh>&& meshes)
 {
 	const std::vector<VertexAttribute> formatVertex =

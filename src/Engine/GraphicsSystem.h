@@ -2,6 +2,12 @@
 
 #include "GraphicsResource.h"
 
+struct TrianglesInfo
+{
+	std::vector<glm::vec3> vertices;
+	std::vector<unsigned> indexes;
+};
+
 class GraphicsSystem final
 {
 	friend class EngineDevice;
@@ -18,6 +24,9 @@ public:
 	void Draw(ModelRef model);
 	std::vector<glm::vec3> GetVertexInMesh(const Mesh& mesh) const;
 	std::vector<glm::vec3> GetVertexInModel(ModelRef model) const;
+
+	TrianglesInfo GetTrianglesInMesh(const Mesh& mesh) const;
+	TrianglesInfo GetTrianglesInModel(ModelRef model) const;
 
 private:
 	GraphicsSystem(GraphicsSystem&&) = delete;
