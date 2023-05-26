@@ -68,17 +68,30 @@ glm::mat4 Camera::GetViewMatrix() const
 //-----------------------------------------------------------------------------
 glm::vec3 Camera::GetForwardVector() const
 {
-	return glm::normalize(glm::vec3(-target.x, 0.0f, -target.z));
+	return GetNormalizedViewVector();
 }
 //-----------------------------------------------------------------------------
 glm::vec3 Camera::GetRightVector() const
 {
-	glm::vec3 right = glm::normalize(glm::rotateY(GetForwardVector(), -90.0f));
-	return glm::vec3(right);
+#ifndef GLM_FORCE_LEFT_HANDED
+	glm::vec3 forwardVector = GetForwardVector();
+	return glm::normalize(glm::cross(forwardVector, upVector));
+#else
+	glm::vec3 forwardVector = GetForwardVector();
+	return glm::normalize(glm::cross(upVector, forwardVector));
+#endif
 }
 //-----------------------------------------------------------------------------
 glm::vec3 Camera::GetUpVector() const
 {
-	return upVector;
+#ifndef GLM_FORCE_LEFT_HANDED
+	glm::vec3 forwardVector = GetForwardVector();
+	glm::vec3 rightVector = GetRightVector();
+	return glm::normalize(glm::cross(rightVector, forwardVector));
+#else
+	glm::vec3 forwardVector = GetForwardVector();
+	glm::vec3 rightVector = GetRightVector();
+	return glm::normalize(glm::cross(forwardVector, rightVector));
+#endif
 }
 //-----------------------------------------------------------------------------
