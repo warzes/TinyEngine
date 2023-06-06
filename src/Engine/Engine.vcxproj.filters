@@ -111,7 +111,7 @@
     <ClInclude Include="Capabilities.h">
       <Filter>RenderAPI</Filter>
     </ClInclude>
-    <ClInclude Include="RenderResourceEnums.h">
+    <ClInclude Include="RenderEnums.h">
       <Filter>RenderAPI</Filter>
     </ClInclude>
     <ClInclude Include="Color.h">

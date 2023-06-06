@@ -144,7 +144,7 @@
     <ClInclude Include="LogSystem.h" />
     <ClInclude Include="MathCoreFunc.h" />
     <ClInclude Include="OpenGLUtil.h" />
-    <ClInclude Include="RenderResourceEnums.h" />
+    <ClInclude Include="RenderEnums.h" />
     <ClInclude Include="RenderResource.h" />
     <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="STBImageLoader.h" />

@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "OpenGLUtil.h"
-#include "RenderResourceEnums.h"
+#include "RenderEnums.h"
 #include "Log.h"
 
 //=============================================================================
