@@ -462,6 +462,51 @@ void RenderSystem::Bind(FramebufferRef resource)
 	glBindFramebuffer(GL_FRAMEBUFFER, *resource);
 }
 //-----------------------------------------------------------------------------
+void RenderSystem::BindGLShaderProgram(unsigned id)
+{
+	if( m_cache.CurrentShaderProgram == id ) return;
+	m_cache.CurrentShaderProgram = id;
+	glUseProgram(id);
+}
+//-----------------------------------------------------------------------------
+void RenderSystem::BindGLVertexBuffer(unsigned id)
+{
+	if( m_cache.CurrentVBO == id ) return;
+	m_cache.CurrentVBO = id;
+	glBindBuffer(GL_ARRAY_BUFFER, id);
+}
+//-----------------------------------------------------------------------------
+void RenderSystem::BindGLIndexBuffer(unsigned id)
+{
+	if( m_cache.CurrentIBO == id ) return;
+	m_cache.CurrentIBO = id;
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
+}
+//-----------------------------------------------------------------------------
+void RenderSystem::BindGLVertexArray(unsigned id)
+{
+	if( m_cache.CurrentVAO == id ) return;
+	m_cache.CurrentVAO = id;
+	m_cache.CurrentVBO = 0;
+	m_cache.CurrentIBO = 0;
+	glBindVertexArray(id);
+}
+//-----------------------------------------------------------------------------
+void RenderSystem::BindGLTexture2D(unsigned id, unsigned slot)
+{
+	if( m_cache.CurrentTexture2D[slot] == id ) return;
+	m_cache.CurrentTexture2D[slot] = id;
+	glActiveTexture(GL_TEXTURE0 + slot);
+	glBindTexture(GL_TEXTURE_2D, id);
+}
+//-----------------------------------------------------------------------------
+void RenderSystem::BindGLFramebuffer(unsigned id)
+{
+	if( m_cache.CurrentFramebuffer == id ) return;
+	m_cache.CurrentFramebuffer = id;
+	glBindFramebuffer(GL_FRAMEBUFFER, id);
+}
+//-----------------------------------------------------------------------------
 void RenderSystem::Draw(VertexArrayRef vao, PrimitiveTopology primitive)
 {
 	assert(IsValid(vao));

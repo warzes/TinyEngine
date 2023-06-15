@@ -120,7 +120,7 @@ public:
 	bool UnmapBuffer(GPUBufferRef buffer);
 
 	//-------------------------------------------------------------------------
-	// Current State Set
+	// Set Current State 
 	//-------------------------------------------------------------------------
 	void ResetState(ResourceType type);
 	void Bind(DepthState state);
@@ -130,6 +130,16 @@ public:
 	void Bind(const VertexAttribute& Attribute);
 	void Bind(Texture2DRef resource, unsigned slot = 0);
 	void Bind(FramebufferRef resource);
+
+	//-------------------------------------------------------------------------
+	// Raw GL State
+	//-------------------------------------------------------------------------
+	void BindGLShaderProgram(unsigned id);
+	void BindGLVertexBuffer(unsigned id);
+	void BindGLIndexBuffer(unsigned id);
+	void BindGLVertexArray(unsigned id);
+	void BindGLTexture2D(unsigned id, unsigned slot);
+	void BindGLFramebuffer(unsigned id);
 
 	//-------------------------------------------------------------------------
 	// Draw
