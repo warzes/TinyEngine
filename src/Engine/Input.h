@@ -23,16 +23,16 @@ public:
 		KEY_MINUS = 45,          // Key: -
 		KEY_PERIOD = 46,         // Key: .
 		KEY_SLASH = 47,          // Key: /
-		KEY_ZERO = 48,           // Key: 0
-		KEY_ONE = 49,            // Key: 1
-		KEY_TWO = 50,            // Key: 2
-		KEY_THREE = 51,          // Key: 3
-		KEY_FOUR = 52,           // Key: 4
-		KEY_FIVE = 53,           // Key: 5
-		KEY_SIX = 54,            // Key: 6
-		KEY_SEVEN = 55,          // Key: 7
-		KEY_EIGHT = 56,          // Key: 8
-		KEY_NINE = 57,           // Key: 9
+		KEY_0 = 48,              // Key: 0
+		KEY_1 = 49,              // Key: 1
+		KEY_2 = 50,              // Key: 2
+		KEY_3 = 51,              // Key: 3
+		KEY_4 = 52,              // Key: 4
+		KEY_5 = 53,              // Key: 5
+		KEY_6 = 54,              // Key: 6
+		KEY_7 = 55,              // Key: 7
+		KEY_8 = 56,              // Key: 8
+		KEY_9 = 57,              // Key: 9
 		KEY_SEMICOLON = 59,      // Key: ;
 		KEY_EQUAL = 61,          // Key: =
 
@@ -131,6 +131,17 @@ public:
 		KEY_MENU = 82,           // Key: Android menu button
 		KEY_VOLUME_UP = 24,      // Key: Android volume up button
 		KEY_VOLUME_DOWN = 25     // Key: Android volume down button
+	};
+
+	enum MouseButton
+	{
+		MOUSE_LEFT = 0,    // Mouse button left
+		MOUSE_RIGHT = 1,   // Mouse button right
+		MOUSE_MIDDLE = 2,  // Mouse button middle (pressed wheel)
+		MOUSE_SIDE = 3,    // Mouse button side (advanced mouse device)
+		MOUSE_EXTRA = 4,   // Mouse button extra (advanced mouse device)
+		MOUSE_FORWARD = 5, // Mouse button forward (advanced mouse device)
+		MOUSE_BACK = 6,    // Mouse button back (advanced mouse device)
 	};
 
 	Input() = default;

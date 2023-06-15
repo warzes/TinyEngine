@@ -23,6 +23,6 @@ public:
 
 	int width = 0;
 	int height = 0;
-	stbi_uc* pixelData = nullptr;
+	uint8_t* pixelData = nullptr;
 	ImagePixelFormat imageFormat = ImagePixelFormat::RGBA_U8;
 };

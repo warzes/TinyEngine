@@ -107,6 +107,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="LogSystem.cpp" />
+    <ClCompile Include="Monitor.cpp" />
     <ClCompile Include="OpenGLUtil.cpp" />
     <ClCompile Include="RenderResource.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
@@ -129,6 +130,7 @@
     <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="GeometryShapes.h" />
     <ClInclude Include="GJK.h" />
+    <ClInclude Include="Monitor.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Temp.h" />
     <ClInclude Include="TinyEngine.h" />

@@ -53,6 +53,9 @@
     <ClCompile Include="Collisions.cpp">
       <Filter>Core\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="Monitor.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -150,6 +153,9 @@
     </ClInclude>
     <ClInclude Include="CoreUtilities.h">
       <Filter>Core\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Monitor.h">
+      <Filter>Platform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

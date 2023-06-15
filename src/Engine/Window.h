@@ -25,8 +25,18 @@ public:
 	void Update();
 	void Present();
 
+	void* GetHandle() const;
+
 	int GetWidth() const;
 	int GetHeight() const;
+
+	glm::vec2 GetPosition() const;
+
+	void SetTitle(const char* title);
+	void SetPosition(int x, int y);
+	void SetSize(int width, int height);
+
+
 
 private:
 	Window(Window&&) = delete;
@@ -41,6 +51,8 @@ private:
 };
 
 Window& GetWindow();
+void* GetWindowHandle();
+bool IsWindowFullscreen();
 int GetWindowWidth();
 int GetWindowHeight();
 float GetWindowSizeAspect();

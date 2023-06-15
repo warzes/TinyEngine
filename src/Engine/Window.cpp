@@ -94,6 +94,11 @@ void Window::Present()
 	glfwSwapBuffers(m_window);
 }
 //-----------------------------------------------------------------------------
+void* Window::GetHandle() const
+{
+	return (void*)m_window;
+}
+//-----------------------------------------------------------------------------
 int Window::GetWidth() const
 {
 	return m_windowWidth;
@@ -104,9 +109,48 @@ int Window::GetHeight() const
 	return m_windowHeight;
 }
 //-----------------------------------------------------------------------------
+glm::vec2 Window::GetPosition() const
+{
+	int x = 0;
+	int y = 0;
+#if PLATFORM_DESKTOP
+	glfwGetWindowPos(m_window, &x, &y);
+#endif
+	return { (float)x, (float)y };
+}
+//-----------------------------------------------------------------------------
+void Window::SetTitle(const char* title)
+{
+#if PLATFORM_DESKTOP
+	glfwSetWindowTitle(m_window, title);
+#endif
+}
+//-----------------------------------------------------------------------------
+void Window::SetPosition(int x, int y)
+{
+#if PLATFORM_DESKTOP
+	glfwSetWindowPos(m_window, x, y);
+#endif
+}
+//-----------------------------------------------------------------------------
+void Window::SetSize(int width, int height)
+{
+	glfwSetWindowSize(m_window, width, height);
+}
+//-----------------------------------------------------------------------------
 Window& GetWindow()
 {
 	return gWindow;
+}
+//-----------------------------------------------------------------------------
+void* GetWindowHandle()
+{
+	return gWindow.GetHandle();
+}
+//-----------------------------------------------------------------------------
+bool IsWindowFullscreen()
+{
+	return false; // TODO: доделать
 }
 //-----------------------------------------------------------------------------
 int GetWindowWidth()
