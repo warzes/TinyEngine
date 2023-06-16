@@ -229,17 +229,46 @@ void RenderSystem::SetUniform(const Uniform& uniform, const glm::mat4& value)
 	glUniformMatrix4fv(uniform.location, 1, GL_FALSE, glm::value_ptr(value));
 }
 //-----------------------------------------------------------------------------
-void RenderSystem::SetUniform3(const Uniform& uniform, unsigned number, float* value)
+void RenderSystem::SetUniform3(const Uniform& uniform, unsigned number, float* values)
 {
 	assert(IsReadyUniform(uniform));
-	glUniform3fv(uniform.location, static_cast<GLsizei>(number), value);
+	glUniform3fv(uniform.location, static_cast<GLsizei>(number), values);
 }
 //-----------------------------------------------------------------------------
-void RenderSystem::SetUniform4(const Uniform& uniform, unsigned number, float* value)
+void RenderSystem::SetUniform4(const Uniform& uniform, unsigned number, float* values)
 {
 	assert(IsReadyUniform(uniform));
-	glUniform4fv(uniform.location, static_cast<GLsizei>(number), value);
+	glUniform4fv(uniform.location, static_cast<GLsizei>(number), values);
 }
+//-----------------------------------------------------------------------------
+void RenderSystem::SetUniform(const Uniform& uniform, std::span<float> values)
+{
+	assert(IsReadyUniform(uniform));
+	if( values.size() == 0 ) return;
+	glUniform1fv(uniform.location, static_cast<GLsizei>(values.size()), (GLfloat*)values.data());
+}
+//-----------------------------------------------------------------------------
+void RenderSystem::SetUniform(const Uniform& uniform, std::span<glm::vec2> values)
+{
+	assert(IsReadyUniform(uniform));
+	if( values.size() == 0 ) return;
+	glUniform2fv(uniform.location, static_cast<GLsizei>(values.size()), (GLfloat*)values.data());
+}
+//-----------------------------------------------------------------------------
+void RenderSystem::SetUniform(const Uniform& uniform, std::span<glm::vec3> values)
+{
+	assert(IsReadyUniform(uniform));
+	if( values.size() == 0 ) return;
+	glUniform3fv(uniform.location, static_cast<GLsizei>(values.size()), (GLfloat*)values.data());
+}
+//-----------------------------------------------------------------------------
+void RenderSystem::SetUniform(const Uniform& uniform, std::span<glm::vec4> values)
+{
+	assert(IsReadyUniform(uniform));
+	if( values.size() == 0 ) return;
+	glUniform4fv(uniform.location, static_cast<GLsizei>(values.size()), (GLfloat*)values.data());
+}
+//-----------------------------------------------------------------------------
 void RenderSystem::SetUniform(const std::string& uniformName, bool value)
 {
 	assert(m_cache.CurrentShaderProgram > 0);

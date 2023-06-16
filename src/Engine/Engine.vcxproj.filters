@@ -195,11 +195,11 @@
     <Filter Include="World">
       <UniqueIdentifier>{3a6f6144-7aa6-4144-9d81-6c05e5dca237}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Container">
-      <UniqueIdentifier>{84132ed2-5eb3-4a8f-8dfb-f018f64a2341}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Geometry">
       <UniqueIdentifier>{3cd8c3ae-3984-4699-bcbd-589f054d1fba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Containers">
+      <UniqueIdentifier>{84132ed2-5eb3-4a8f-8dfb-f018f64a2341}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

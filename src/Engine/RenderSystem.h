@@ -11,8 +11,6 @@ struct RenderCreateInfo final
 	glm::vec3 clearColor = glm::vec3{ 0.2f, 0.4f, 0.9f };
 };
 
-// TODO: очистка ресурсов из кеша
-
 class RenderSystem final
 {
 	friend class EngineDevice;
@@ -99,8 +97,13 @@ public:
 	void SetUniform(const Uniform& uniform, const glm::vec4& value);
 	void SetUniform(const Uniform& uniform, const glm::mat3& value);
 	void SetUniform(const Uniform& uniform, const glm::mat4& value);
-	void SetUniform3(const Uniform& uniform, unsigned number, float* value);
-	void SetUniform4(const Uniform& uniform, unsigned number, float* value);
+	void SetUniform3(const Uniform& uniform, unsigned number, float* values);
+	void SetUniform4(const Uniform& uniform, unsigned number, float* values);
+
+	void SetUniform(const Uniform& uniform, std::span<float> values);
+	void SetUniform(const Uniform& uniform, std::span<glm::vec2> values);
+	void SetUniform(const Uniform& uniform, std::span<glm::vec3> values);
+	void SetUniform(const Uniform& uniform, std::span<glm::vec4> values);
 
 	// не рекомендуется - только для быстрого теста
 	void SetUniform(const std::string& uniformName, bool value);

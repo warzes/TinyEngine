@@ -26,6 +26,7 @@
 #include <list>
 #include <vector>
 #include <unordered_map>
+#include <span>
 
 #include <glad/gl.h>
 

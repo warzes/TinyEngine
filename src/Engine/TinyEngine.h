@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <sstream>
 #include <string>
+#include <span>
 #include <vector>
 
 #include <glad/gl.h>
@@ -30,6 +31,7 @@
 
 #include "BaseMacros.h"
 #include "BaseFunc.h"
+
 #include "FileSystem.h"
 #include "Log.h"
 
