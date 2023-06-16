@@ -181,6 +181,12 @@ Uniform RenderSystem::GetUniform(ShaderProgramRef program, const char* uniformNa
 	return uniform;
 }
 //-----------------------------------------------------------------------------
+void RenderSystem::SetUniform(const Uniform& uniform, bool value)
+{
+	assert(IsReadyUniform(uniform));
+	glUniform1i(uniform.location, value);
+}
+//-----------------------------------------------------------------------------
 void RenderSystem::SetUniform(const Uniform& uniform, int value)
 {
 	assert(IsReadyUniform(uniform));
@@ -233,6 +239,11 @@ void RenderSystem::SetUniform4(const Uniform& uniform, unsigned number, float* v
 {
 	assert(IsReadyUniform(uniform));
 	glUniform4fv(uniform.location, static_cast<GLsizei>(number), value);
+}
+void RenderSystem::SetUniform(const std::string& uniformName, bool value)
+{
+	assert(m_cache.CurrentShaderProgram > 0);
+	glUniform1i(glGetUniformLocation(m_cache.CurrentShaderProgram, uniformName.c_str()), value);
 }
 //-----------------------------------------------------------------------------
 void RenderSystem::SetUniform(const std::string& uniformName, int value)

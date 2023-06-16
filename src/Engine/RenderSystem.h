@@ -91,6 +91,7 @@ public:
 	std::vector<ShaderAttributeInfo> GetAttributesInfo(ShaderProgramRef program) const;
 	Uniform GetUniform(ShaderProgramRef program, const char* uniformName) const;
 
+	void SetUniform(const Uniform& uniform, bool value);
 	void SetUniform(const Uniform& uniform, int value);
 	void SetUniform(const Uniform& uniform, float value);
 	void SetUniform(const Uniform& uniform, const glm::vec2& value);
@@ -102,6 +103,7 @@ public:
 	void SetUniform4(const Uniform& uniform, unsigned number, float* value);
 
 	// не рекомендуется - только для быстрого теста
+	void SetUniform(const std::string& uniformName, bool value);
 	void SetUniform(const std::string& uniformName, int value);
 	void SetUniform(const std::string& uniformName, float value);
 	void SetUniform(const std::string& uniformName, const glm::vec2& value);
