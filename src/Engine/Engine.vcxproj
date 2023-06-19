@@ -95,6 +95,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BoundingBox.cpp" />
+    <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Capabilities.cpp" />
     <ClCompile Include="Collisions.cpp" />
@@ -109,6 +111,7 @@
     <ClCompile Include="LogSystem.cpp" />
     <ClCompile Include="Monitor.cpp" />
     <ClCompile Include="OpenGLUtil.cpp" />
+    <ClCompile Include="Plane.cpp" />
     <ClCompile Include="RenderResource.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="STBImageLoader.cpp" />
@@ -122,15 +125,20 @@
     <ClInclude Include="AABB.h" />
     <ClInclude Include="BaseFunc.h" />
     <ClInclude Include="BaseMacros.h" />
+    <ClInclude Include="BoundingBox.h" />
+    <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Capabilities.h" />
     <ClInclude Include="Collisions.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="GeometryCore.h" />
     <ClInclude Include="CoreUtilities.h" />
     <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="GeometryShapes.h" />
     <ClInclude Include="GJK.h" />
     <ClInclude Include="Monitor.h" />
+    <ClInclude Include="Plane.h" />
+    <ClInclude Include="PlatformMacros.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Temp.h" />
     <ClInclude Include="TinyEngine.h" />

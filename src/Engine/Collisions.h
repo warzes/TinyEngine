@@ -44,15 +44,15 @@ glm::vec3 LineClosestPoint(const Line& line, const glm::vec3& point);
 // Ray
 //-----------------------------------------------------------------------------
 
-float RayTestPlane(const Ray& ray, const glm::vec4& p4);
-float RayTestTriangle(const Ray& ray, const Triangle& t);
-bool RayTestSphere(float* t0, float* t1, const Ray& r, const Sphere& s);
-bool RayTestAABB(float* t0, float* t1, const Ray& r, const AABB& a);
+float RayTestPlane(const OldRay& ray, const glm::vec4& p4);
+float RayTestTriangle(const OldRay& ray, const Triangle& t);
+bool RayTestSphere(float* t0, float* t1, const OldRay& r, const Sphere& s);
+bool RayTestAABB(float* t0, float* t1, const OldRay& r, const AABB& a);
 
-Hit RayHitPlane(const Ray& r, const Plane& p);
-Hit RayHitTriangle(const Ray& r, const Triangle& t);
-Hit RayHitSphere(const Ray& r, const Sphere& s);
-Hit RayHitAABB(const Ray& r, const AABB& a);
+Hit RayHitPlane(const OldRay& r, const OldPlane& p);
+Hit RayHitTriangle(const OldRay& r, const Triangle& t);
+Hit RayHitSphere(const OldRay& r, const Sphere& s);
+Hit RayHitAABB(const OldRay& r, const AABB& a);
 
 //-----------------------------------------------------------------------------
 // Plane

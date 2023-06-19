@@ -98,7 +98,7 @@ inline glm::vec3 LineClosestPoint(const Line& line, const glm::vec3& point)
 // Ray
 //-----------------------------------------------------------------------------
 
-inline float RayTestPlane(const Ray& ray, const glm::vec4& plane)
+inline float RayTestPlane(const OldRay& ray, const glm::vec4& plane)
 {
 	/*Result:
 	* Behind : t < 0
@@ -110,7 +110,7 @@ inline float RayTestPlane(const Ray& ray, const glm::vec4& plane)
 	return n / (glm::dot(p, ray.d));
 }
 
-inline float RayTestTriangle(const Ray& ray, const Triangle& tr)
+inline float RayTestTriangle(const OldRay& ray, const Triangle& tr)
 {
 	/* calculate triangle normal */
 	const glm::vec3 d10 = tr.p1 - tr.p0;
@@ -142,7 +142,7 @@ inline float RayTestTriangle(const Ray& ray, const Triangle& tr)
 	return t;
 }
 
-inline bool RayTestSphere(float* t0, float* t1, const Ray& r, const Sphere& s)
+inline bool RayTestSphere(float* t0, float* t1, const OldRay& r, const Sphere& s)
 {
 	const glm::vec3 a = s.center - r.p;
 	const float tc = glm::dot(r.d, a);
@@ -158,7 +158,7 @@ inline bool RayTestSphere(float* t0, float* t1, const Ray& r, const Sphere& s)
 	return true;
 }
 
-inline bool RayTestAABB(float* t0, float* t1, const Ray& r, const AABB& a)
+inline bool RayTestAABB(float* t0, float* t1, const OldRay& r, const AABB& a)
 {
 	const float t0x = (a.min.x - r.p.x) / r.d.x;
 	const float t0y = (a.min.y - r.p.y) / r.d.y;
@@ -186,7 +186,7 @@ inline bool RayTestAABB(float* t0, float* t1, const Ray& r, const AABB& a)
 	return true;
 }
 
-inline Hit RayHitPlane(const Ray& r, const Plane& p)
+inline Hit RayHitPlane(const OldRay& r, const OldPlane& p)
 {
 	const glm::vec4 pf = Plane4(p.p, p.n);
 	const float t = RayTestPlane(r, pf);
@@ -199,7 +199,7 @@ inline Hit RayHitPlane(const Ray& r, const Plane& p)
 	return hit;
 }
 
-inline Hit RayHitTriangle(const Ray& r, const Triangle& tr)
+inline Hit RayHitTriangle(const OldRay& r, const Triangle& tr)
 {
 	const float t = RayTestTriangle(r, tr);
 	if (t <= 0.0f) return NotHit;
@@ -212,7 +212,7 @@ inline Hit RayHitTriangle(const Ray& r, const Triangle& tr)
 	return hit;
 }
 
-inline Hit RayHitSphere(const Ray& r, const Sphere& s)
+inline Hit RayHitSphere(const OldRay& r, const Sphere& s)
 {
 	Hit hit;
 	if (!RayTestSphere(&hit.t0, &hit.t1, r, s))
@@ -224,7 +224,7 @@ inline Hit RayHitSphere(const Ray& r, const Sphere& s)
 	return hit;
 }
 
-inline Hit RayHitAABB(const Ray& r, const AABB& a)
+inline Hit RayHitAABB(const OldRay& r, const AABB& a)
 {
 	Hit hit;
 	if (!RayTestAABB(&hit.t0, &hit.t1, r, a))
@@ -388,7 +388,7 @@ inline Hit SphereHitCapsule(Sphere s, const Capsule& c)
 	const glm::vec3 l = c.a - c.b; 
 	const float len = glm::length(l);
 	glm::vec3 d = glm::normalize(l);
-	Ray r = Ray(c.a + (d * (-2.0f * len)), d);
+	OldRay r = OldRay(c.a + (d * (-2.0f * len)), d);
 	s.radius += c.r;
 	Hit hit = RayHitSphere(r, s);
 	if (hit.hit == 0) return NotHit;

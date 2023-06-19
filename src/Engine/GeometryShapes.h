@@ -5,7 +5,7 @@ struct Line
 	glm::vec3 a, b;
 };
 
-struct Plane
+struct OldPlane
 {
 	glm::vec3 p;
 	glm::vec3 n;
@@ -34,7 +34,7 @@ struct capsule_t
 	float r, height;
 };
 
-class Ray
+class OldRay
 {
 public:
 	glm::vec3 p;

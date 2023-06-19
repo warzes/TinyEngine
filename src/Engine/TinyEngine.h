@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "EngineConfiguration.h"
+#include "PlatformMacros.h"
 
 #if defined(_MSC_VER)
 #	pragma warning(push, 3)
@@ -38,6 +39,7 @@
 #include "MathCoreFunc.h"
 #include "Color.h"
 #include "Transform.h"
+#include "Plane.h"
 #include "AABB.h"
 #include "GeometryShapes.h"
 #include "Collisions.h"

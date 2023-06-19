@@ -56,6 +56,15 @@
     <ClCompile Include="Monitor.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
+    <ClCompile Include="Plane.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingBox.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingSphere.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -156,6 +165,21 @@
     </ClInclude>
     <ClInclude Include="Monitor.h">
       <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="PlatformMacros.h">
+      <Filter>Core\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingBox.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryCore.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingSphere.h">
+      <Filter>Core\Geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
