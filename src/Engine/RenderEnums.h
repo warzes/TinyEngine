@@ -90,23 +90,23 @@ enum class BlendFactor : uint8_t
 {
 	Zero,
 	One,
-	SrcColor,
-	OneMinusSrcColor,
-	DstColor,
-	OneMinusDstColor,
-	SrcAlpha,
-	OneMinusSrcAlpha,
-	DstAlpha,
-	OneMinusDstAlpha,
+	SourceColor,
+	InverseSourceColor,
+	DestinationColor,
+	InverseDestinationColor,
+	SourceAlpha,
+	InverseSourceAlpha,
+	DestinationAlpha,
+	InverseDestinationAlpha,
 	ConstantColor,
-	OneMinusConstantColor,
+	InverseConstantColor,
 	ConstantAlpha,
-	OneMinusConstantAlpha,
-	SrcAlphaSaturate,
-	Src1Color,
-	OneMinusSrc1Color,
-	Src1Alpha,
-	OneMinusSrc1Alpha
+	InverseConstantAlpha,
+	SourceAlphaSaturation,
+	Source1Color,
+	InverseSource1Color,
+	Source1Alpha,
+	InverseSource1Alpha
 };
 
 //=============================================================================

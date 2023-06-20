@@ -2,7 +2,7 @@
 
 #include "RenderResource.h"
 //-----------------------------------------------------------------------------
-inline GLenum TranslateToGL(ImageFormat format)
+[[nodiscard]] inline GLenum TranslateToGL(ImageFormat format)
 {
 	switch( format )
 	{
@@ -36,7 +36,7 @@ inline GLenum TranslateToGL(ImageFormat format)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline GLenum TranslateToGL(ComparisonFunc func)
+[[nodiscard]] inline GLenum TranslateToGL(ComparisonFunc func)
 {
 	switch (func)
 	{
@@ -55,7 +55,7 @@ inline GLenum TranslateToGL(ComparisonFunc func)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline GLenum TranslateToGL(StencilOp op)
+[[nodiscard]] inline GLenum TranslateToGL(StencilOp op)
 {
 	switch (op)
 	{
@@ -73,7 +73,7 @@ inline GLenum TranslateToGL(StencilOp op)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline GLenum TranslateToGL(BlendOp op)
+[[nodiscard]] inline GLenum TranslateToGL(BlendOp op)
 {
 	switch( op )
 	{
@@ -88,36 +88,36 @@ inline GLenum TranslateToGL(BlendOp op)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline GLenum TranslateToGL(BlendFactor func)
+[[nodiscard]] inline GLenum TranslateToGL(BlendFactor func)
 {
 	switch( func )
 	{
-	case BlendFactor::Zero:                  return GL_ZERO;
-	case BlendFactor::One:                   return GL_ONE;
-	case BlendFactor::SrcColor:              return GL_SRC_COLOR;
-	case BlendFactor::OneMinusSrcColor:      return GL_ONE_MINUS_SRC_COLOR;
-	case BlendFactor::DstColor:              return GL_DST_COLOR;
-	case BlendFactor::OneMinusDstColor:      return GL_ONE_MINUS_DST_COLOR;
-	case BlendFactor::SrcAlpha:              return GL_SRC_ALPHA;
-	case BlendFactor::OneMinusSrcAlpha:      return GL_ONE_MINUS_SRC_ALPHA;
-	case BlendFactor::DstAlpha:              return GL_DST_ALPHA;
-	case BlendFactor::OneMinusDstAlpha:      return GL_ONE_MINUS_DST_ALPHA;
-	case BlendFactor::ConstantColor:         return GL_CONSTANT_COLOR;
-	case BlendFactor::OneMinusConstantColor: return GL_ONE_MINUS_CONSTANT_COLOR;
-	case BlendFactor::ConstantAlpha:         return GL_CONSTANT_ALPHA;
-	case BlendFactor::OneMinusConstantAlpha: return GL_ONE_MINUS_CONSTANT_ALPHA;
-	case BlendFactor::SrcAlphaSaturate:      return GL_SRC_ALPHA_SATURATE;
-	case BlendFactor::Src1Color:             return GL_SRC1_COLOR;
-	case BlendFactor::OneMinusSrc1Color:     return GL_ONE_MINUS_SRC1_COLOR;
-	case BlendFactor::Src1Alpha:             return GL_SRC1_ALPHA;
-	case BlendFactor::OneMinusSrc1Alpha:     return GL_ONE_MINUS_SRC1_ALPHA;
+	case BlendFactor::Zero:                    return GL_ZERO;
+	case BlendFactor::One:                     return GL_ONE;
+	case BlendFactor::SourceColor:             return GL_SRC_COLOR;
+	case BlendFactor::InverseSourceColor:      return GL_ONE_MINUS_SRC_COLOR;
+	case BlendFactor::DestinationColor:        return GL_DST_COLOR;
+	case BlendFactor::InverseDestinationColor: return GL_ONE_MINUS_DST_COLOR;
+	case BlendFactor::SourceAlpha:             return GL_SRC_ALPHA;
+	case BlendFactor::InverseSourceAlpha:      return GL_ONE_MINUS_SRC_ALPHA;
+	case BlendFactor::DestinationAlpha:        return GL_DST_ALPHA;
+	case BlendFactor::InverseDestinationAlpha: return GL_ONE_MINUS_DST_ALPHA;
+	case BlendFactor::ConstantColor:           return GL_CONSTANT_COLOR;
+	case BlendFactor::InverseConstantColor:    return GL_ONE_MINUS_CONSTANT_COLOR;
+	case BlendFactor::ConstantAlpha:           return GL_CONSTANT_ALPHA;
+	case BlendFactor::InverseConstantAlpha:    return GL_ONE_MINUS_CONSTANT_ALPHA;
+	case BlendFactor::SourceAlphaSaturation:   return GL_SRC_ALPHA_SATURATE;
+	case BlendFactor::Source1Color:            return GL_SRC1_COLOR;
+	case BlendFactor::InverseSource1Color:     return GL_ONE_MINUS_SRC1_COLOR;
+	case BlendFactor::Source1Alpha:            return GL_SRC1_ALPHA;
+	case BlendFactor::InverseSource1Alpha:     return GL_ONE_MINUS_SRC1_ALPHA;
 	default: break;
 	}
 	assert(false && "Unknown BlendFactor");
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline GLenum TranslateToGL(RasterizerCullMode face)
+[[nodiscard]] inline GLenum TranslateToGL(RasterizerCullMode face)
 {
 	switch( face )
 	{
@@ -130,7 +130,7 @@ inline GLenum TranslateToGL(RasterizerCullMode face)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline GLenum TranslateToGL(FaceOrientation orientation)
+[[nodiscard]] inline GLenum TranslateToGL(FaceOrientation orientation)
 {
 	switch( orientation )
 	{
@@ -142,7 +142,7 @@ inline GLenum TranslateToGL(FaceOrientation orientation)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline GLenum TranslateToGL(ShaderType usage)
+[[nodiscard]] inline GLenum TranslateToGL(ShaderType usage)
 {
 	switch( usage )
 	{
@@ -158,7 +158,7 @@ inline GLenum TranslateToGL(ShaderType usage)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline std::string ConvertToStr(ShaderType usage)
+[[nodiscard]] inline std::string ConvertToStr(ShaderType usage)
 {
 	switch( usage )
 	{
@@ -174,7 +174,7 @@ inline std::string ConvertToStr(ShaderType usage)
 	return "";
 }
 //-----------------------------------------------------------------------------
-inline GLenum TranslateToGL(BufferType type)
+[[nodiscard]] inline GLenum TranslateToGL(BufferType type)
 {
 	switch( type )
 	{
@@ -197,7 +197,7 @@ inline GLenum TranslateToGL(BufferType type)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline GLenum TranslateToGL(BufferUsage usage)
+[[nodiscard]] inline GLenum TranslateToGL(BufferUsage usage)
 {
 	switch( usage )
 	{
@@ -216,7 +216,7 @@ inline GLenum TranslateToGL(BufferUsage usage)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline GLenum TranslateToGL(BufferMapAccess access)
+[[nodiscard]] inline GLenum TranslateToGL(BufferMapAccess access)
 {
 	switch( access )
 	{
@@ -229,7 +229,7 @@ inline GLenum TranslateToGL(BufferMapAccess access)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline GLenum TranslateToGL(BufferBinding binding)
+[[nodiscard]] inline GLenum TranslateToGL(BufferBinding binding)
 {
 	switch( binding )
 	{
@@ -252,7 +252,7 @@ inline GLenum TranslateToGL(BufferBinding binding)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline BufferBinding GetBindingTarget(BufferType type)
+[[nodiscard]] inline BufferBinding GetBindingTarget(BufferType type)
 {
 	BufferBinding target;
 	switch( type )
@@ -276,7 +276,7 @@ inline BufferBinding GetBindingTarget(BufferType type)
 	return {};
 }
 //-----------------------------------------------------------------------------
-inline GLenum TranslateToGL(BufferMapAccessFlags accessFlags)
+[[nodiscard]] inline GLenum TranslateToGL(BufferMapAccessFlags accessFlags)
 {
 	switch( accessFlags )
 	{
@@ -294,7 +294,7 @@ inline GLenum TranslateToGL(BufferMapAccessFlags accessFlags)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline constexpr unsigned SizeIndexType(IndexType format)
+[[nodiscard]] inline constexpr unsigned SizeIndexType(IndexType format)
 {
 	switch( format )
 	{
@@ -307,7 +307,7 @@ inline constexpr unsigned SizeIndexType(IndexType format)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline constexpr unsigned SizeIndexType(unsigned size)
+[[nodiscard]] inline constexpr unsigned SizeIndexType(unsigned size)
 {
 	switch( size )
 	{
@@ -320,7 +320,7 @@ inline constexpr unsigned SizeIndexType(unsigned size)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline GLenum TranslateToGL(IndexType type) // TODO: использовать
+[[nodiscard]] inline GLenum TranslateToGL(IndexType type) // TODO: использовать
 {
 	switch( type )
 	{
@@ -333,7 +333,7 @@ inline GLenum TranslateToGL(IndexType type) // TODO: использовать
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline GLenum TranslateToGL(PrimitiveTopology topology)
+[[nodiscard]] inline GLenum TranslateToGL(PrimitiveTopology topology)
 {
 	switch( topology )
 	{
@@ -355,7 +355,7 @@ inline GLenum TranslateToGL(PrimitiveTopology topology)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline constexpr GLint TranslateToGL(TextureType type)
+[[nodiscard]] inline constexpr GLint TranslateToGL(TextureType type)
 {
 	switch( type )
 	{
@@ -372,7 +372,7 @@ inline constexpr GLint TranslateToGL(TextureType type)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline GLint TranslateToGL(TextureMinFilter filter)
+[[nodiscard]] inline GLint TranslateToGL(TextureMinFilter filter)
 {
 	switch( filter )
 	{
@@ -388,7 +388,7 @@ inline GLint TranslateToGL(TextureMinFilter filter)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline constexpr GLint TranslateToGL(TextureMagFilter filter)
+[[nodiscard]] inline constexpr GLint TranslateToGL(TextureMagFilter filter)
 {
 	switch( filter )
 	{
@@ -400,7 +400,7 @@ inline constexpr GLint TranslateToGL(TextureMagFilter filter)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline GLint TranslateToGL(TextureAddressMode wrapMode)
+[[nodiscard]] inline GLint TranslateToGL(TextureAddressMode wrapMode)
 {
 	switch( wrapMode )
 	{
@@ -416,7 +416,7 @@ inline GLint TranslateToGL(TextureAddressMode wrapMode)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline GLenum TranslateToGL(TextureCubeTarget target)
+[[nodiscard]] inline GLenum TranslateToGL(TextureCubeTarget target)
 {
 	switch( target )
 	{
@@ -432,7 +432,7 @@ inline GLenum TranslateToGL(TextureCubeTarget target)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline bool GetTextureFormatType(TexelsFormat inFormat, GLenum textureType, GLenum& format, GLint& internalFormat, GLenum& oglType)
+[[nodiscard]] inline bool GetTextureFormatType(TexelsFormat inFormat, GLenum textureType, GLenum& format, GLint& internalFormat, GLenum& oglType)
 {
 	if( inFormat == TexelsFormat::R_U8 )
 	{
@@ -504,7 +504,7 @@ inline bool GetTextureFormatType(TexelsFormat inFormat, GLenum textureType, GLen
 	return true;
 }
 //-----------------------------------------------------------------------------
-inline GLenum TranslateToGL(FramebufferAttachment attachment)
+[[nodiscard]] inline GLenum TranslateToGL(FramebufferAttachment attachment)
 {
 	switch( attachment )
 	{
@@ -533,7 +533,7 @@ inline GLenum TranslateToGL(FramebufferAttachment attachment)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline GLint TranslateToGL(FramebufferType type)
+[[nodiscard]] inline GLint TranslateToGL(FramebufferType type)
 {
 	switch( type )
 	{
@@ -546,7 +546,7 @@ inline GLint TranslateToGL(FramebufferType type)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline GLint TranslateToGL(FramebufferStatus status)
+[[nodiscard]] inline GLint TranslateToGL(FramebufferStatus status)
 {
 	switch( status )
 	{
@@ -565,7 +565,7 @@ inline GLint TranslateToGL(FramebufferStatus status)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline GLint TranslateToGL(FramebufferBinding binding)
+[[nodiscard]] inline GLint TranslateToGL(FramebufferBinding binding)
 {
 	switch( binding )
 	{
@@ -578,7 +578,7 @@ inline GLint TranslateToGL(FramebufferBinding binding)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline FramebufferBinding GetBindingTarget(FramebufferType type)
+[[nodiscard]] inline FramebufferBinding GetBindingTarget(FramebufferType type)
 {
 	switch( type )
 	{
@@ -591,7 +591,7 @@ inline FramebufferBinding GetBindingTarget(FramebufferType type)
 	return {};
 }
 //-----------------------------------------------------------------------------
-inline GLenum GetAttributeType(GLenum type)
+[[nodiscard]] inline GLenum GetAttributeType(GLenum type)
 {
 	switch( type )
 	{
@@ -610,7 +610,7 @@ inline GLenum GetAttributeType(GLenum type)
 	return 0;
 }
 //-----------------------------------------------------------------------------
-inline GLint GetAttributeSize(GLenum type)
+[[nodiscard]] inline GLint GetAttributeSize(GLenum type)
 {
 	switch( type )
 	{
