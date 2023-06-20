@@ -2,6 +2,7 @@
 #include "BoundingBox.h"
 #include "Plane.h"
 #include "BoundingSphere.h"
+#include "Ray.h"
 #include "MathCoreFunc.h"
 
 ContainmentType BoundingBox::Contains(const glm::vec3& point) const noexcept
@@ -46,7 +47,23 @@ ContainmentType BoundingBox::Contains(const BoundingBox& box) const noexcept
 
 ContainmentType BoundingBox::Contains(const BoundingSphere& sphere) const noexcept
 {
-	return ContainmentType();
+	const auto clamped = glm::clamp(sphere.center, min, max);
+	const auto distanceSquared = DistanceSquared(sphere.center, clamped);
+
+	if( distanceSquared > sphere.radius * sphere.radius )
+	{
+		return ContainmentType::Disjoint;
+	}
+	if( (sphere.radius <= sphere.center.x - min.x) &&
+		(sphere.radius <= sphere.center.y - min.y) &&
+		(sphere.radius <= sphere.center.z - min.z) &&
+		(sphere.radius <= max.x - sphere.center.x) &&
+		(sphere.radius <= max.y - sphere.center.y) &&
+		(sphere.radius <= max.z - sphere.center.z) )
+	{
+		return ContainmentType::Contains;
+	}
+	return ContainmentType::Intersects;
 }
 
 bool BoundingBox::Intersects(const BoundingBox& box) const noexcept
@@ -59,7 +76,7 @@ bool BoundingBox::Intersects(const BoundingBox& box) const noexcept
 
 bool BoundingBox::Intersects(const BoundingSphere& sphere) const noexcept
 {
-	const auto clamped = std::clamp(sphere.center, min, max);
+	const auto clamped = glm::clamp(sphere.center, min, max);
 	const auto distanceSquared = DistanceSquared(sphere.center, clamped);
 	return distanceSquared <= sphere.radius * sphere.radius;
 }
@@ -71,7 +88,7 @@ PlaneIntersectionType BoundingBox::Intersects(const Plane& plane) const noexcept
 
 std::optional<float> BoundingBox::Intersects(const Ray& ray) const noexcept
 {
-	return std::optional<float>();
+	return ray.Intersects(*this);
 }
 
 std::array<glm::vec3, BoundingBox::CornerCount> BoundingBox::GetCorners() const noexcept

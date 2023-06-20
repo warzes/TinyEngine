@@ -96,6 +96,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BoundingBox.cpp" />
+    <ClCompile Include="BoundingFrustum.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Capabilities.cpp" />
@@ -112,6 +113,7 @@
     <ClCompile Include="Monitor.cpp" />
     <ClCompile Include="OpenGLUtil.cpp" />
     <ClCompile Include="Plane.cpp" />
+    <ClCompile Include="Ray.cpp" />
     <ClCompile Include="RenderResource.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="STBImageLoader.cpp" />
@@ -126,6 +128,7 @@
     <ClInclude Include="BaseFunc.h" />
     <ClInclude Include="BaseMacros.h" />
     <ClInclude Include="BoundingBox.h" />
+    <ClInclude Include="BoundingFrustum.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Capabilities.h" />
@@ -139,6 +142,7 @@
     <ClInclude Include="Monitor.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="PlatformMacros.h" />
+    <ClInclude Include="Ray.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Temp.h" />
     <ClInclude Include="TinyEngine.h" />

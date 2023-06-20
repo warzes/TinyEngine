@@ -16,6 +16,9 @@ public:
 	[[nodiscard]] PlaneIntersectionType Intersects(const Plane& plane) const noexcept;
 	[[nodiscard]] std::optional<float> Intersects(const Ray& ray) const noexcept;
 
+	[[nodiscard]] static BoundingSphere CreateFromPoints(const glm::vec3* points, std::size_t pointCount) noexcept;
+	[[nodiscard]] static BoundingSphere CreateFromPoints(std::function<glm::vec3(std::size_t)> points, std::size_t pointCount) noexcept;
+
 	glm::vec3 center = glm::vec3(0.0f);
 	float radius = 0.0f;
 };

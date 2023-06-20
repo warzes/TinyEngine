@@ -65,6 +65,12 @@
     <ClCompile Include="BoundingSphere.cpp">
       <Filter>Core\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="BoundingFrustum.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Ray.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -179,6 +185,12 @@
       <Filter>Core\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="BoundingSphere.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingFrustum.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Ray.h">
       <Filter>Core\Geometry</Filter>
     </ClInclude>
   </ItemGroup>

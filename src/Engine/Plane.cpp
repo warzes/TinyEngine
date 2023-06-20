@@ -2,6 +2,8 @@
 #include "Plane.h"
 #include "BoundingBox.h"
 #include "BoundingSphere.h"
+#include "BoundingFrustum.h"
+#include "MathCoreFunc.h"
 
 Plane::Plane(const glm::vec3& point0, const glm::vec3& point1, const glm::vec3& point2) noexcept
 {
@@ -12,9 +14,46 @@ Plane::Plane(const glm::vec3& point0, const glm::vec3& point1, const glm::vec3& 
 	distance = -glm::dot(normal, point0);
 }
 
+void Plane::Normalize() noexcept
+{
+	const auto length = glm::length(normal);
+
+	if( length >= std::numeric_limits<float>::epsilon() )
+	{
+		const auto inverseLength = 1.0f / length;
+		normal *= inverseLength;
+		distance *= inverseLength;
+	}
+}
+
+Plane Plane::Normalize(const Plane& plane) noexcept
+{
+	auto result = plane;
+	result.Normalize();
+	return result;
+}
+
+float Plane::Dot(const glm::vec4& vec) const noexcept
+{
+	return normal.x * vec.x +
+		normal.y * vec.y +
+		normal.z * vec.z +
+		distance * vec.w;
+}
+
 float Plane::DotCoordinate(const glm::vec3& vec) const noexcept
 {
 	return normal.x * vec.x + normal.y * vec.y + normal.z * vec.z + distance;
+}
+
+float Plane::DotNormal(const glm::vec3& vec) const noexcept
+{
+	return glm::dot(normal, vec);
+}
+
+float Plane::GetDistanceToPoint(const glm::vec3& point) const noexcept
+{
+	return DotCoordinate(point);
 }
 
 PlaneIntersectionType Plane::Intersects(const glm::vec3& point) const noexcept
@@ -53,7 +92,7 @@ PlaneIntersectionType Plane::Intersects(const BoundingBox& box) const noexcept
 
 PlaneIntersectionType Plane::Intersects(const BoundingFrustum& frustum) const noexcept
 {
-	return PlaneIntersectionType();
+	return frustum.Intersects(*this);
 }
 
 PlaneIntersectionType Plane::Intersects(const BoundingSphere& sphere) const noexcept
@@ -62,4 +101,23 @@ PlaneIntersectionType Plane::Intersects(const BoundingSphere& sphere) const noex
 	if( dotProduct > sphere.radius ) return PlaneIntersectionType::Front;
 	if( dotProduct < -sphere.radius ) return PlaneIntersectionType::Back;
 	return PlaneIntersectionType::Intersecting;
+}
+
+Plane Plane::Transform(const Plane& plane, const glm::mat4& matrix)
+{
+	const auto transformMatrix = glm::inverse(matrix);
+	const auto vector = glm::vec4{ plane.normal, plane.distance };
+	const auto transformedVector = ::Transform(vector, transformMatrix);
+
+	Plane result;
+	result.normal.x = transformedVector.x;
+	result.normal.y = transformedVector.y;
+	result.normal.z = transformedVector.z;
+	result.distance = transformedVector.w;
+	return result;
+}
+
+Plane Plane::CreateFromPointNormal(const glm::vec3& point, const glm::vec3& normal)
+{
+	return Plane(normal, -glm::dot(normal, point));
 }
