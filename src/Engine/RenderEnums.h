@@ -66,11 +66,11 @@ enum class StencilOp : uint8_t
 	Keep,
 	Zero,
 	Replace,
-	IncrSat,
-	DecrSat,
+	IncrementSaturation,
+	DecrementSaturation,
 	Invert,
-	IncrWrap,
-	DecrWrap
+	IncrementWrap,
+	DecrementWrap
 };
 
 //=============================================================================
@@ -122,11 +122,11 @@ enum class RasterizerCullMode : uint8_t
 
 enum class FaceOrientation : uint8_t
 {
-	Cw,
-	Ccw,
+	ClockwiseFace,
+	CounterClockwiseFace,
 };
 
-enum class RasterizerFillMode : uint8_t // TODO: нет функции TranslateToGL
+enum class RasterizerFillMode : uint8_t
 {
 	Solid,
 	Wireframe,
@@ -224,11 +224,11 @@ enum class BufferMapAccessFlags : uint8_t
 // IndexBuffer enum
 //=============================================================================
 
-enum class IndexType : uint8_t
+enum class IndexFormat : uint8_t
 {
-	Uint8,
-	Uint16,
-	Uint32
+	UInt8,
+	UInt16,
+	UInt32
 };
 
 //=============================================================================

@@ -87,7 +87,7 @@ GPUBufferRef RenderSystem::CreateVertexBuffer(BufferUsage usage, unsigned vertex
 	return resource;
 }
 //-----------------------------------------------------------------------------
-GPUBufferRef RenderSystem::CreateIndexBuffer(BufferUsage usage, unsigned indexCount, IndexType indexFormat, const void * data)
+GPUBufferRef RenderSystem::CreateIndexBuffer(BufferUsage usage, unsigned indexCount, IndexFormat indexFormat, const void * data)
 {
 	const unsigned indexSize = SizeIndexType(indexFormat);
 	GPUBufferRef resource(new GPUBuffer(BufferType::ElementArrayBuffer, usage, indexCount, indexSize));
@@ -193,7 +193,7 @@ VertexArrayRef RenderSystem::CreateVertexArray(GPUBufferRef vbo, GPUBufferRef ib
 	return CreateVertexArray(vbo, ibo, attribs);
 }
 //-----------------------------------------------------------------------------
-GeometryBufferRef RenderSystem::CreateGeometryBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* vertexData, unsigned indexCount, IndexType indexFormat, const void* indexData, ShaderProgramRef shaders)
+GeometryBufferRef RenderSystem::CreateGeometryBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* vertexData, unsigned indexCount, IndexFormat indexFormat, const void* indexData, ShaderProgramRef shaders)
 {
 	assert(IsValid(shaders));
 
@@ -227,7 +227,7 @@ GeometryBufferRef RenderSystem::CreateGeometryBuffer(BufferUsage usage, unsigned
 	return geom;
 }
 //-----------------------------------------------------------------------------
-GeometryBufferRef RenderSystem::CreateGeometryBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* vertexData, unsigned indexCount, IndexType indexFormat, const void* indexData, const std::vector<VertexAttribute>& attribs)
+GeometryBufferRef RenderSystem::CreateGeometryBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* vertexData, unsigned indexCount, IndexFormat indexFormat, const void* indexData, const std::vector<VertexAttribute>& attribs)
 {
 	GeometryBufferRef geom(new GeometryBuffer());
 

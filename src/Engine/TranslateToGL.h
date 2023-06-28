@@ -59,14 +59,14 @@
 {
 	switch (op)
 	{
-	case StencilOp::Keep:     return GL_KEEP;
-	case StencilOp::Zero:     return GL_ZERO;
-	case StencilOp::Replace:  return GL_REPLACE;
-	case StencilOp::IncrSat:  return GL_INCR;
-	case StencilOp::DecrSat:  return GL_DECR;
-	case StencilOp::Invert:   return GL_INVERT;
-	case StencilOp::IncrWrap: return GL_INCR_WRAP;
-	case StencilOp::DecrWrap: return GL_DECR_WRAP;
+	case StencilOp::Keep:                return GL_KEEP;
+	case StencilOp::Zero:                return GL_ZERO;
+	case StencilOp::Replace:             return GL_REPLACE;
+	case StencilOp::IncrementSaturation: return GL_INCR;
+	case StencilOp::DecrementSaturation: return GL_DECR;
+	case StencilOp::Invert:              return GL_INVERT;
+	case StencilOp::IncrementWrap:       return GL_INCR_WRAP;
+	case StencilOp::DecrementWrap:       return GL_DECR_WRAP;
 	default: break;
 	}
 	assert(false && "Unknown StencilOp");
@@ -134,13 +134,27 @@
 {
 	switch( orientation )
 	{
-	case FaceOrientation::Cw:  return GL_CW;
-	case FaceOrientation::Ccw: return GL_CCW;
+	case FaceOrientation::ClockwiseFace:        return GL_CW;
+	case FaceOrientation::CounterClockwiseFace: return GL_CCW;
 	default: break;
 	}
 	assert(false && "Unknown FaceOrientation");
 	return 0;
 }
+//-----------------------------------------------------------------------------
+[[nodiscard]] inline GLenum TranslateToGL(RasterizerFillMode fillMode)
+{
+	switch( fillMode )
+	{
+	case RasterizerFillMode::Solid:     return GL_FILL;
+	case RasterizerFillMode::Wireframe: return GL_LINE;
+	case RasterizerFillMode::Point:     return GL_POINT;
+	default: break;
+	}
+	assert(false && "Unknown RasterizerFillMode");
+	return 0;
+}
+
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLenum TranslateToGL(ShaderType usage)
 {
@@ -294,13 +308,13 @@
 	return 0;
 }
 //-----------------------------------------------------------------------------
-[[nodiscard]] inline constexpr unsigned SizeIndexType(IndexType format)
+[[nodiscard]] inline constexpr unsigned SizeIndexType(IndexFormat format)
 {
 	switch( format )
 	{
-	case IndexType::Uint8:  return sizeof(uint8_t);
-	case IndexType::Uint16: return sizeof(uint16_t);
-	case IndexType::Uint32: return sizeof(uint32_t);
+	case IndexFormat::UInt8:  return sizeof(uint8_t);
+	case IndexFormat::UInt16: return sizeof(uint16_t);
+	case IndexFormat::UInt32: return sizeof(uint32_t);
 	default: break;
 	}
 	assert(false && "Unknown IndexType");
@@ -320,13 +334,13 @@
 	return 0;
 }
 //-----------------------------------------------------------------------------
-[[nodiscard]] inline GLenum TranslateToGL(IndexType type) // TODO: использовать
+[[nodiscard]] inline GLenum TranslateToGL(IndexFormat type) // TODO: использовать
 {
 	switch( type )
 	{
-	case IndexType::Uint8:  return GL_UNSIGNED_BYTE;
-	case IndexType::Uint16: return GL_UNSIGNED_SHORT;
-	case IndexType::Uint32: return GL_UNSIGNED_INT;
+	case IndexFormat::UInt8:  return GL_UNSIGNED_BYTE;
+	case IndexFormat::UInt16: return GL_UNSIGNED_SHORT;
+	case IndexFormat::UInt32: return GL_UNSIGNED_INT;
 	default: break;
 	}
 	assert(false && "Unknown IndexType");

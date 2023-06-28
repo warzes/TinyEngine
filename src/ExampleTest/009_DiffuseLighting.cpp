@@ -90,7 +90,7 @@ void main()
 	m_uniformLightDirection = renderSystem.GetUniform(m_shader, "lightDirection");
 	m_uniformLightColor = renderSystem.GetUniform(m_shader, "diffuseLightColor");
 
-	m_geom = renderSystem.CreateGeometryBuffer(BufferUsage::StaticDraw, (unsigned)Countof(vert), (unsigned)sizeof(vertex), vert, (unsigned)Countof(indices), IndexType::Uint32, indices, m_shader);
+	m_geom = renderSystem.CreateGeometryBuffer(BufferUsage::StaticDraw, (unsigned)Countof(vert), (unsigned)sizeof(vertex), vert, (unsigned)Countof(indices), IndexFormat::UInt32, indices, m_shader);
 
 	m_texture = renderSystem.CreateTexture2D("../ExampleData/textures/stone01.png");
 

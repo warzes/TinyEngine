@@ -39,17 +39,17 @@ public:
 	//-------------------------------------------------------------------------
 	ShaderProgramRef CreateShaderProgram(const ShaderSource& vertexShaderSource, const ShaderSource& fragmentShaderSource);
 	GPUBufferRef CreateVertexBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* data);
-	GPUBufferRef CreateIndexBuffer(BufferUsage usage, unsigned indexCount, IndexType indexFormat, const void* data);
+	GPUBufferRef CreateIndexBuffer(BufferUsage usage, unsigned indexCount, IndexFormat indexFormat, const void* data);
 	VertexArrayRef CreateVertexArray(GPUBufferRef vbo, GPUBufferRef ibo, const std::vector<VertexAttribute>& attribs);
 	VertexArrayRef CreateVertexArray(GPUBufferRef vbo, GPUBufferRef ibo, ShaderProgramRef shaders);
 
 	GeometryBufferRef CreateGeometryBuffer(BufferUsage usage,
 		/*vertex*/unsigned vertexCount, unsigned vertexSize, const void* vertexData,
-		/*index*/unsigned indexCount, IndexType indexFormat, const void* indexData,
+		/*index*/unsigned indexCount, IndexFormat indexFormat, const void* indexData,
 		ShaderProgramRef shaders);
 	GeometryBufferRef CreateGeometryBuffer(BufferUsage usage,
 		/*vertex*/unsigned vertexCount, unsigned vertexSize, const void* vertexData,
-		/*index*/unsigned indexCount, IndexType indexFormat, const void* indexData,
+		/*index*/unsigned indexCount, IndexFormat indexFormat, const void* indexData,
 		const std::vector<VertexAttribute>& attribs);
 	GeometryBufferRef CreateGeometryBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* vertexData, ShaderProgramRef shaders);
 	GeometryBufferRef CreateGeometryBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* vertexData, const std::vector<VertexAttribute>& attribs);
