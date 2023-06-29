@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "RenderResource.h"
-#include "AABB.h"
+#include "RenderAPI/RenderResource.h"
+#include "Core/Geometry/AABB.h"
 
 class Material final
 {

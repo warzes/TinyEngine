@@ -2,7 +2,7 @@
 #include "RenderResource.h"
 #include "RenderSystem.h"
 #include "TranslateToGL.h"
-#include "STBImageLoader.h"
+#include "Core/IO/STBImageLoader.h"
 //-----------------------------------------------------------------------------
 Shader::Shader(ShaderType type)
 {

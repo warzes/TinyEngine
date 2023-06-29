@@ -101,7 +101,7 @@
 /// included  a specific file.
 ///
 
-//#include "detail/_fixes.hpp"
+#include "detail/_fixes.hpp"
 
 #include "detail/setup.hpp"
 

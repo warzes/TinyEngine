@@ -1,12 +1,12 @@
 ﻿#pragma once
 
-#include "LogSystem.h"
+#include "Core/Logging/LogSystem.h"
 #include "EngineTimestamp.h"
-#include "FileSystem.h"
-#include "Window.h"
-#include "Input.h"
-#include "RenderSystem.h"
-#include "GraphicsSystem.h"
+#include "Core/IO/FileSystem.h"
+#include "Platform/Window.h"
+#include "Platform/Input.h"
+#include "RenderAPI/RenderSystem.h"
+#include "Graphics/GraphicsSystem.h"
 #include "IApp.h"
 
 struct EngineDeviceCreateInfo final

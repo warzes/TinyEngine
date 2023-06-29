@@ -1,7 +1,15 @@
 ﻿#pragma once
 
-#include "EngineConfiguration.h"
+//=============================================================================
+// Config
+//=============================================================================
+
 #include "Core/Base/PlatformMacros.h"
+#include "EngineConfiguration.h"
+
+//=============================================================================
+// STL and 3rdparty Header
+//=============================================================================
 
 #if defined(_MSC_VER)
 #	pragma warning(push, 3)
@@ -30,37 +38,81 @@
 #	pragma warning(disable : 4820)
 #endif
 
+//=============================================================================
+// Core
+//=============================================================================
+
+//-----------------------------------------------------------------------------
+// Base
+//-----------------------------------------------------------------------------
 #include "Core/Base/BaseMacros.h"
 #include "Core/Base/BaseFunc.h"
-
-#include "FileSystem.h"
-#include "Log.h"
-
-#include "MathCoreFunc.h"
-#include "Color.h"
-#include "Transform.h"
-#include "Plane.h"
-#include "AABB.h"
-#include "GeometryShapes.h"
-#include "Collisions.h"
-
+//-----------------------------------------------------------------------------
+// IO
+//-----------------------------------------------------------------------------
+#include "Core/IO/FileSystem.h"
+//-----------------------------------------------------------------------------
+// Logging
+//-----------------------------------------------------------------------------
+#include "Core/Logging/Log.h"
+//-----------------------------------------------------------------------------
+// Math
+//-----------------------------------------------------------------------------
+#include "Core/Math/MathCoreFunc.h"
+#include "Core/Math/Color.h"
+#include "Core/Math/Transform.h"
+//-----------------------------------------------------------------------------
+// Geometry
+//-----------------------------------------------------------------------------
+#include "Core/Geometry/Plane.h"
+#include "Core/Geometry/AABB.h"
+#include "Core/Geometry/GeometryShapes.h"
+#include "Core/Geometry/Collisions.h"
+//-----------------------------------------------------------------------------
+// Utilities
+//-----------------------------------------------------------------------------
 #include "CoreUtilities.h"
+#include "Core/Utilities/StringUtilities.h"
 
-#include "Window.h"
-#include "Input.h"
+//=============================================================================
+// Platform
+//=============================================================================
 
-#include "RenderResource.h"
-#include "RenderSystem.h"
+#include "Platform/Monitor.h"
+#include "Platform/Window.h"
+#include "Platform/Input.h"
 
-#include "GraphicsResource.h"
-#include "GraphicsSystem.h"
-#include "DebugDraw.h"
+//=============================================================================
+// RenderAPI
+//=============================================================================
 
-#include "Camera.h"
+#include "RenderAPI/RenderResource.h"
+#include "RenderAPI/RenderSystem.h"
 
-#include "IApp.h"
+//=============================================================================
+// Graphics
+//=============================================================================
 
-#include "EngineDevice.h"
+#include "Graphics/GraphicsResource.h"
+#include "Graphics/GraphicsSystem.h"
+#include "Graphics/DebugDraw.h"
+
+//=============================================================================
+// World
+//=============================================================================
+
+#include "World/Camera.h"
+
+//=============================================================================
+// EngineApp
+//=============================================================================
+
+#include "EngineApp/IApp.h"
+#include "EngineApp/EngineDevice.h"
+
+//=============================================================================
+// End Header
+//=============================================================================
 
 #if defined(_MSC_VER)
 #	pragma warning(pop)

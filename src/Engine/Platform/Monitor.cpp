@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Monitor.h"
 #include "Window.h"
-#include "Log.h"
+#include "Core/Logging/Log.h"
 //-----------------------------------------------------------------------------
 int Monitor::GetCount()
 {

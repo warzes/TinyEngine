@@ -2,187 +2,85 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="EngineDevice.cpp">
-      <Filter>EngineApp</Filter>
+    <ClCompile Include="Core\Utilities\StringUtilities.cpp">
+      <Filter>Core\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="EngineTimestamp.cpp">
-      <Filter>EngineApp</Filter>
-    </ClCompile>
-    <ClCompile Include="Window.cpp">
-      <Filter>Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="Input.cpp">
-      <Filter>Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderSystem.cpp">
-      <Filter>RenderAPI</Filter>
-    </ClCompile>
-    <ClCompile Include="FileSystem.cpp">
+    <ClCompile Include="Core\IO\STBImageLoader.cpp">
       <Filter>Core\IO</Filter>
     </ClCompile>
-    <ClCompile Include="RenderResource.cpp">
+    <ClCompile Include="Core\IO\FileSystem.cpp">
+      <Filter>Core\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Logging\Log.cpp">
+      <Filter>Core\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Logging\LogSystem.cpp">
+      <Filter>Core\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\BoundingBox.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\BoundingFrustum.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\BoundingSphere.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\Collisions.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\Plane.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\Ray.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Input.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Monitor.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Window.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\Capabilities.cpp">
       <Filter>RenderAPI</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="RenderAPI\OpenGLUtil.cpp">
+      <Filter>RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\RenderResource.cpp">
+      <Filter>RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\RenderSystem.cpp">
+      <Filter>RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\DebugDraw.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GraphicsResource.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GraphicsSystem.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="World\Camera.cpp">
       <Filter>World</Filter>
     </ClCompile>
-    <ClCompile Include="GraphicsResource.cpp">
-      <Filter>Graphics</Filter>
+    <ClCompile Include="EngineApp\EngineDevice.cpp">
+      <Filter>EngineApp</Filter>
     </ClCompile>
-    <ClCompile Include="GraphicsSystem.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="STBImageLoader.cpp">
-      <Filter>Core\IO</Filter>
-    </ClCompile>
-    <ClCompile Include="OpenGLUtil.cpp">
-      <Filter>RenderAPI</Filter>
-    </ClCompile>
-    <ClCompile Include="LogSystem.cpp">
-      <Filter>Core\Logging</Filter>
-    </ClCompile>
-    <ClCompile Include="Log.cpp">
-      <Filter>Core\Logging</Filter>
-    </ClCompile>
-    <ClCompile Include="Capabilities.cpp">
-      <Filter>RenderAPI</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugDraw.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Collisions.cpp">
-      <Filter>Core\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Monitor.cpp">
-      <Filter>Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="Plane.cpp">
-      <Filter>Core\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="BoundingBox.cpp">
-      <Filter>Core\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="BoundingSphere.cpp">
-      <Filter>Core\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="BoundingFrustum.cpp">
-      <Filter>Core\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Ray.cpp">
-      <Filter>Core\Geometry</Filter>
+    <ClCompile Include="EngineApp\EngineTimestamp.cpp">
+      <Filter>EngineApp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="EngineConfiguration.h" />
-    <ClInclude Include="EngineDevice.h">
-      <Filter>EngineApp</Filter>
-    </ClInclude>
-    <ClInclude Include="IApp.h">
-      <Filter>EngineApp</Filter>
-    </ClInclude>
-    <ClInclude Include="EngineTimestamp.h">
-      <Filter>EngineApp</Filter>
-    </ClInclude>
-    <ClInclude Include="Window.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="Input.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderSystem.h">
-      <Filter>RenderAPI</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Core\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="FileSystem.h">
-      <Filter>Core\IO</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderResource.h">
-      <Filter>RenderAPI</Filter>
-    </ClInclude>
-    <ClInclude Include="TranslateToGL.h">
-      <Filter>RenderAPI</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>World</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphicsResource.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphicsSystem.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="STBImageLoader.h">
-      <Filter>Core\IO</Filter>
-    </ClInclude>
-    <ClInclude Include="OpenGLUtil.h">
-      <Filter>RenderAPI</Filter>
-    </ClInclude>
-    <ClInclude Include="Capabilities.h">
-      <Filter>RenderAPI</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderEnums.h">
-      <Filter>RenderAPI</Filter>
-    </ClInclude>
-    <ClInclude Include="Color.h">
-      <Filter>Core\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="MathCoreFunc.h">
-      <Filter>Core\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="LogSystem.h">
-      <Filter>Core\Logging</Filter>
-    </ClInclude>
-    <ClInclude Include="Log.h">
-      <Filter>Core\Logging</Filter>
-    </ClInclude>
     <ClInclude Include="TinyEngine.h" />
-    <ClInclude Include="DebugDraw.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="GeometryShapes.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="AABB.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Collisions.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Sphere.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Temp.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="GJK.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
     <ClInclude Include="CoreUtilities.h">
       <Filter>Core\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="Monitor.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="Plane.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="BoundingBox.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="GeometryCore.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="BoundingSphere.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="BoundingFrustum.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Ray.h">
-      <Filter>Core\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Core\Base\PlatformMacros.h">
       <Filter>Core\Base</Filter>
@@ -195,6 +93,114 @@
     </ClInclude>
     <ClInclude Include="Core\Base\DebugNew.h">
       <Filter>Core\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utilities\StringUtilities.h">
+      <Filter>Core\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IO\FileSystem.h">
+      <Filter>Core\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IO\STBImageLoader.h">
+      <Filter>Core\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Logging\LogSystem.h">
+      <Filter>Core\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Logging\Log.h">
+      <Filter>Core\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Math\Transform.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Math\Color.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Math\MathCoreFunc.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Temp.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\AABB.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\BoundingBox.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\BoundingFrustum.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\BoundingSphere.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Collisions.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\GeometryCore.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\GeometryShapes.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\GJK.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Plane.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Ray.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Sphere.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Window.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Input.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Monitor.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\TranslateToGL.h">
+      <Filter>RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\Capabilities.h">
+      <Filter>RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\OpenGLUtil.h">
+      <Filter>RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\RenderEnums.h">
+      <Filter>RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\RenderResource.h">
+      <Filter>RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\RenderSystem.h">
+      <Filter>RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GraphicsSystem.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\DebugDraw.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GraphicsResource.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Camera.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineApp\IApp.h">
+      <Filter>EngineApp</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineApp\EngineDevice.h">
+      <Filter>EngineApp</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineApp\EngineTimestamp.h">
+      <Filter>EngineApp</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -245,7 +251,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Collisions.inl">
+    <None Include="Core\Geometry\Collisions.inl">
       <Filter>Core\Geometry</Filter>
     </None>
   </ItemGroup>

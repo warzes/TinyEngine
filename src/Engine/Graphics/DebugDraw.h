@@ -1,7 +1,7 @@
 #pragma once
 
-#include "GeometryShapes.h"
-#include "Color.h"
+#include "Core/Geometry/GeometryShapes.h"
+#include "Core/Math/Color.h"
 
 // debugdraw framework
 // Credits: Based on work by @glampert https://github.com/glampert/debug-draw (PD)

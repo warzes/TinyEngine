@@ -2,7 +2,7 @@
 
 #include "OpenGLUtil.h"
 #include "RenderEnums.h"
-#include "Log.h"
+#include "Core/Logging/Log.h"
 
 //=============================================================================
 // Pipeline State Core

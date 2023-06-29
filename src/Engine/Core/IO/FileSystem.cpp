@@ -1,6 +1,6 @@
 ﻿#include "stdafx.h"
 #include "FileSystem.h"
-#include "Log.h"
+#include "Core/Logging/Log.h"
 //-----------------------------------------------------------------------------
 std::optional<std::vector<uint8_t>> FileSystem::FileToMemory(const std::string& fileName, unsigned int* bytesRead)
 {

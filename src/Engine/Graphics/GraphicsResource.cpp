@@ -1,7 +1,7 @@
 ﻿#include "stdafx.h"
 #include "GraphicsResource.h"
 #include "GraphicsSystem.h"
-#include "RenderSystem.h"
+#include "RenderAPI/RenderSystem.h"
 //-----------------------------------------------------------------------------
 namespace std
 {
