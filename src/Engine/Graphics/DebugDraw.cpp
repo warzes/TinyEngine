@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "DebugDraw.h"
-#include "RenderSystem.h"
+#include "RenderAPI/RenderSystem.h"
 //-----------------------------------------------------------------------------
 namespace {
 	ShaderProgramRef shaderProgram;

@@ -3,7 +3,7 @@
 #include "BoundingBox.h"
 #include "BoundingSphere.h"
 #include "BoundingFrustum.h"
-#include "MathCoreFunc.h"
+#include "Core/Math/MathCoreFunc.h"
 
 Plane::Plane(const glm::vec3& point0, const glm::vec3& point1, const glm::vec3& point2) noexcept
 {

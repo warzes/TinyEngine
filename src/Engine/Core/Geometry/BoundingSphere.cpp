@@ -3,7 +3,7 @@
 #include "BoundingBox.h"
 #include "Ray.h"
 #include "Plane.h"
-#include "MathCoreFunc.h"
+#include "Core/Math/MathCoreFunc.h"
 
 ContainmentType BoundingSphere::Contains(const glm::vec3& point) const noexcept
 {

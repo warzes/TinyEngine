@@ -4,7 +4,7 @@
 #include "BoundingFrustum.h"
 #include "BoundingSphere.h"
 #include "Plane.h"
-#include "MathCoreFunc.h"
+#include "Core/Math/MathCoreFunc.h"
 
 std::optional<float> Ray::Intersects(const BoundingBox& box) const
 {
