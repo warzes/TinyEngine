@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #define PLATFORM_LINUX 0
 #define PLATFORM_BSD 0

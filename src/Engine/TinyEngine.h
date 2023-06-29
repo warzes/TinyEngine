@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "EngineConfiguration.h"
-#include "PlatformMacros.h"
+#include "Core/Base/PlatformMacros.h"
 
 #if defined(_MSC_VER)
 #	pragma warning(push, 3)
@@ -30,8 +30,8 @@
 #	pragma warning(disable : 4820)
 #endif
 
-#include "BaseMacros.h"
-#include "BaseFunc.h"
+#include "Core/Base/BaseMacros.h"
+#include "Core/Base/BaseFunc.h"
 
 #include "FileSystem.h"
 #include "Log.h"

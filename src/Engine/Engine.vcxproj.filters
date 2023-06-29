@@ -87,17 +87,11 @@
     <ClInclude Include="Window.h">
       <Filter>Platform</Filter>
     </ClInclude>
-    <ClInclude Include="BaseFunc.h">
-      <Filter>Core\Base</Filter>
-    </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>Platform</Filter>
     </ClInclude>
     <ClInclude Include="RenderSystem.h">
       <Filter>RenderAPI</Filter>
-    </ClInclude>
-    <ClInclude Include="BaseMacros.h">
-      <Filter>Core\Base</Filter>
     </ClInclude>
     <ClInclude Include="Transform.h">
       <Filter>Core\Math</Filter>
@@ -172,9 +166,6 @@
     <ClInclude Include="Monitor.h">
       <Filter>Platform</Filter>
     </ClInclude>
-    <ClInclude Include="PlatformMacros.h">
-      <Filter>Core\Base</Filter>
-    </ClInclude>
     <ClInclude Include="Plane.h">
       <Filter>Core\Geometry</Filter>
     </ClInclude>
@@ -192,6 +183,18 @@
     </ClInclude>
     <ClInclude Include="Ray.h">
       <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Base\PlatformMacros.h">
+      <Filter>Core\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Base\BaseFunc.h">
+      <Filter>Core\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Base\BaseMacros.h">
+      <Filter>Core\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Base\DebugNew.h">
+      <Filter>Core\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -236,6 +239,9 @@
     </Filter>
     <Filter Include="Core\Containers">
       <UniqueIdentifier>{84132ed2-5eb3-4a8f-8dfb-f018f64a2341}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Debug">
+      <UniqueIdentifier>{12d5a640-6179-46cc-8b35-035ca8fac904}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

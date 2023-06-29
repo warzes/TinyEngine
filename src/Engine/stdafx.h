@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "EngineConfiguration.h"
-#include "PlatformMacros.h"
+#include "Core/Base/PlatformMacros.h"
 
 #if defined(_MSC_VER)
 #	pragma warning(disable : 4514)
@@ -15,6 +15,14 @@
 #include <cassert>
 #include <cmath>
 #include <cstdio>
+
+#if defined(_MSC_VER) && defined(_DEBUG)
+#	define _CRTDBG_MAP_ALLOC
+#	ifdef _malloca
+#		undef _malloca
+#	endif
+#	include <crtdbg.h>
+#endif
 
 #include <memory>
 #include <algorithm>
