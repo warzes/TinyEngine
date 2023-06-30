@@ -4,7 +4,7 @@
 #include "BoundingSphere.h"
 #include "BoundingFrustum.h"
 #include "Core/Math/MathCoreFunc.h"
-
+//-----------------------------------------------------------------------------
 Plane::Plane(const glm::vec3& point0, const glm::vec3& point1, const glm::vec3& point2) noexcept
 {
 	// NOTE: Left-handed coordinate system (not right-handed one)
@@ -13,7 +13,7 @@ Plane::Plane(const glm::vec3& point0, const glm::vec3& point1, const glm::vec3& 
 	normal = glm::normalize(glm::cross(vector1, vector2));
 	distance = -glm::dot(normal, point0);
 }
-
+//-----------------------------------------------------------------------------
 void Plane::Normalize() noexcept
 {
 	const auto length = glm::length(normal);
@@ -25,14 +25,14 @@ void Plane::Normalize() noexcept
 		distance *= inverseLength;
 	}
 }
-
+//-----------------------------------------------------------------------------
 Plane Plane::Normalize(const Plane& plane) noexcept
 {
 	auto result = plane;
 	result.Normalize();
 	return result;
 }
-
+//-----------------------------------------------------------------------------
 float Plane::Dot(const glm::vec4& vec) const noexcept
 {
 	return normal.x * vec.x +
@@ -40,22 +40,22 @@ float Plane::Dot(const glm::vec4& vec) const noexcept
 		normal.z * vec.z +
 		distance * vec.w;
 }
-
+//-----------------------------------------------------------------------------
 float Plane::DotCoordinate(const glm::vec3& vec) const noexcept
 {
 	return normal.x * vec.x + normal.y * vec.y + normal.z * vec.z + distance;
 }
-
+//-----------------------------------------------------------------------------
 float Plane::DotNormal(const glm::vec3& vec) const noexcept
 {
 	return glm::dot(normal, vec);
 }
-
+//-----------------------------------------------------------------------------
 float Plane::GetDistanceToPoint(const glm::vec3& point) const noexcept
 {
 	return DotCoordinate(point);
 }
-
+//-----------------------------------------------------------------------------
 PlaneIntersectionType Plane::Intersects(const glm::vec3& point) const noexcept
 {
 	const auto dotProduct = DotCoordinate(point);
@@ -63,7 +63,7 @@ PlaneIntersectionType Plane::Intersects(const glm::vec3& point) const noexcept
 	if( dotProduct < 0.0f ) return PlaneIntersectionType::Back;
 	return PlaneIntersectionType::Intersecting;
 }
-
+//-----------------------------------------------------------------------------
 PlaneIntersectionType Plane::Intersects(const BoundingBox& box) const noexcept
 {
 	glm::vec3 positiveVertex{ box.min.x, box.min.y, box.min.z };
@@ -89,12 +89,12 @@ PlaneIntersectionType Plane::Intersects(const BoundingBox& box) const noexcept
 	if( DotCoordinate(positiveVertex) < 0.0f ) return PlaneIntersectionType::Back;
 	return PlaneIntersectionType::Intersecting;
 }
-
+//-----------------------------------------------------------------------------
 PlaneIntersectionType Plane::Intersects(const BoundingFrustum& frustum) const noexcept
 {
 	return frustum.Intersects(*this);
 }
-
+//-----------------------------------------------------------------------------
 PlaneIntersectionType Plane::Intersects(const BoundingSphere& sphere) const noexcept
 {
 	const auto dotProduct = DotCoordinate(sphere.center);
@@ -102,7 +102,7 @@ PlaneIntersectionType Plane::Intersects(const BoundingSphere& sphere) const noex
 	if( dotProduct < -sphere.radius ) return PlaneIntersectionType::Back;
 	return PlaneIntersectionType::Intersecting;
 }
-
+//-----------------------------------------------------------------------------
 Plane Plane::Transform(const Plane& plane, const glm::mat4& matrix)
 {
 	const auto transformMatrix = glm::inverse(matrix);
@@ -116,8 +116,9 @@ Plane Plane::Transform(const Plane& plane, const glm::mat4& matrix)
 	result.distance = transformedVector.w;
 	return result;
 }
-
+//-----------------------------------------------------------------------------
 Plane Plane::CreateFromPointNormal(const glm::vec3& point, const glm::vec3& normal)
 {
 	return Plane(normal, -glm::dot(normal, point));
 }
+//-----------------------------------------------------------------------------

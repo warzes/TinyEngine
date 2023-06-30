@@ -4,7 +4,7 @@
 #include "Ray.h"
 #include "Plane.h"
 #include "Core/Math/MathCoreFunc.h"
-
+//-----------------------------------------------------------------------------
 ContainmentType BoundingSphere::Contains(const glm::vec3& point) const noexcept
 {
 	const auto distanceSquared = DistanceSquared(point, center);
@@ -13,7 +13,7 @@ ContainmentType BoundingSphere::Contains(const glm::vec3& point) const noexcept
 	else if( distanceSquared < radiusSquared ) return ContainmentType::Contains;
 	return ContainmentType::Intersects;
 }
-
+//-----------------------------------------------------------------------------
 ContainmentType BoundingSphere::Contains(const BoundingBox& box) const noexcept
 {
 	bool inside = true;
@@ -29,7 +29,7 @@ ContainmentType BoundingSphere::Contains(const BoundingBox& box) const noexcept
 	if( Intersects(box) ) return ContainmentType::Intersects;
 	return ContainmentType::Disjoint;
 }
-
+//-----------------------------------------------------------------------------
 ContainmentType BoundingSphere::Contains(const BoundingSphere& sphere) const noexcept
 {
 	const auto distance = glm::distance(center, sphere.center);
@@ -37,34 +37,34 @@ ContainmentType BoundingSphere::Contains(const BoundingSphere& sphere) const noe
 	if( distance + sphere.radius < radius ) return ContainmentType::Contains;
 	return ContainmentType::Intersects;
 }
-
+//-----------------------------------------------------------------------------
 bool BoundingSphere::Intersects(const BoundingBox& box) const noexcept
 {
 	return box.Intersects(*this);
 }
-
+//-----------------------------------------------------------------------------
 bool BoundingSphere::Intersects(const BoundingSphere& sphere) const noexcept
 {
 	const auto distance = glm::distance(center, sphere.center);
 	return distance <= radius + sphere.radius;
 }
-
+//-----------------------------------------------------------------------------
 PlaneIntersectionType BoundingSphere::Intersects(const Plane& plane) const noexcept
 {
 	return plane.Intersects(*this);
 }
-
+//-----------------------------------------------------------------------------
 std::optional<float> BoundingSphere::Intersects(const Ray& ray) const noexcept
 {
 	return ray.Intersects(*this);
 }
-
+//-----------------------------------------------------------------------------
 BoundingSphere BoundingSphere::CreateFromPoints(const glm::vec3* points, std::size_t pointCount) noexcept
 {
 	auto accessor = [&](std::size_t i) -> glm::vec3 { return points[i]; };
 	return CreateFromPoints(std::move(accessor), pointCount);
 }
-
+//-----------------------------------------------------------------------------
 BoundingSphere BoundingSphere::CreateFromPoints(std::function<glm::vec3(std::size_t)> points, std::size_t pointCount) noexcept
 {
 	assert(points != nullptr);
@@ -150,3 +150,4 @@ BoundingSphere BoundingSphere::CreateFromPoints(std::function<glm::vec3(std::siz
 	sphere.radius = radius;
 	return sphere;
 }
+//-----------------------------------------------------------------------------

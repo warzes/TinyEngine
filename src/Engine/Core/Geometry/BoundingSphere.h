@@ -6,7 +6,13 @@ class BoundingSphere final
 {
 public:
 	BoundingSphere() = default;
+	BoundingSphere(const BoundingSphere&) noexcept = default;
 	BoundingSphere(const glm::vec3& center, float radius) : center(center), radius(radius) {}
+
+	BoundingSphere& operator=(const BoundingSphere&) noexcept = default;
+
+	bool operator==(const BoundingSphere& rhs) const { return center == rhs.center && radius == rhs.radius; }
+	bool operator!=(const BoundingSphere& rhs) const { return center != rhs.center || radius != rhs.radius; }
 
 	[[nodiscard]] ContainmentType Contains(const glm::vec3& point) const noexcept;
 	[[nodiscard]] ContainmentType Contains(const BoundingBox& box) const noexcept;

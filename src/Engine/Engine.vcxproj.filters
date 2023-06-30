@@ -20,21 +20,6 @@
     <ClCompile Include="Core\Geometry\BoundingBox.cpp">
       <Filter>Core\Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Geometry\BoundingFrustum.cpp">
-      <Filter>Core\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Geometry\BoundingSphere.cpp">
-      <Filter>Core\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Geometry\Collisions.cpp">
-      <Filter>Core\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Geometry\Plane.cpp">
-      <Filter>Core\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Geometry\Ray.cpp">
-      <Filter>Core\Geometry</Filter>
-    </ClCompile>
     <ClCompile Include="Platform\Input.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
@@ -73,6 +58,21 @@
     </ClCompile>
     <ClCompile Include="EngineApp\EngineTimestamp.cpp">
       <Filter>EngineApp</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\Collisions.cpp">
+      <Filter>Core\Geometry\old</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\BoundingSphere.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\BoundingFrustum.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\Ray.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\Plane.cpp">
+      <Filter>Core\Geometry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -118,40 +118,7 @@
     <ClInclude Include="Core\Math\MathCoreFunc.h">
       <Filter>Core\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Geometry\Temp.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Geometry\AABB.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Geometry\BoundingBox.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Geometry\BoundingFrustum.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Geometry\BoundingSphere.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Geometry\Collisions.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Geometry\GeometryCore.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Geometry\GeometryShapes.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Geometry\GJK.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Geometry\Plane.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Geometry\Ray.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Geometry\Sphere.h">
       <Filter>Core\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Platform\Window.h">
@@ -202,6 +169,39 @@
     <ClInclude Include="EngineApp\EngineTimestamp.h">
       <Filter>EngineApp</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Geometry\AABB.h">
+      <Filter>Core\Geometry\old</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Collisions.h">
+      <Filter>Core\Geometry\old</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\GeometryCore.h">
+      <Filter>Core\Geometry\old</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\GeometryShapes.h">
+      <Filter>Core\Geometry\old</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\GJK.h">
+      <Filter>Core\Geometry\old</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Sphere.h">
+      <Filter>Core\Geometry\old</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Temp.h">
+      <Filter>Core\Geometry\old</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\BoundingSphere.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\BoundingFrustum.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Ray.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Plane.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -249,10 +249,13 @@
     <Filter Include="Core\Debug">
       <UniqueIdentifier>{12d5a640-6179-46cc-8b35-035ca8fac904}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Geometry\old">
+      <UniqueIdentifier>{42176c97-4270-422e-bc7e-470b059f0822}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Core\Geometry\Collisions.inl">
-      <Filter>Core\Geometry</Filter>
+      <Filter>Core\Geometry\old</Filter>
     </None>
   </ItemGroup>
 </Project>

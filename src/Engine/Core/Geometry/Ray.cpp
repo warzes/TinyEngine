@@ -5,7 +5,7 @@
 #include "BoundingSphere.h"
 #include "Plane.h"
 #include "Core/Math/MathCoreFunc.h"
-
+//-----------------------------------------------------------------------------
 std::optional<float> Ray::Intersects(const BoundingBox& box) const
 {
 	using T = float;
@@ -113,12 +113,12 @@ std::optional<float> Ray::Intersects(const BoundingBox& box) const
 	assert(tNear <= tFar && tFar >= 0);
 	return tNear;
 }
-
+//-----------------------------------------------------------------------------
 std::optional<float> Ray::Intersects(const BoundingFrustum& frustum) const
 {
 	return frustum.Intersects(*this);
 }
-
+//-----------------------------------------------------------------------------
 std::optional<float> Ray::Intersects(const BoundingSphere& sphere) const
 {
 	const auto toSphere = sphere.center - position;
@@ -143,7 +143,7 @@ std::optional<float> Ray::Intersects(const BoundingSphere& sphere) const
 	}
 	return glm::max(distance - std::sqrt(discriminant), 0.0f);
 }
-
+//-----------------------------------------------------------------------------
 std::optional<float> Ray::Intersects(const Plane& plane) const
 {
 	constexpr auto Epsilon = 1e-6f;
@@ -162,3 +162,4 @@ std::optional<float> Ray::Intersects(const Plane& plane) const
 	}
 	return distance;
 }
+//-----------------------------------------------------------------------------

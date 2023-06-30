@@ -6,8 +6,11 @@ class Plane final
 {
 public:
 	Plane() = default;
+	Plane(const Plane&) noexcept = default;
 	Plane(const glm::vec3& normal, float distance) : normal(normal), distance(distance) {}
 	Plane(const glm::vec3& point0, const glm::vec3& point1, const glm::vec3& point2) noexcept;
+
+	Plane& operator =(const Plane&) noexcept = default;
 
 	void Normalize() noexcept;
 	[[nodiscard]] static Plane Normalize(const Plane& plane) noexcept;
