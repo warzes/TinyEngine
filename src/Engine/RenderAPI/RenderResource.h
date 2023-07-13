@@ -215,7 +215,8 @@ public:
 using ShaderProgramRef = std::shared_ptr<ShaderProgram>;
 
 static_assert(sizeof(ShaderProgram) == 8, "ShaderProgram size changed!!!");
-//inline bool operator==(ShaderProgramRef Left, ShaderProgramRef Right) noexcept { return *Left == *Right; }
+
+class VertexArray;
 
 class GPUBuffer final : public glObject
 {
@@ -235,11 +236,13 @@ public:
 	BufferUsage usage = BufferUsage::StaticDraw;
 	unsigned count = 0;
 	unsigned size = 0; 
+	std::shared_ptr<VertexArray> parentArray = nullptr;
 };
 using GPUBufferRef = std::shared_ptr<GPUBuffer>;
 
-static_assert(sizeof(GPUBuffer) == 20, "GPUBuffer size changed!!!");
-//inline bool operator==(GPUBufferRef Left, GPUBufferRef Right) noexcept { return *Left == *Right; }
+static_assert(sizeof(GPUBuffer) == 40, "GPUBuffer size changed!!!");
+
+// TODO: возможно снова разделить на вершинный буфер и т.д. так как VAO нужно только вершинному и не нужно например юниформ буферу
 
 class VertexArray final : public glObject
 {
@@ -261,7 +264,6 @@ public:
 };
 using VertexArrayRef = std::shared_ptr<VertexArray>;
 static_assert(sizeof(VertexArray) == 48, "VertexArray size changed!!!");
-//inline bool operator==(VertexArrayRef Left, VertexArrayRef Right) noexcept { return *Left == *Right; }
 
 class GeometryBuffer final
 {

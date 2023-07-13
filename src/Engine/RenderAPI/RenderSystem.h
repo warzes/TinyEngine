@@ -127,11 +127,13 @@ public:
 	//-------------------------------------------------------------------------
 	// Set Current State 
 	//-------------------------------------------------------------------------
+	void ResetAllStates();
 	void ResetState(ResourceType type);
 	void Bind(DepthState state);
 	void Bind(StencilState state);
 	void Bind(ShaderProgramRef resource);
 	void Bind(GPUBufferRef buffer);
+	void Bind(VertexArrayRef vao);
 	void Bind(const VertexAttribute& Attribute);
 	void Bind(Texture2DRef resource, unsigned slot = 0);
 	void Bind(FramebufferRef resource);
@@ -181,6 +183,16 @@ private:
 		StencilState CurrentStencilState{};
 
 		GLbitfield CurrentClearMask = 0;
+
+		void Reset()
+		{
+			CurrentShaderProgram = CurrentVBO = CurrentIBO = CurrentVAO = CurrentFramebuffer = 0;
+			for (size_t i = 0; i < MaxBindingTextures; i++)
+				CurrentTexture2D[i] = 0;
+			CurrentDepthState = {};
+			CurrentStencilState = {};
+			CurrentClearMask = 0;
+		}
 	} m_cache;
 
 	unsigned& getCurrentCacheBufferFromType(BufferType type)

@@ -320,6 +320,13 @@ void RenderSystem::SetUniform(const std::string& uniformName, const glm::mat4& v
 void RenderSystem::UpdateBuffer(GPUBufferRef buffer, unsigned offset, unsigned count, unsigned size, const void* data)
 {
 	assert(IsValid(buffer));
+
+	// TODO: оптимизировать
+
+	// это вершинный буффер?
+	if (buffer->type == BufferType::ArrayBuffer)
+		Bind(buffer->parentArray);
+
 	const GLenum target = TranslateToGL(buffer->type);
 	const unsigned id = *buffer;
 	const unsigned cacheId = getCurrentCacheBufferFromType(buffer->type);
@@ -335,7 +342,7 @@ void RenderSystem::UpdateBuffer(GPUBufferRef buffer, unsigned offset, unsigned c
 	buffer->size = size;
 
 	// restore current buffer
-	if( cacheId != id ) glBindBuffer(target, cacheId);
+	//if( cacheId != id ) glBindBuffer(target, cacheId);
 }
 //-----------------------------------------------------------------------------
 void* RenderSystem::MapBuffer(GPUBufferRef buffer)
@@ -347,6 +354,7 @@ void* RenderSystem::MapBuffer(GPUBufferRef buffer)
 //-----------------------------------------------------------------------------
 void* RenderSystem::MapBuffer(GPUBufferRef buffer, unsigned offset, unsigned size)
 {
+	// TODO: нужно подключать вао
 	assert(IsValid(buffer));
 	Bind(buffer);
 	return glMapBufferRange(TranslateToGL(buffer->type), offset, size, GL_MAP_WRITE_BIT);
@@ -354,9 +362,27 @@ void* RenderSystem::MapBuffer(GPUBufferRef buffer, unsigned offset, unsigned siz
 //-----------------------------------------------------------------------------
 bool RenderSystem::UnmapBuffer(GPUBufferRef buffer)
 {
+	// TODO: нужно подключать вао
 	assert(IsValid(buffer));
 	assert(*buffer == getCurrentCacheBufferFromType(buffer->type));
 	return GL_TRUE == glUnmapBuffer(TranslateToGL(buffer->type));
+}
+//-----------------------------------------------------------------------------
+void RenderSystem::ResetAllStates()
+{
+	m_cache.Reset();
+
+	glUseProgram(0);
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	for (unsigned i = 0; i < MaxBindingTextures; i++)
+	{
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	glActiveTexture(GL_TEXTURE0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 //-----------------------------------------------------------------------------
 void RenderSystem::ResetState(ResourceType type)
@@ -470,6 +496,19 @@ void RenderSystem::Bind(GPUBufferRef buffer)
 	glBindBuffer(TranslateToGL(buffer->type), *buffer);
 }
 //-----------------------------------------------------------------------------
+void RenderSystem::Bind(VertexArrayRef vao)
+{
+	if (m_cache.CurrentVAO != *vao)
+	{
+		m_cache.CurrentVAO = *vao;
+		m_cache.CurrentVBO = 0;
+		m_cache.CurrentIBO = 0;
+		glBindVertexArray(*vao);
+	}
+	Bind(vao->vbo);
+	Bind(vao->ibo);
+}
+//-----------------------------------------------------------------------------
 void RenderSystem::Bind(const VertexAttribute& attribute)
 {
 	const GLuint oglLocation = static_cast<GLuint>(attribute.location);
@@ -551,16 +590,7 @@ void RenderSystem::Draw(VertexArrayRef vao, PrimitiveTopology primitive)
 {
 	assert(IsValid(vao));
 
-	if( m_cache.CurrentVAO != *vao )
-	{
-		m_cache.CurrentVAO = *vao;
-		m_cache.CurrentVBO = 0;
-		m_cache.CurrentIBO = 0;
-		glBindVertexArray(*vao);
-	}
-	Bind(vao->vbo);
-	Bind(vao->ibo);
-
+	Bind(vao);
 	if( vao->ibo )
 	{
 		glDrawElements(TranslateToGL(primitive), (GLsizei)vao->ibo->count, SizeIndexType(vao->ibo->size), nullptr);

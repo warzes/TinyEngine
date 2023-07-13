@@ -126,6 +126,8 @@ VertexArrayRef RenderSystem::CreateVertexArray(GPUBufferRef vbo, GPUBufferRef ib
 		LogError("VertexArray create failed!");
 		return {};
 	}
+	vbo->parentArray = resource;
+	if (ibo) ibo->parentArray = resource;
 
 	glBindVertexArray(*resource);
 	Bind(resource->vbo);
