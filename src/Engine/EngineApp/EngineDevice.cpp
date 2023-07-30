@@ -13,16 +13,34 @@ extern Window gWindow;
 extern RenderSystem gRenderSystem;
 extern GraphicsSystem gGraphicsSystem;
 //-----------------------------------------------------------------------------
+EngineDevice::EngineDevice(const EngineDeviceCreateInfo& createInfo)
+{
+	gLogSystem.Create(createInfo.log);
+	LogPrint("EngineDevice Create");
+
+	if (!gWindow.Create(createInfo.window)) return;
+	gInput.Create();
+	gRenderSystem.Create(createInfo.render);
+	gGraphicsSystem.Create();
+
+	m_timestamp.PreviousFrameTimestamp = EngineTimestamp::GetTime();
+
+	isExitRequested = false;
+}
+//-----------------------------------------------------------------------------
 EngineDevice::~EngineDevice()
 {
-	close();
+	LogPrint("EngineDevice Destroy");
+
+	gGraphicsSystem.Destroy();
+	gRenderSystem.Destroy();
+	gWindow.Destroy();
+	gLogSystem.Destroy();
 }
 //-----------------------------------------------------------------------------
 std::shared_ptr<EngineDevice> EngineDevice::Create(const EngineDeviceCreateInfo& createInfo)
 {
-	auto ptr = std::make_shared<EngineDevice>();
-	ptr->init(createInfo);
-	return ptr;
+	return std::make_shared<EngineDevice>(createInfo);
 }
 //-----------------------------------------------------------------------------
 void EngineDevice::RunApp(std::shared_ptr<IApp> app)
@@ -35,11 +53,8 @@ void EngineDevice::RunApp(std::shared_ptr<IApp> app)
 
 	// Init
 	m_currentApp = app;
-
 	if( m_currentApp->Create() )
 	{
-		m_timestamp.PreviousFrameTimestamp = EngineTimestamp::GetTime();
-
 		while( !isExitRequested )
 		{
 			update();
@@ -50,31 +65,6 @@ void EngineDevice::RunApp(std::shared_ptr<IApp> app)
 	// Destroy App
 	m_currentApp->Destroy();
 	m_currentApp = nullptr;
-}
-//-----------------------------------------------------------------------------
-void EngineDevice::init(const EngineDeviceCreateInfo& createInfo)
-{
-	gLogSystem.Create(createInfo.log);
-	LogPrint("EngineDevice Create");
-
-	if( !gWindow.Create(createInfo.window))
-		return;
-
-	gInput.Create();
-	gRenderSystem.Create(createInfo.render);
-	gGraphicsSystem.Create();
-
-	isExitRequested = false;
-}
-//-----------------------------------------------------------------------------
-void EngineDevice::close()
-{
-	LogPrint("EngineDevice Destroy");
-	
-	gGraphicsSystem.Destroy();
-	gRenderSystem.Destroy();
-	gWindow.Destroy();
-	gLogSystem.Destroy();
 }
 //-----------------------------------------------------------------------------
 void EngineDevice::update()

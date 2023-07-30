@@ -19,7 +19,7 @@ struct EngineDeviceCreateInfo final
 class EngineDevice final
 {
 public:
-	EngineDevice() = default;
+	EngineDevice(const EngineDeviceCreateInfo& createInfo);
 	~EngineDevice();
 
 	static std::shared_ptr<EngineDevice> Create(const EngineDeviceCreateInfo& createInfo);
@@ -31,9 +31,6 @@ private:
 	EngineDevice(const EngineDevice&) = delete;
 	EngineDevice& operator=(EngineDevice&&) = delete;
 	EngineDevice& operator=(const EngineDevice&) = delete;
-
-	void init(const EngineDeviceCreateInfo& createInfo);
-	void close();
 
 	void update();
 	void render();
