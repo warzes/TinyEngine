@@ -4,13 +4,13 @@
 #include "TranslateToGL.h"
 #include "Core/IO/STBImageLoader.h"
 //-----------------------------------------------------------------------------
-Shader::Shader(ShaderType type)
+Shader::Shader(ShaderPipelineStage stage)
 {
-	m_handle = glCreateShader(TranslateToGL(type));
+	m_handle = glCreateShader(TranslateToGL(stage));
 	m_ownership = true;
 }
 //-----------------------------------------------------------------------------
-bool ShaderSource::LoadFromFile(const std::string& file)
+bool ShaderBytecode::LoadFromFile(const std::string& file)
 {
 	// TODO: возможно заменить fstream на file?
 	m_filename = file;
@@ -30,7 +30,7 @@ bool ShaderSource::LoadFromFile(const std::string& file)
 	return true;
 }
 //-----------------------------------------------------------------------------
-ShaderProgramRef RenderSystem::CreateShaderProgram(const ShaderSource& vertexShaderSource, const ShaderSource& fragmentShaderSource)
+ShaderProgramRef RenderSystem::CreateShaderProgram(const ShaderBytecode& vertexShaderSource, const ShaderBytecode& fragmentShaderSource)
 {
 	if( !vertexShaderSource.IsValid() )
 	{
@@ -44,8 +44,8 @@ ShaderProgramRef RenderSystem::CreateShaderProgram(const ShaderSource& vertexSha
 		return {};
 	}
 
-	ShaderRef glShaderVertex   = compileShader(ShaderType::Vertex, vertexShaderSource.GetSource());
-	ShaderRef glShaderFragment = compileShader(ShaderType::Fragment, fragmentShaderSource.GetSource());
+	ShaderRef glShaderVertex   = compileShader(ShaderPipelineStage::Vertex, vertexShaderSource.GetSource());
+	ShaderRef glShaderFragment = compileShader(ShaderPipelineStage::Fragment, fragmentShaderSource.GetSource());
 
 	ShaderProgramRef resource;
 	if( IsValid(glShaderVertex) && IsValid(glShaderFragment) )
@@ -459,7 +459,7 @@ FramebufferRef RenderSystem::CreateFramebuffer(FramebufferAttachment attachment,
 	return resource;
 }
 //-----------------------------------------------------------------------------
-ShaderRef RenderSystem::compileShader(ShaderType type, const std::string& source)
+ShaderRef RenderSystem::compileShader(ShaderPipelineStage type, const std::string& source)
 {
 	const char* shaderText = source.data();
 	const GLint lenShaderText = static_cast<GLint>(source.size());

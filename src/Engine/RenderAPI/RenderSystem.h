@@ -20,7 +20,7 @@ public:
 	//-------------------------------------------------------------------------
 	// Core
 	//-------------------------------------------------------------------------
-	void Create(const RenderCreateInfo& createInfo);
+	bool Create(const RenderCreateInfo& createInfo);
 	void Destroy();
 
 	//-------------------------------------------------------------------------
@@ -37,7 +37,7 @@ public:
 	//-------------------------------------------------------------------------
 	// Create Render Resource
 	//-------------------------------------------------------------------------
-	ShaderProgramRef CreateShaderProgram(const ShaderSource& vertexShaderSource, const ShaderSource& fragmentShaderSource);
+	ShaderProgramRef CreateShaderProgram(const ShaderBytecode& vertexShaderSource, const ShaderBytecode& fragmentShaderSource);
 	GPUBufferRef CreateVertexBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* data);
 	GPUBufferRef CreateIndexBuffer(BufferUsage usage, unsigned indexCount, IndexFormat indexFormat, const void* data);
 	VertexArrayRef CreateVertexArray(GPUBufferRef vbo, GPUBufferRef ibo, const std::vector<VertexAttribute>& attribs);
@@ -161,7 +161,7 @@ private:
 
 	void initializeCapabilities(bool print);
 
-	ShaderRef compileShader(ShaderType type, const std::string& source);
+	ShaderRef compileShader(ShaderPipelineStage type, const std::string& source);
 	void attachmentFrameBufferColor(FramebufferRef fbo, RenderbufferRef colorBuffer);
 	void attachmentFrameBufferColor(FramebufferRef fbo, Texture2DRef colorTexture);
 	void attachmentFrameBufferDepthStencil(FramebufferRef fbo, RenderbufferRef depthStencilBuffer);

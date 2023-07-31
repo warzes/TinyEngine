@@ -57,7 +57,7 @@ void APIENTRY glDebugCallback(GLenum source, GLenum type, GLuint id, GLenum seve
 //-----------------------------------------------------------------------------
 RenderSystem gRenderSystem;
 //-----------------------------------------------------------------------------
-void RenderSystem::Create(const RenderCreateInfo& createInfo)
+bool RenderSystem::Create(const RenderCreateInfo& createInfo)
 {
 #if defined(_DEBUG)
 	glDebugMessageCallback(glDebugCallback, nullptr);
@@ -88,6 +88,8 @@ void RenderSystem::Create(const RenderCreateInfo& createInfo)
 	glClearColor(createInfo.clearColor.x, createInfo.clearColor.y, createInfo.clearColor.z, 1.0f);
 
 	setClearMask(true, true, false);
+
+	return true;
 }
 //-----------------------------------------------------------------------------
 void RenderSystem::Destroy()
@@ -455,7 +457,8 @@ void RenderSystem::Bind(StencilState state)
 		setClearMask(true, m_cache.CurrentDepthState.enable, state.enable);
 	}
 
-	if (cache.stencilRef != state.stencilRef || cache.readMask != state.readMask
+	if (cache.stencilRef != state.stencilRef 
+		|| cache.readMask != state.readMask
 		|| cache.stencilFuncFront != state.stencilFuncFront
 		|| cache.stencilFailOpFront != state.stencilFailOpFront
 		|| cache.stencilZFailOpFront != state.stencilZFailOpFront

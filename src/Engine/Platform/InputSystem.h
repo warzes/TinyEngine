@@ -1,19 +1,12 @@
 ﻿#pragma once
+
 constexpr auto MAX_KEYBOARD_KEYS = 512;
 constexpr auto MAX_KEY_PRESSED_QUEUE = 16;
 constexpr auto MAX_CHAR_PRESSED_QUEUE = 16;
 constexpr auto MAX_MOUSE_BUTTONS = 8;
 
-class Input final
+namespace Input
 {
-	friend class EngineDevice;
-	friend void GLFWKeyCallback(GLFWwindow*, int, int, int, int) noexcept;
-	friend void GLFWCharCallback(GLFWwindow*, unsigned int) noexcept;
-	friend void GLFWMouseButtonCallback(GLFWwindow*, int, int, int) noexcept;
-	friend void GLFWMouseCursorPosCallback(GLFWwindow*, double, double) noexcept;
-	friend void GLFWMouseScrollCallback(GLFWwindow*, double, double) noexcept;
-	friend void GLFWCursorEnterCallback(GLFWwindow*, int) noexcept;
-public:
 	enum KeyboardKey
 	{
 		KEY_NULL = 0,            // Key: NULL, used for no key pressed
@@ -143,10 +136,21 @@ public:
 		MOUSE_FORWARD = 5, // Mouse button forward (advanced mouse device)
 		MOUSE_BACK = 6,    // Mouse button back (advanced mouse device)
 	};
+}
 
-	Input() = default;
+class InputSystem final
+{
+	friend class EngineDevice;
+	friend void GLFWKeyCallback(GLFWwindow*, int, int, int, int) noexcept;
+	friend void GLFWCharCallback(GLFWwindow*, unsigned int) noexcept;
+	friend void GLFWMouseButtonCallback(GLFWwindow*, int, int, int) noexcept;
+	friend void GLFWMouseCursorPosCallback(GLFWwindow*, double, double) noexcept;
+	friend void GLFWMouseScrollCallback(GLFWwindow*, double, double) noexcept;
+	friend void GLFWCursorEnterCallback(GLFWwindow*, int) noexcept;
+public:
+	InputSystem() = default;
 
-	void Create();
+	bool Create();
 	void Update();
 
 	bool IsKeyPressed(int key) const;
@@ -178,10 +182,10 @@ public:
 	}
 
 private:
-	Input(Input&&) = delete;
-	Input(const Input&) = delete;
-	Input& operator=(Input&&) = delete;
-	Input& operator=(const Input&) = delete;
+	InputSystem(InputSystem&&) = delete;
+	InputSystem(const InputSystem&) = delete;
+	InputSystem& operator=(InputSystem&&) = delete;
+	InputSystem& operator=(const InputSystem&) = delete;
 
 	struct
 	{
@@ -210,4 +214,4 @@ private:
 	} m_mouse;
 };
 
-Input& GetInput();
+InputSystem& GetInputSystem();

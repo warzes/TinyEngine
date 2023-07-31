@@ -111,9 +111,9 @@
     <ClCompile Include="Graphics\DebugDraw.cpp" />
     <ClCompile Include="Graphics\GraphicsResource.cpp" />
     <ClCompile Include="Graphics\GraphicsSystem.cpp" />
-    <ClCompile Include="Platform\Input.cpp" />
+    <ClCompile Include="Platform\InputSystem.cpp" />
     <ClCompile Include="Platform\Monitor.cpp" />
-    <ClCompile Include="Platform\Window.cpp" />
+    <ClCompile Include="Platform\WindowSystem.cpp" />
     <ClCompile Include="RenderAPI\Capabilities.cpp" />
     <ClCompile Include="RenderAPI\OpenGLUtil.cpp" />
     <ClCompile Include="RenderAPI\RenderResource.cpp" />
@@ -156,9 +156,9 @@
     <ClInclude Include="Graphics\DebugDraw.h" />
     <ClInclude Include="Graphics\GraphicsResource.h" />
     <ClInclude Include="Graphics\GraphicsSystem.h" />
-    <ClInclude Include="Platform\Input.h" />
+    <ClInclude Include="Platform\InputSystem.h" />
     <ClInclude Include="Platform\Monitor.h" />
-    <ClInclude Include="Platform\Window.h" />
+    <ClInclude Include="Platform\WindowSystem.h" />
     <ClInclude Include="RenderAPI\Capabilities.h" />
     <ClInclude Include="RenderAPI\OpenGLUtil.h" />
     <ClInclude Include="RenderAPI\RenderEnums.h" />

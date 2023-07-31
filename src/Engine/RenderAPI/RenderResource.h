@@ -10,7 +10,7 @@
 
 struct DepthState final
 {
-	ComparisonFunc depthFunc = ComparisonFunc::Less;
+	ComparisonFunction depthFunc = ComparisonFunction::Less;
 	bool depthWrite = true;
 	bool enable = true;
 };
@@ -21,12 +21,12 @@ struct StencilState final
 	uint8_t readMask = 0xFF;
 	uint8_t writeMask = 0xFF;
 	
-	ComparisonFunc stencilFuncFront = ComparisonFunc::Always;
+	ComparisonFunction stencilFuncFront = ComparisonFunction::Always;
 	StencilOp stencilPassOpFront = StencilOp::Keep;  // stencil and depth pass
 	StencilOp stencilFailOpFront = StencilOp::Keep;  // stencil fail (depth irrelevant)
 	StencilOp stencilZFailOpFront = StencilOp::Keep; // stencil pass, depth fail
 	
-	ComparisonFunc stencilFuncBack = ComparisonFunc::Always;
+	ComparisonFunction stencilFuncBack = ComparisonFunction::Always;
 	StencilOp stencilPassOpBack = StencilOp::Keep;
 	StencilOp stencilFailOpBack = StencilOp::Keep;
 	StencilOp stencilZFailOpBack = StencilOp::Keep;
@@ -49,18 +49,18 @@ struct BlendState final
 //=============================================================================
 
 // A class that can load shader sources in from files, and do some preprocessing on them.
-class ShaderSource final
+class ShaderBytecode final
 {
 public:
-	ShaderSource() = default;
+	ShaderBytecode() = default;
 	// Loads in the shader from a memory data.
-	ShaderSource(const std::string& src) : m_src(src) {};
-	ShaderSource(ShaderSource&&) = default;
-	ShaderSource(const ShaderSource&) = default;
+	ShaderBytecode(const std::string& src) : m_src(src) {};
+	ShaderBytecode(ShaderBytecode&&) = default;
+	ShaderBytecode(const ShaderBytecode&) = default;
 
-	ShaderSource& operator=(ShaderSource&&) = default;
-	ShaderSource& operator=(const ShaderSource&) = default;
-	ShaderSource& operator=(const std::string& src) { m_src = src; return *this; }
+	ShaderBytecode& operator=(ShaderBytecode&&) = default;
+	ShaderBytecode& operator=(const ShaderBytecode&) = default;
+	ShaderBytecode& operator=(const std::string& src) { m_src = src; return *this; }
 
 	bool LoadFromFile(const std::string& file);
 
@@ -78,7 +78,7 @@ public:
 #if defined(_DEBUG)
 		if( macroPos == std::string::npos )
 		{
-			LogFatal("ShaderSource::insert_macro_value is called for '" + m_filename + "', but the shader doesn't have any macro named " + macroName);
+			LogFatal("ShaderBytecode::insert_macro_value is called for '" + m_filename + "', but the shader doesn't have any macro named " + macroName);
 			return;
 		}
 #endif
@@ -191,7 +191,7 @@ class Shader final : public glObject
 {
 public:
 	explicit Shader(GLuint handle) { m_handle = handle; m_ownership = false; }
-	explicit Shader(ShaderType type);
+	explicit Shader(ShaderPipelineStage stage);
 	~Shader() { if( m_ownership ) glDeleteShader(m_handle); }
 
 	Shader(Shader&&) noexcept = default;
@@ -315,7 +315,6 @@ public:
 using Texture2DRef = std::shared_ptr<Texture2D>;
 
 static_assert(sizeof(Texture2D) == 20, "Texture2D size changed!!!");
-//inline bool operator==(Texture2DRef Left, Texture2DRef Right) noexcept { return *Left == *Right; }
 
 class Renderbuffer final : public glObject
 {
@@ -340,7 +339,6 @@ public:
 using RenderbufferRef = std::shared_ptr<Renderbuffer>;
 
 static_assert(sizeof(Renderbuffer) == 24, "Renderbuffer size changed!!!");
-//inline bool operator==(RenderbufferRef Left, RenderbufferRef Right) noexcept { return *Left == *Right; }
 
 class Framebuffer final : public glObject
 {
@@ -365,7 +363,6 @@ public:
 using FramebufferRef = std::shared_ptr<Framebuffer>;
 
 static_assert(sizeof(Framebuffer) == 80, "Framebuffer size changed!!!");
-//inline bool operator==(FramebufferRef Left, FramebufferRef Right) noexcept { return *Left == *Right; }
 
 #if USE_OPENGL_VERSION == OPENGL40
 class TransformFeedback final : public glObject
@@ -384,6 +381,5 @@ public:
 using TransformFeedbackRef = std::shared_ptr<TransformFeedback>;
 
 static_assert(sizeof(TransformFeedback) == 8, "TransformFeedback size changed!!!");
-//inline bool operator==(TransformFeedbackRef Left, TransformFeedbackRef Right) noexcept { return *Left == *Right; }
 
 #endif // OPENGL40

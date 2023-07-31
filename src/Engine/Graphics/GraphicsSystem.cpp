@@ -4,9 +4,11 @@
 //-----------------------------------------------------------------------------
 GraphicsSystem gGraphicsSystem;
 //-----------------------------------------------------------------------------
-void GraphicsSystem::Create()
+bool GraphicsSystem::Create()
 {
 	DebugDraw::Init();
+
+	return true;
 }
 //-----------------------------------------------------------------------------
 void GraphicsSystem::Destroy()

@@ -14,7 +14,7 @@ class GraphicsSystem final
 public:
 	GraphicsSystem() = default;
 
-	void Create();
+	bool Create();
 	void Destroy();
 
 	ModelRef CreateModel(const char* fileName, const char* pathMaterialFiles = "./");

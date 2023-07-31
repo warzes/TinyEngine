@@ -36,22 +36,22 @@
 	return 0;
 }
 //-----------------------------------------------------------------------------
-[[nodiscard]] inline GLenum TranslateToGL(ComparisonFunc func)
+[[nodiscard]] inline GLenum TranslateToGL(ComparisonFunction func)
 {
 	switch (func)
 	{
-	case ComparisonFunc::Never:    return GL_NEVER;
-	case ComparisonFunc::Equal:    return GL_EQUAL;
-	case ComparisonFunc::Less:     return GL_LESS;
-	case ComparisonFunc::LEqual:   return GL_LEQUAL;
-	case ComparisonFunc::Greater:  return GL_GREATER;
-	case ComparisonFunc::GEqual:   return GL_GEQUAL;
-	case ComparisonFunc::NotEqual: return GL_NOTEQUAL;
-	case ComparisonFunc::Always:   return GL_ALWAYS;
+	case ComparisonFunction::Never:        return GL_NEVER;
+	case ComparisonFunction::Equal:        return GL_EQUAL;
+	case ComparisonFunction::Less:         return GL_LESS;
+	case ComparisonFunction::LessEqual:    return GL_LEQUAL;
+	case ComparisonFunction::Greater:      return GL_GREATER;
+	case ComparisonFunction::GreaterEqual: return GL_GEQUAL;
+	case ComparisonFunction::NotEqual:     return GL_NOTEQUAL;
+	case ComparisonFunction::Always:       return GL_ALWAYS;
 
 	default: break;
 	}
-	assert(false && "Unknown ComparisonFunc");
+	assert(false && "Unknown ComparisonFunction");
 	return 0;
 }
 //-----------------------------------------------------------------------------
@@ -156,32 +156,32 @@
 }
 
 //-----------------------------------------------------------------------------
-[[nodiscard]] inline GLenum TranslateToGL(ShaderType usage)
+[[nodiscard]] inline GLenum TranslateToGL(ShaderPipelineStage usage)
 {
 	switch( usage )
 	{
-	case ShaderType::Vertex:      return GL_VERTEX_SHADER;
-	case ShaderType::Fragment:    return GL_FRAGMENT_SHADER;
-	case ShaderType::Geometry:    return GL_GEOMETRY_SHADER;
-	case ShaderType::Compute:     return GL_COMPUTE_SHADER;
-	case ShaderType::TessControl: return GL_TESS_CONTROL_SHADER;
-	case ShaderType::Evaluation:  return GL_TESS_EVALUATION_SHADER;
+	case ShaderPipelineStage::Vertex:      return GL_VERTEX_SHADER;
+	case ShaderPipelineStage::Fragment:    return GL_FRAGMENT_SHADER;
+	case ShaderPipelineStage::Geometry:    return GL_GEOMETRY_SHADER;
+	case ShaderPipelineStage::Compute:     return GL_COMPUTE_SHADER;
+	case ShaderPipelineStage::TessControl: return GL_TESS_CONTROL_SHADER;
+	case ShaderPipelineStage::Evaluation:  return GL_TESS_EVALUATION_SHADER;
 	default: break;
 	}
-	assert(false && "Unknown ShaderType");
+	assert(false && "Unknown ShaderPipelineStage");
 	return 0;
 }
 //-----------------------------------------------------------------------------
-[[nodiscard]] inline std::string ConvertToStr(ShaderType usage)
+[[nodiscard]] inline std::string ConvertToStr(ShaderPipelineStage usage)
 {
 	switch( usage )
 	{
-	case ShaderType::Vertex:      return "Vertex";
-	case ShaderType::Fragment:    return "Fragment";
-	case ShaderType::Geometry:    return "Geometry";
-	case ShaderType::Compute:     return "Compute";
-	case ShaderType::TessControl: return "TessControl";
-	case ShaderType::Evaluation:  return "Evaluation";
+	case ShaderPipelineStage::Vertex:      return "Vertex";
+	case ShaderPipelineStage::Fragment:    return "Fragment";
+	case ShaderPipelineStage::Geometry:    return "Geometry";
+	case ShaderPipelineStage::Compute:     return "Compute";
+	case ShaderPipelineStage::TessControl: return "TessControl";
+	case ShaderPipelineStage::Evaluation:  return "Evaluation";
 	default: break;
 	}
 	assert(false && "Unknown ShaderType");

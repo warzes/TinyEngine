@@ -8,7 +8,7 @@ LogSystem::~LogSystem()
 	Destroy();
 }
 //-----------------------------------------------------------------------------
-void LogSystem::Create(const LogCreateInfo& createInfo)
+bool LogSystem::Create(const LogCreateInfo& createInfo) noexcept
 {
 #if defined(_WIN32)
 	errno_t fileErr = fopen_s(&m_logFile, createInfo.fileName.c_str(), "w");
@@ -18,6 +18,7 @@ void LogSystem::Create(const LogCreateInfo& createInfo)
 		m_logFile = nullptr;
 	}
 #endif
+	return true;
 }
 //-----------------------------------------------------------------------------
 void LogSystem::Destroy()
@@ -31,7 +32,7 @@ void LogSystem::Destroy()
 #endif
 }
 //-----------------------------------------------------------------------------
-void LogSystem::Print(const std::string& msg)
+void LogSystem::Print(const std::string& msg) noexcept
 {
 	puts(msg.c_str());
 #if defined(_WIN32)
@@ -39,17 +40,17 @@ void LogSystem::Print(const std::string& msg)
 #endif
 }
 //-----------------------------------------------------------------------------
-void LogSystem::Warning(const std::string& msg)
+void LogSystem::Warning(const std::string& msg) noexcept
 {
 	Print("Warning: " + msg);
 }
 //-----------------------------------------------------------------------------
-void LogSystem::Error(const std::string& msg)
+void LogSystem::Error(const std::string& msg) noexcept
 {
 	Print("Error: " + msg);
 }
 //-----------------------------------------------------------------------------
-void LogSystem::Fatal(const std::string& msg)
+void LogSystem::Fatal(const std::string& msg) noexcept
 {
 	extern void ExitRequest();
 	ExitRequest();

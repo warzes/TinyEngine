@@ -1,27 +1,27 @@
 ﻿#include "stdafx.h"
-#include "Window.h"
+#include "WindowSystem.h"
 #include "Core/Logging/Log.h"
 //-----------------------------------------------------------------------------
-Window gWindow;
+WindowSystem gWindowSystem;
 //-----------------------------------------------------------------------------
 extern void ExitRequest();
 //-----------------------------------------------------------------------------
-static void GLFWErrorCallback(int error, const char *description) noexcept
+void GLFWErrorCallback(int error, const char *description) noexcept
 {
 	LogError(std::string("GLFW error ") + std::to_string(error) + ": " + description);
 }
 //-----------------------------------------------------------------------------
 void GLFWFramebufferSizeCallback(GLFWwindow* window, int width, int height) noexcept
 {
-	const auto app = static_cast<Window*>(glfwGetWindowUserPointer(window));
+	const auto app = static_cast<WindowSystem*>(glfwGetWindowUserPointer(window));
 	if( app == nullptr ) return;
 	app->m_windowWidth = width;
 	app->m_windowHeight = height;
 }
 //-----------------------------------------------------------------------------
-bool Window::Create(const WindowCreateInfo& createInfo)
+bool WindowSystem::Create(const WindowCreateInfo& createInfo)
 {
-	LogPrint("Window Create");
+	LogPrint("WindowSystem Create");
 
 	m_requestedVSync = createInfo.vsyncEnabled;
 
@@ -55,7 +55,7 @@ bool Window::Create(const WindowCreateInfo& createInfo)
 	m_window = glfwCreateWindow(createInfo.width, createInfo.height, createInfo.title.c_str(), nullptr, nullptr);
 	if( !m_window )
 	{
-		LogFatal("GLFW: Failed to initialize Window");
+		LogFatal("GLFW: Failed to initialize WindowSystem");
 		return false;
 	}
 	glfwSetWindowUserPointer(m_window, this);
@@ -77,39 +77,39 @@ bool Window::Create(const WindowCreateInfo& createInfo)
 	return true;
 }
 //-----------------------------------------------------------------------------
-void Window::Destroy()
+void WindowSystem::Destroy()
 {
 	glfwDestroyWindow(m_window);
 	glfwTerminate();
-	LogPrint("Window Destroy");
+	LogPrint("WindowSystem Destroy");
 }
 //-----------------------------------------------------------------------------
-void Window::Update()
+void WindowSystem::Update()
 {
 	if (glfwWindowShouldClose(m_window) == GLFW_TRUE) ExitRequest();
 }
 //-----------------------------------------------------------------------------
-void Window::Present()
+void WindowSystem::Present()
 {
 	glfwSwapBuffers(m_window);
 }
 //-----------------------------------------------------------------------------
-void* Window::GetHandle() const
+[[nodiscard]] void* WindowSystem::GetHandle() const noexcept
 {
 	return (void*)m_window;
 }
 //-----------------------------------------------------------------------------
-int Window::GetWidth() const
+[[nodiscard]] int WindowSystem::GetWidth() const noexcept
 {
 	return m_windowWidth;
 }
 //-----------------------------------------------------------------------------
-int Window::GetHeight() const
+[[nodiscard]] int WindowSystem::GetHeight() const noexcept
 {
 	return m_windowHeight;
 }
 //-----------------------------------------------------------------------------
-glm::vec2 Window::GetPosition() const
+[[nodiscard]] glm::vec2 WindowSystem::GetPosition() const
 {
 	int x = 0;
 	int y = 0;
@@ -119,53 +119,53 @@ glm::vec2 Window::GetPosition() const
 	return { (float)x, (float)y };
 }
 //-----------------------------------------------------------------------------
-void Window::SetTitle(const char* title)
+void WindowSystem::SetTitle(const char* title)
 {
 #if PLATFORM_DESKTOP
 	glfwSetWindowTitle(m_window, title);
 #endif
 }
 //-----------------------------------------------------------------------------
-void Window::SetPosition(int x, int y)
+void WindowSystem::SetPosition(int x, int y)
 {
 #if PLATFORM_DESKTOP
 	glfwSetWindowPos(m_window, x, y);
 #endif
 }
 //-----------------------------------------------------------------------------
-void Window::SetSize(int width, int height)
+void WindowSystem::SetSize(int width, int height)
 {
 	glfwSetWindowSize(m_window, width, height);
 }
 //-----------------------------------------------------------------------------
-Window& GetWindow()
+WindowSystem& GetWindowSystem()
 {
-	return gWindow;
+	return gWindowSystem;
 }
 //-----------------------------------------------------------------------------
-void* GetWindowHandle()
+[[nodiscard]] void* GetWindowHandle() noexcept
 {
-	return gWindow.GetHandle();
+	return gWindowSystem.GetHandle();
 }
 //-----------------------------------------------------------------------------
-bool IsWindowFullscreen()
+[[nodiscard]] bool IsWindowFullscreen() noexcept
 {
 	return false; // TODO: доделать
 }
 //-----------------------------------------------------------------------------
-int GetWindowWidth()
+[[nodiscard]] int GetWindowWidth() noexcept
 {
-	return gWindow.GetWidth();
+	return gWindowSystem.GetWidth();
 }
 //-----------------------------------------------------------------------------
-int GetWindowHeight()
+[[nodiscard]] int GetWindowHeight() noexcept
 {
-	return gWindow.GetHeight();
+	return gWindowSystem.GetHeight();
 }
 //-----------------------------------------------------------------------------
-float GetWindowSizeAspect()
+[[nodiscard]] float GetWindowSizeAspect() noexcept
 {
-	assert(gWindow.GetHeight() > 0);
-	return static_cast<float>(gWindow.GetWidth()) / static_cast<float>(gWindow.GetHeight());
+	assert(gWindowSystem.GetHeight() > 0);
+	return static_cast<float>(gWindowSystem.GetWidth()) / static_cast<float>(gWindowSystem.GetHeight());
 }
 //-----------------------------------------------------------------------------

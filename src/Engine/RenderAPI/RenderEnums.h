@@ -49,14 +49,14 @@ enum class ImageFormat : uint8_t
 // Depth Stencil enum
 //=============================================================================
 
-enum class ComparisonFunc : uint8_t
+enum class ComparisonFunction : uint8_t
 {
 	Never,
 	Equal,
 	Less,
-	LEqual,
+	LessEqual,
 	Greater,
-	GEqual,
+	GreaterEqual,
 	NotEqual,
 	Always,
 };
@@ -137,7 +137,7 @@ enum class RasterizerFillMode : uint8_t
 // Shader enum
 //=============================================================================
 
-enum class ShaderType : uint8_t
+enum class ShaderPipelineStage : uint8_t
 {
 	Vertex,
 	Fragment,

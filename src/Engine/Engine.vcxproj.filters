@@ -20,13 +20,13 @@
     <ClCompile Include="Core\Geometry\BoundingBox.cpp">
       <Filter>Core\Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Platform\Input.cpp">
+    <ClCompile Include="Platform\InputSystem.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
     <ClCompile Include="Platform\Monitor.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
-    <ClCompile Include="Platform\Window.cpp">
+    <ClCompile Include="Platform\WindowSystem.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
     <ClCompile Include="RenderAPI\Capabilities.cpp">
@@ -121,10 +121,10 @@
     <ClInclude Include="Core\Geometry\BoundingBox.h">
       <Filter>Core\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Platform\Window.h">
+    <ClInclude Include="Platform\WindowSystem.h">
       <Filter>Platform</Filter>
     </ClInclude>
-    <ClInclude Include="Platform\Input.h">
+    <ClInclude Include="Platform\InputSystem.h">
       <Filter>Platform</Filter>
     </ClInclude>
     <ClInclude Include="Platform\Monitor.h">

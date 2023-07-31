@@ -137,8 +137,8 @@ namespace ea = eastl;
 //=============================================================================
 
 #include "Platform/Monitor.h"
-#include "Platform/Window.h"
-#include "Platform/Input.h"
+#include "Platform/WindowSystem.h"
+#include "Platform/InputSystem.h"
 
 //=============================================================================
 // RenderAPI

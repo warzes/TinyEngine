@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Monitor.h"
-#include "Window.h"
+#include "WindowSystem.h"
 #include "Core/Logging/Log.h"
 //-----------------------------------------------------------------------------
 int Monitor::GetCount()
@@ -211,7 +211,7 @@ glm::vec2 Monitor::GetScaleDPI()
 #if PLATFORM_DESKTOP
 	float xdpi = 1.0;
 	float ydpi = 1.0;
-	glm::vec2 windowPos = GetWindow().GetPosition();
+	glm::vec2 windowPos = GetWindowSystem().GetPosition();
 
 	int monitorCount = 0;
 	GLFWmonitor **monitors = glfwGetMonitors(&monitorCount);

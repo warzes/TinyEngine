@@ -2,6 +2,12 @@
 #include "FileSystem.h"
 #include "Core/Logging/Log.h"
 //-----------------------------------------------------------------------------
+bool FileSystem::Exists(const std::string& path) noexcept
+{
+	assert(!path.empty());
+	return std::filesystem::exists(path);
+}
+//-----------------------------------------------------------------------------
 std::optional<std::vector<uint8_t>> FileSystem::FileToMemory(const std::string& fileName, unsigned int* bytesRead)
 {
 	if (fileName.empty())

@@ -1,24 +1,23 @@
 ﻿#pragma once
 
-struct LogCreateInfo
+struct LogCreateInfo final
 {
 	std::string fileName = "../log.txt";
 };
 
 class LogSystem final
 {
-	friend class EngineDevice;
 public:
 	LogSystem() = default;
 	~LogSystem();
 
-	void Create(const LogCreateInfo& createInfo);
+	bool Create(const LogCreateInfo& createInfo) noexcept;
 	void Destroy();
 
-	void Print(const std::string& msg);
-	void Warning(const std::string& msg);
-	void Error(const std::string& msg);
-	void Fatal(const std::string& msg);
+	void Print(const std::string& msg) noexcept;
+	void Warning(const std::string& msg) noexcept;
+	void Error(const std::string& msg) noexcept;
+	void Fatal(const std::string& msg) noexcept;
 
 private:
 	LogSystem(LogSystem&&) = delete;

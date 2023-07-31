@@ -1,56 +1,56 @@
 ﻿#include "stdafx.h"
-#include "Input.h"
-#include "Window.h"
+#include "InputSystem.h"
+#include "WindowSystem.h"
 //-----------------------------------------------------------------------------
-Input gInput;
+InputSystem gInputSystem;
 //-----------------------------------------------------------------------------
 void GLFWKeyCallback(GLFWwindow* /*window*/, int key, int /*scancode*/, int action, int /*mods*/) noexcept
 {
 	if (key < 0) return;
 
-	if (action == GLFW_RELEASE) gInput.m_keyboard.currentKeyState[key] = 0;
-	else gInput.m_keyboard.currentKeyState[key] = 1;
+	if (action == GLFW_RELEASE) gInputSystem.m_keyboard.currentKeyState[key] = 0;
+	else gInputSystem.m_keyboard.currentKeyState[key] = 1;
 
-	if ((gInput.m_keyboard.keyPressedQueueCount < MAX_KEY_PRESSED_QUEUE) && (action == GLFW_PRESS))
+	if ((gInputSystem.m_keyboard.keyPressedQueueCount < MAX_KEY_PRESSED_QUEUE) && (action == GLFW_PRESS))
 	{
-		gInput.m_keyboard.keyPressedQueue[gInput.m_keyboard.keyPressedQueueCount] = key;
-		gInput.m_keyboard.keyPressedQueueCount++;
+		gInputSystem.m_keyboard.keyPressedQueue[gInputSystem.m_keyboard.keyPressedQueueCount] = key;
+		gInputSystem.m_keyboard.keyPressedQueueCount++;
 	}
 }
 //-----------------------------------------------------------------------------
 void GLFWCharCallback(GLFWwindow* /*window*/, unsigned int key) noexcept
 {
-	if (gInput.m_keyboard.charPressedQueueCount < MAX_KEY_PRESSED_QUEUE)
+	if (gInputSystem.m_keyboard.charPressedQueueCount < MAX_KEY_PRESSED_QUEUE)
 	{
-		gInput.m_keyboard.charPressedQueue[gInput.m_keyboard.charPressedQueueCount] = (int)key;
-		gInput.m_keyboard.charPressedQueueCount++;
+		gInputSystem.m_keyboard.charPressedQueue[gInputSystem.m_keyboard.charPressedQueueCount] = (int)key;
+		gInputSystem.m_keyboard.charPressedQueueCount++;
 	}
 }
 //-----------------------------------------------------------------------------
 void GLFWMouseButtonCallback(GLFWwindow* /*window*/, int button, int action, int /*mods*/) noexcept
 {
-	gInput.m_mouse.currentButtonState[button] = (char)action;
+	gInputSystem.m_mouse.currentButtonState[button] = (char)action;
 }
 //-----------------------------------------------------------------------------
 void GLFWMouseCursorPosCallback(GLFWwindow* /*window*/, double x, double y) noexcept
 {
-	gInput.m_mouse.currentPosition.x = (float)x;
-	gInput.m_mouse.currentPosition.y = (float)y;
+	gInputSystem.m_mouse.currentPosition.x = (float)x;
+	gInputSystem.m_mouse.currentPosition.y = (float)y;
 }
 //-----------------------------------------------------------------------------
 void GLFWMouseScrollCallback(GLFWwindow* /*window*/, double xoffset, double yoffset) noexcept
 {
-	gInput.m_mouse.currentWheelMove = { (float)xoffset, (float)yoffset };
+	gInputSystem.m_mouse.currentWheelMove = { (float)xoffset, (float)yoffset };
 }
 //-----------------------------------------------------------------------------
 void GLFWCursorEnterCallback(GLFWwindow* /*window*/, int enter) noexcept
 {
-	gInput.m_mouse.cursorOnScreen = (enter == GLFW_TRUE);
+	gInputSystem.m_mouse.cursorOnScreen = (enter == GLFW_TRUE);
 }
 //-----------------------------------------------------------------------------
-void Input::Create()
+bool InputSystem::Create()
 {
-	Window& wnd = GetWindow();
+	WindowSystem& wnd = GetWindowSystem();
 
 	glfwSetKeyCallback(wnd.m_window, GLFWKeyCallback);
 	glfwSetCharCallback(wnd.m_window, GLFWCharCallback);
@@ -61,9 +61,11 @@ void Input::Create()
 
 	m_mouse.currentPosition.x = (float)wnd.m_windowWidth / 2.0f;
 	m_mouse.currentPosition.y = (float)wnd.m_windowHeight / 2.0f;
+
+	return true;
 }
 //-----------------------------------------------------------------------------
-void Input::Update()
+void InputSystem::Update()
 {
 	m_keyboard.keyPressedQueueCount = 0;
 	m_keyboard.charPressedQueueCount = 0;
@@ -78,31 +80,31 @@ void Input::Update()
 	glfwPollEvents();
 }
 //-----------------------------------------------------------------------------
-bool Input::IsKeyPressed(int key) const
+bool InputSystem::IsKeyPressed(int key) const
 {
 	if ((m_keyboard.previousKeyState[key] == 0) && (m_keyboard.currentKeyState[key] == 1)) return true;
 	return false;
 }
 //-----------------------------------------------------------------------------
-bool Input::IsKeyDown(int key) const
+bool InputSystem::IsKeyDown(int key) const
 {
 	if (m_keyboard.currentKeyState[key] == 1) return true;
 	else return false;
 }
 //-----------------------------------------------------------------------------
-bool Input::IsKeyReleased(int key) const
+bool InputSystem::IsKeyReleased(int key) const
 {
 	if ((m_keyboard.previousKeyState[key] == 1) && (m_keyboard.currentKeyState[key] == 0)) return true;
 	return false;
 }
 //-----------------------------------------------------------------------------
-bool Input::IsKeyUp(int key) const
+bool InputSystem::IsKeyUp(int key) const
 {
 	if (m_keyboard.currentKeyState[key] == 0) return true;
 	else return false;
 }
 //-----------------------------------------------------------------------------
-int Input::GetKeyPressed()
+int InputSystem::GetKeyPressed()
 {
 	int value = 0;
 
@@ -120,7 +122,7 @@ int Input::GetKeyPressed()
 	return value;
 }
 //-----------------------------------------------------------------------------
-int Input::GetCharPressed()
+int InputSystem::GetCharPressed()
 {
 	int value = 0;
 
@@ -138,30 +140,30 @@ int Input::GetCharPressed()
 	return value;
 }
 //-----------------------------------------------------------------------------
-bool Input::IsMouseButtonPressed(int button) const
+bool InputSystem::IsMouseButtonPressed(int button) const
 {
 	if ((m_mouse.currentButtonState[button] == 1) && (m_mouse.previousButtonState[button] == 0)) return true;
 	return false;
 }
 //-----------------------------------------------------------------------------
-bool Input::IsMouseButtonDown(int button) const
+bool InputSystem::IsMouseButtonDown(int button) const
 {
 	if (m_mouse.currentButtonState[button] == 1) return true;
 	return false;
 }
 //-----------------------------------------------------------------------------
-bool Input::IsMouseButtonReleased(int button) const
+bool InputSystem::IsMouseButtonReleased(int button) const
 {
 	if ((m_mouse.currentButtonState[button] == 0) && (m_mouse.previousButtonState[button] == 1)) return true;
 	return false;
 }
 //-----------------------------------------------------------------------------
-bool Input::IsMouseButtonUp(int button) const
+bool InputSystem::IsMouseButtonUp(int button) const
 {
 	return !IsMouseButtonDown(button);
 }
 //-----------------------------------------------------------------------------
-glm::vec2 Input::GetMousePosition() const
+glm::vec2 InputSystem::GetMousePosition() const
 {
 	return
 	{
@@ -170,7 +172,7 @@ glm::vec2 Input::GetMousePosition() const
 	};
 }
 //-----------------------------------------------------------------------------
-glm::vec2 Input::GetMouseDeltaPosition() const
+glm::vec2 InputSystem::GetMouseDeltaPosition() const
 {
 	return
 	{
@@ -179,15 +181,15 @@ glm::vec2 Input::GetMouseDeltaPosition() const
 	};
 }
 //-----------------------------------------------------------------------------
-void Input::SetMousePosition(int x, int y)
+void InputSystem::SetMousePosition(int x, int y)
 {
-	Window& wnd = GetWindow();
+	WindowSystem& wnd = GetWindowSystem();
 	m_mouse.currentPosition = { (float)x, (float)y };
 	m_mouse.previousPosition = m_mouse.currentPosition;
 	glfwSetCursorPos(wnd.m_window, m_mouse.currentPosition.x, m_mouse.currentPosition.y);
 }
 //-----------------------------------------------------------------------------
-float Input::GetMouseWheelMove() const
+float InputSystem::GetMouseWheelMove() const
 {
 	float result = 0.0f;
 	if (fabsf(m_mouse.currentWheelMove.x) > fabsf(m_mouse.currentWheelMove.y)) result = (float)m_mouse.currentWheelMove.x;
@@ -195,16 +197,16 @@ float Input::GetMouseWheelMove() const
 	return result;
 }
 //-----------------------------------------------------------------------------
-glm::vec2 Input::GetMouseWheelMoveV() const
+glm::vec2 InputSystem::GetMouseWheelMoveV() const
 {
 	return m_mouse.currentWheelMove;
 }
 //-----------------------------------------------------------------------------
-void Input::SetMouseLock(bool lock)
+void InputSystem::SetMouseLock(bool lock)
 {
 	if (m_mouse.cursorHidden == lock) return;
 
-	Window& wnd = GetWindow();
+	WindowSystem& wnd = GetWindowSystem();
 
 #if defined(__EMSCRIPTEN__)
 	if (lock) emscripten_request_pointerlock("#canvas", 1);
@@ -217,13 +219,13 @@ void Input::SetMouseLock(bool lock)
 	m_mouse.cursorHidden = lock;
 }
 //-----------------------------------------------------------------------------
-bool Input::IsCursorOnScreen() const
+bool InputSystem::IsCursorOnScreen() const
 {
 	return m_mouse.cursorOnScreen;
 }
 //-----------------------------------------------------------------------------
-Input& GetInput()
+InputSystem& GetInputSystem()
 {
-	return gInput;
+	return gInputSystem;
 }
 //-----------------------------------------------------------------------------

@@ -8,23 +8,22 @@
 bool isExitRequested = true;
 //-----------------------------------------------------------------------------
 extern LogSystem gLogSystem;
-extern Input gInput;
-extern Window gWindow;
+extern InputSystem gInputSystem;
+extern WindowSystem gWindowSystem;
 extern RenderSystem gRenderSystem;
 extern GraphicsSystem gGraphicsSystem;
 //-----------------------------------------------------------------------------
 EngineDevice::EngineDevice(const EngineDeviceCreateInfo& createInfo)
 {
-	gLogSystem.Create(createInfo.log);
+	if (!gLogSystem.Create(createInfo.log)) return;
 	LogPrint("EngineDevice Create");
+	if (!gWindowSystem.Create(createInfo.window)) return;
+	if (!gInputSystem.Create()) return;
 
-	if (!gWindow.Create(createInfo.window)) return;
-	gInput.Create();
-	gRenderSystem.Create(createInfo.render);
-	gGraphicsSystem.Create();
+	if (!gRenderSystem.Create(createInfo.render)) return;
+	if (!gGraphicsSystem.Create()) return;
 
 	m_timestamp.PreviousFrameTimestamp = EngineTimestamp::GetTime();
-
 	isExitRequested = false;
 }
 //-----------------------------------------------------------------------------
@@ -34,7 +33,7 @@ EngineDevice::~EngineDevice()
 
 	gGraphicsSystem.Destroy();
 	gRenderSystem.Destroy();
-	gWindow.Destroy();
+	gWindowSystem.Destroy();
 	gLogSystem.Destroy();
 }
 //-----------------------------------------------------------------------------
@@ -69,9 +68,9 @@ void EngineDevice::RunApp(std::shared_ptr<IApp> app)
 //-----------------------------------------------------------------------------
 void EngineDevice::update()
 {
-	gWindow.Update();
+	gWindowSystem.Update();
 	m_timestamp.Update();
-	gInput.Update();
+	gInputSystem.Update();
 
 	m_currentApp->Update(static_cast<float>(m_timestamp.ElapsedTime));
 
@@ -85,7 +84,7 @@ void EngineDevice::render()
 //-----------------------------------------------------------------------------
 void EngineDevice::present()
 {
-	gWindow.Present();
+	gWindowSystem.Present();
 }
 //-----------------------------------------------------------------------------
 void ExitRequest()
