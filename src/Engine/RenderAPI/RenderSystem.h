@@ -65,6 +65,7 @@ public:
 	FramebufferRef CreateFramebuffer(RenderbufferRef colorBuffer, RenderbufferRef depthStencilBuffer);
 	FramebufferRef CreateFramebuffer(Texture2DRef colorTexture);
 	FramebufferRef CreateFramebuffer(Texture2DRef colorTexture, RenderbufferRef depthStencilBuffer);
+	FramebufferRef CreateFramebuffer(const std::vector<Texture2DRef>& colorTextures, RenderbufferRef depthStencilBuffer);
 	FramebufferRef CreateFramebuffer(Texture2DRef colorTexture, Texture2DRef depthStencilTexture);
 
 	FramebufferRef CreateFramebuffer(FramebufferAttachment attachment, Texture2DRef texture); // TODO: delete
@@ -164,6 +165,7 @@ private:
 	ShaderRef compileShader(ShaderPipelineStage type, const std::string& source);
 	void attachmentFrameBufferColor(FramebufferRef fbo, RenderbufferRef colorBuffer);
 	void attachmentFrameBufferColor(FramebufferRef fbo, Texture2DRef colorTexture);
+	void attachmentFrameBufferColor(FramebufferRef fbo, const std::vector<Texture2DRef>& colorTextures);
 	void attachmentFrameBufferDepthStencil(FramebufferRef fbo, RenderbufferRef depthStencilBuffer);
 	void attachmentFrameBufferDepthStencil(FramebufferRef fbo, Texture2DRef depthStencilTexture);
 	bool checkCurrentFrameBuffer() const;

@@ -351,10 +351,10 @@ public:
 	Framebuffer& operator=(Framebuffer&&) = default;
 	Framebuffer& operator=(const Framebuffer&) = delete;
 
-	bool operator==(const Framebuffer& ref) noexcept { return m_handle == ref.m_handle && m_ownership == ref.m_ownership && size == ref.size && colorTexture == ref.colorTexture && colorBuffer == ref.colorBuffer && depthStencilTexture == ref.depthStencilTexture && depthStencilBuffer ==ref.depthStencilBuffer; }
+	bool operator==(const Framebuffer& ref) noexcept { return m_handle == ref.m_handle && m_ownership == ref.m_ownership && size == ref.size && colorTextures == ref.colorTextures && colorBuffer == ref.colorBuffer && depthStencilTexture == ref.depthStencilTexture && depthStencilBuffer ==ref.depthStencilBuffer; }
 
 	glm::uvec2 size = glm::uvec2(0);
-	Texture2DRef colorTexture = nullptr;
+	std::vector<Texture2DRef> colorTextures = { nullptr };
 	RenderbufferRef colorBuffer = nullptr;
 	Texture2DRef depthStencilTexture = nullptr;
 	RenderbufferRef depthStencilBuffer = nullptr;
@@ -362,7 +362,7 @@ public:
 
 using FramebufferRef = std::shared_ptr<Framebuffer>;
 
-static_assert(sizeof(Framebuffer) == 80, "Framebuffer size changed!!!");
+static_assert(sizeof(Framebuffer) == 96, "Framebuffer size changed!!!");
 
 #if USE_OPENGL_VERSION == OPENGL40
 class TransformFeedback final : public glObject

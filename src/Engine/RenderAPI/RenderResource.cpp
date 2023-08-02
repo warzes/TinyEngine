@@ -427,6 +427,19 @@ FramebufferRef RenderSystem::CreateFramebuffer(Texture2DRef colorTexture, Render
 	return resource;
 }
 //-----------------------------------------------------------------------------
+FramebufferRef RenderSystem::CreateFramebuffer(const std::vector<Texture2DRef>& colorTextures, RenderbufferRef depthStencilBuffer)
+{
+	FramebufferRef resource(new Framebuffer());
+	glBindFramebuffer(GL_FRAMEBUFFER, *resource);
+	attachmentFrameBufferColor(resource, colorTextures);
+	attachmentFrameBufferDepthStencil(resource, depthStencilBuffer);
+	if (!checkCurrentFrameBuffer())
+		resource.reset();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, m_cache.CurrentFramebuffer);
+	return resource;
+}
+//-----------------------------------------------------------------------------
 FramebufferRef RenderSystem::CreateFramebuffer(Texture2DRef colorTexture, Texture2DRef depthStencilTexture)
 {
 	FramebufferRef resource(new Framebuffer());
@@ -445,9 +458,9 @@ FramebufferRef RenderSystem::CreateFramebuffer(FramebufferAttachment attachment,
 	assert(IsValid(texture));
 
 	FramebufferRef resource(new Framebuffer());
-	resource->colorTexture = texture;
+	resource->colorTextures[0] = texture;
 	glBindFramebuffer(GL_FRAMEBUFFER, *resource);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, TranslateToGL(attachment), GL_TEXTURE_2D, *resource->colorTexture, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, TranslateToGL(attachment), GL_TEXTURE_2D, *resource->colorTextures[0], 0);
 	GLenum result = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 	if( GL_FRAMEBUFFER_COMPLETE != result )
 	{
@@ -508,12 +521,33 @@ void RenderSystem::attachmentFrameBufferColor(FramebufferRef fbo, Texture2DRef c
 		fbo->size = { colorTexture->width, colorTexture->height };
 		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, *colorTexture, 0);
-		fbo->colorTexture = colorTexture;
+		fbo->colorTextures[0] = colorTexture;
 	}
 	else
 	{
 		glDrawBuffer(GL_NONE);
 		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+	}
+}
+//-----------------------------------------------------------------------------
+void RenderSystem::attachmentFrameBufferColor(FramebufferRef fbo, const std::vector<Texture2DRef>& colorTextures)
+{
+	if (colorTextures.empty() || !colorTextures[0])
+	{
+		glDrawBuffer(GL_NONE);
+		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+	}
+	else
+	{
+		std::vector<uint32_t> colorAttachments;
+		for (size_t i = 0; i < colorTextures.size(); i++)
+		{
+			glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, *colorTextures[i], 0);
+			colorAttachments.push_back(GL_COLOR_ATTACHMENT0 + i);
+		}
+		glDrawBuffers(static_cast<GLsizei>(colorAttachments.size()), colorAttachments.data());
+		fbo->size = { colorTextures[0]->width, colorTextures[0]->height }; // TODO: нужно как-то разобраться с ситуацией если текстуры разных размеров - скорее всго это ошибка, но надо обработать
+		fbo->colorTextures = colorTextures;
 	}
 }
 //-----------------------------------------------------------------------------
@@ -528,6 +562,7 @@ void RenderSystem::attachmentFrameBufferDepthStencil(FramebufferRef fbo, Renderb
 
 		glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, *depthStencilBuffer);
 		glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthStencilBuffer->format == ImageFormat::D24S8 ? *depthStencilBuffer : 0u);
+		//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, *depthStencilBuffer);
 
 	}
 	else
