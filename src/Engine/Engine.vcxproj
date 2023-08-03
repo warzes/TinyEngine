@@ -105,7 +105,6 @@
     <ClCompile Include="Core\IO\STBImageLoader.cpp" />
     <ClCompile Include="Core\Logging\Log.cpp" />
     <ClCompile Include="Core\Logging\LogSystem.cpp" />
-    <ClCompile Include="Core\Utilities\StringUtilities.cpp" />
     <ClCompile Include="EngineApp\EngineDevice.cpp" />
     <ClCompile Include="EngineApp\EngineTimestamp.cpp" />
     <ClCompile Include="Graphics\DebugDraw.cpp" />
@@ -148,7 +147,6 @@
     <ClInclude Include="Core\Math\Color.h" />
     <ClInclude Include="Core\Math\MathCoreFunc.h" />
     <ClInclude Include="Core\Math\Transform.h" />
-    <ClInclude Include="Core\Utilities\StringUtilities.h" />
     <ClInclude Include="CoreUtilities.h" />
     <ClInclude Include="EngineApp\EngineDevice.h" />
     <ClInclude Include="EngineApp\EngineTimestamp.h" />

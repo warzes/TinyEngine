@@ -2,9 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="Core\Utilities\StringUtilities.cpp">
-      <Filter>Core\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="Core\IO\STBImageLoader.cpp">
       <Filter>Core\IO</Filter>
     </ClCompile>
@@ -93,9 +90,6 @@
     </ClInclude>
     <ClInclude Include="Core\Base\DebugNew.h">
       <Filter>Core\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Utilities\StringUtilities.h">
-      <Filter>Core\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Core\IO\FileSystem.h">
       <Filter>Core\IO</Filter>
