@@ -8,6 +8,7 @@ bool FileSystem::Exists(const std::string& path) noexcept
 	return std::filesystem::exists(path);
 }
 //-----------------------------------------------------------------------------
+#if !PLATFORM_EMSCRIPTEN // TODO:
 std::optional<std::vector<uint8_t>> FileSystem::FileToMemory(const std::string& fileName, unsigned int* bytesRead)
 {
 	if (fileName.empty())
@@ -69,6 +70,7 @@ std::optional<std::vector<uint8_t>> FileSystem::FileToMemory(const std::string& 
 	fclose(file);
 	return contents;
 }
+#endif
 //-----------------------------------------------------------------------------
 const char* FileSystem::GetFileExtension(const char* fileName)
 {

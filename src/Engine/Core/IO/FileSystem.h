@@ -6,8 +6,9 @@ namespace FileSystem
 	[[nodiscard]] bool Exists(const std::string& path) noexcept;
 
 
-
+#if !PLATFORM_EMSCRIPTEN // TODO:
 	[[nodiscard]] std::optional<std::vector<uint8_t>> FileToMemory(const std::string& fileName, unsigned int* bytesRead = nullptr);
+#endif
 
 	// TODO: убрать из кода заменив на std::filesystem
 	
