@@ -50,8 +50,8 @@ int32_t CCDGJKInternal(const void* c0, const Vqs& xform_a, SupportFunc f0, const
 	ccd.max_iterations = 100;                   // maximal number of iterations
 	ccd.epa_tolerance = 0.0001;                // maximal tolerance for epa to succeed
 
-	// Default transforms
-	Vqs _xa, _xb;
+	//// Default transforms
+	//Vqs _xa, _xb;
 
 	// Collision object 1
 	CollisionObjHandle h0 = {};

@@ -707,8 +707,7 @@ void DebugDraw::Flush(const glm::mat4& ViewProj)
 //-----------------------------------------------------------------------------
 bool DebugDraw::Init()
 {
-	const char* vertexSource = R"(
-#version 330 core
+	const std::string vertexSource = R"(
 layout(location = 0) in vec3 aPosition;
 uniform mat4 uMVP;
 uniform vec3 uColor;
@@ -720,8 +719,7 @@ void main()
 }
 )";
 
-	const char* fragmentSource = R"(
-#version 330 core
+	const std::string fragmentSource = R"(
 in vec3 fColor;
 out vec4 fragcolor;
 void main()
@@ -730,11 +728,15 @@ void main()
 }
 )";
 	auto& renderSystem = GetRenderSystem();
-	shaderProgram = renderSystem.CreateShaderProgram({ vertexSource }, { fragmentSource });
+	shaderProgram = renderSystem.CreateShaderProgram({ vertexSource.c_str() }, { fragmentSource.c_str() });
+	LogPrint("3");
 	uniformProjectionMatrix = renderSystem.GetUniform(shaderProgram, "uMVP");
+	LogPrint("4");
 	uniformColor = renderSystem.GetUniform(shaderProgram, "uColor");
 
+	LogPrint("5");
 	vb = renderSystem.CreateVertexBuffer(BufferUsage::DynamicDraw, 1, (unsigned)sizeof(glm::vec3), nullptr);
+	LogPrint("6");
 	vao = renderSystem.CreateVertexArray(vb, nullptr, shaderProgram);
 
 	return true;

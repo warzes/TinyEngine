@@ -37,6 +37,10 @@
 #include <unordered_map>
 #include <span>
 
+#if PLATFORM_DESKTOP
+#	include <glad/gl.h>
+#endif
+
 #if PLATFORM_EMSCRIPTEN
 //#	define GLFW_INCLUDE_ES2           // GLFW3: Enable OpenGL ES 2.0 (translated to WebGL)
 #	define GLFW_INCLUDE_ES3          // GLFW3: Enable OpenGL ES 3.0 (transalted to WebGL2?)
@@ -46,9 +50,6 @@
 #	include <emscripten/html5.h>      // Emscripten HTML5 library
 #endif
 
-#if PLATFORM_DESKTOP
-#	include <glad/gl.h>
-#endif
 #include <glfw.h>
 
 #include <stb/stb_image.h>

@@ -25,7 +25,9 @@ private:
 	LogSystem& operator=(LogSystem&&) = delete;
 	LogSystem& operator=(const LogSystem&) = delete;
 
+#if PLATFORM_DESKTOP
 	FILE* m_logFile = nullptr;
+#endif
 };
 
 LogSystem& GetLogSystem();

@@ -3,6 +3,7 @@
 #include "TranslateToGL.h"
 //-----------------------------------------------------------------------------
 // Use discrete GPU by default.
+#if PLATFORM_DESKTOP
 extern "C" 
 {
 	// http://developer.download.nvidia.com/devzone/devcenter/gamegraphics/files/OptimusRenderingPolicies.pdf
@@ -11,6 +12,7 @@ extern "C"
 	// https://gpuopen.com/learn/amdpowerxpressrequesthighperformance/
 	__declspec(dllexport) unsigned long AmdPowerXpressRequestHighPerformance = 0x00000001;
 }
+#endif
 //-----------------------------------------------------------------------------
 #if defined(_DEBUG)
 void APIENTRY glDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei /*length*/, const GLchar* message, const void* /*user_param*/) noexcept
@@ -88,6 +90,8 @@ bool RenderSystem::Create(const RenderCreateInfo& createInfo)
 	glClearColor(createInfo.clearColor.x, createInfo.clearColor.y, createInfo.clearColor.z, 1.0f);
 
 	setClearMask(true, true, false);
+
+	LogPrint("RenderSystem Create");
 
 	return true;
 }
@@ -347,12 +351,14 @@ void RenderSystem::UpdateBuffer(GPUBufferRef buffer, unsigned offset, unsigned c
 	//if( cacheId != id ) glBindBuffer(target, cacheId);
 }
 //-----------------------------------------------------------------------------
+#if !PLATFORM_EMSCRIPTEN
 void* RenderSystem::MapBuffer(GPUBufferRef buffer)
 {
 	assert(IsValid(buffer));
 	Bind(buffer);
 	return glMapBuffer(TranslateToGL(buffer->type), GL_WRITE_ONLY);
 }
+#endif
 //-----------------------------------------------------------------------------
 void* RenderSystem::MapBuffer(GPUBufferRef buffer, unsigned offset, unsigned size)
 {

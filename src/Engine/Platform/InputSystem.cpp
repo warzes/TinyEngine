@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "InputSystem.h"
 #include "WindowSystem.h"
+#include "Core/Logging/Log.h"
 //-----------------------------------------------------------------------------
 InputSystem gInputSystem;
 //-----------------------------------------------------------------------------
@@ -61,6 +62,8 @@ bool InputSystem::Create()
 
 	m_mouse.currentPosition.x = (float)wnd.m_windowWidth / 2.0f;
 	m_mouse.currentPosition.y = (float)wnd.m_windowHeight / 2.0f;
+
+	LogPrint("InputSystem Create");
 
 	return true;
 }
@@ -206,12 +209,11 @@ void InputSystem::SetMouseLock(bool lock)
 {
 	if (m_mouse.cursorHidden == lock) return;
 
-	WindowSystem& wnd = GetWindowSystem();
-
-#if defined(__EMSCRIPTEN__)
+#if PLATFORM_EMSCRIPTEN
 	if (lock) emscripten_request_pointerlock("#canvas", 1);
 	else emscripten_exit_pointerlock();
 #else
+	WindowSystem& wnd = GetWindowSystem();
 	glfwSetInputMode(wnd.m_window, GLFW_CURSOR, lock ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
 #endif
 	SetMousePosition(GetWindowWidth() / 2, GetWindowHeight() / 2);

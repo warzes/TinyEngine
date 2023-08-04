@@ -21,8 +21,6 @@ void GLFWFramebufferSizeCallback(GLFWwindow* window, int width, int height) noex
 //-----------------------------------------------------------------------------
 bool WindowSystem::Create(const WindowCreateInfo& createInfo)
 {
-	LogPrint("WindowSystem Create");
-
 	m_requestedVSync = createInfo.vsyncEnabled;
 
 	if( glfwInit() != GLFW_TRUE )
@@ -38,8 +36,13 @@ bool WindowSystem::Create(const WindowCreateInfo& createInfo)
 	glfwSetErrorCallback(GLFWErrorCallback);
 
 	// OpenGL Config
+#if PLATFORM_EMSCRIPTEN
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+#else
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+#endif
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_FALSE);
 #if defined(_DEBUG)
@@ -64,15 +67,19 @@ bool WindowSystem::Create(const WindowCreateInfo& createInfo)
 
 	glfwMakeContextCurrent(m_window);
 
+#if PLATFORM_DESKTOP
 	if( !gladLoadGL((GLADloadfunc)glfwGetProcAddress) )
 	{
 		LogFatal("GLAD: Cannot load OpenGL extensions.");
 		return false;
 	}
+#endif
 
 	glfwSwapInterval(m_requestedVSync ? 1 : 0);
 
 	glfwGetFramebufferSize(m_window, &m_windowWidth, &m_windowHeight);
+
+	LogPrint("WindowSystem Create");
 
 	return true;
 }

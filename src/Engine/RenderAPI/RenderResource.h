@@ -90,6 +90,9 @@ public:
 		m_src = sstream.str();
 	}
 
+	static std::string GetHeaderVertexShader();
+	static std::string GetHeaderFragmentShader();
+
 private:
 	std::string m_filename = "Unnamed shader";
 	std::string m_path;
@@ -111,8 +114,9 @@ struct Uniform final
 	unsigned programId = 0; 
 };
 
+#if !PLATFORM_EMSCRIPTEN
 static_assert(sizeof(Uniform) == 8, "Uniform size changed!!!");
-inline bool operator==(const Uniform& Left, const Uniform& Right) noexcept { return Left.location == Right.location && Left.programId == Right.programId; }
+#endif
 
 //=============================================================================
 // Buffer Core
@@ -214,7 +218,9 @@ public:
 };
 using ShaderProgramRef = std::shared_ptr<ShaderProgram>;
 
+#if !PLATFORM_EMSCRIPTEN
 static_assert(sizeof(ShaderProgram) == 8, "ShaderProgram size changed!!!");
+#endif
 
 class VertexArray;
 
@@ -239,8 +245,9 @@ public:
 	std::shared_ptr<VertexArray> parentArray = nullptr;
 };
 using GPUBufferRef = std::shared_ptr<GPUBuffer>;
-
+#if !PLATFORM_EMSCRIPTEN
 static_assert(sizeof(GPUBuffer) == 40, "GPUBuffer size changed!!!");
+#endif
 
 // TODO: возможно снова разделить на вершинный буфер и т.д. так как VAO нужно только вершинному и не нужно например юниформ буферу
 
@@ -263,7 +270,9 @@ public:
 	unsigned attribsCount = 0;
 };
 using VertexArrayRef = std::shared_ptr<VertexArray>;
+#if !PLATFORM_EMSCRIPTEN
 static_assert(sizeof(VertexArray) == 48, "VertexArray size changed!!!");
+#endif
 
 class GeometryBuffer final
 {
@@ -314,7 +323,9 @@ public:
 
 using Texture2DRef = std::shared_ptr<Texture2D>;
 
+#if !PLATFORM_EMSCRIPTEN
 static_assert(sizeof(Texture2D) == 20, "Texture2D size changed!!!");
+#endif
 
 class Renderbuffer final : public glObject
 {
@@ -338,7 +349,9 @@ public:
 };
 using RenderbufferRef = std::shared_ptr<Renderbuffer>;
 
+#if !PLATFORM_EMSCRIPTEN
 static_assert(sizeof(Renderbuffer) == 24, "Renderbuffer size changed!!!");
+#endif
 
 class Framebuffer final : public glObject
 {
@@ -362,7 +375,9 @@ public:
 
 using FramebufferRef = std::shared_ptr<Framebuffer>;
 
+#if !PLATFORM_EMSCRIPTEN
 static_assert(sizeof(Framebuffer) == 96, "Framebuffer size changed!!!");
+#endif
 
 #if USE_OPENGL_VERSION == OPENGL40
 class TransformFeedback final : public glObject
@@ -380,6 +395,8 @@ public:
 };
 using TransformFeedbackRef = std::shared_ptr<TransformFeedback>;
 
+#if !PLATFORM_EMSCRIPTEN
 static_assert(sizeof(TransformFeedback) == 8, "TransformFeedback size changed!!!");
+#endif
 
 #endif // OPENGL40

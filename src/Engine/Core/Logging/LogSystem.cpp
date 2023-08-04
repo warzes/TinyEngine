@@ -10,7 +10,7 @@ LogSystem::~LogSystem()
 //-----------------------------------------------------------------------------
 bool LogSystem::Create(const LogCreateInfo& createInfo) noexcept
 {
-#if defined(_WIN32)
+#if PLATFORM_DESKTOP
 	errno_t fileErr = fopen_s(&m_logFile, createInfo.fileName.c_str(), "w");
 	if (fileErr != 0 || !m_logFile)
 	{
@@ -23,7 +23,7 @@ bool LogSystem::Create(const LogCreateInfo& createInfo) noexcept
 //-----------------------------------------------------------------------------
 void LogSystem::Destroy()
 {
-#if defined(_WIN32)
+#if PLATFORM_DESKTOP
 	if (m_logFile)
 	{
 		fclose(m_logFile);
@@ -35,7 +35,7 @@ void LogSystem::Destroy()
 void LogSystem::Print(const std::string& msg) noexcept
 {
 	puts(msg.c_str());
-#if defined(_WIN32)
+#if PLATFORM_DESKTOP
 	if (m_logFile) fputs((msg + "\n").c_str(), m_logFile);
 #endif
 }

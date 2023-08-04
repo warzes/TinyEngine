@@ -12,11 +12,24 @@ extern InputSystem gInputSystem;
 extern WindowSystem gWindowSystem;
 extern RenderSystem gRenderSystem;
 extern GraphicsSystem gGraphicsSystem;
+#if PLATFORM_EMSCRIPTEN
+EngineDevice* thisEngineDevice = nullptr;
+#endif
+//-----------------------------------------------------------------------------
+#if PLATFORM_EMSCRIPTEN
+void mainLoop()
+{
+	thisEngineDevice->Update();
+	thisEngineDevice->Render();
+	thisEngineDevice->Present();
+	// TODO: exit command
+}
+#endif
 //-----------------------------------------------------------------------------
 EngineDevice::EngineDevice(const EngineDeviceCreateInfo& createInfo)
 {
 	if (!gLogSystem.Create(createInfo.log)) return;
-	LogPrint("EngineDevice Create");
+
 	if (!gWindowSystem.Create(createInfo.window)) return;
 	if (!gInputSystem.Create()) return;
 
@@ -24,7 +37,12 @@ EngineDevice::EngineDevice(const EngineDeviceCreateInfo& createInfo)
 	if (!gGraphicsSystem.Create()) return;
 
 	m_timestamp.PreviousFrameTimestamp = EngineTimestamp::GetTime();
+#if PLATFORM_EMSCRIPTEN
+	thisEngineDevice = this;
+#endif
 	isExitRequested = false;
+
+	LogPrint("EngineDevice Create");
 }
 //-----------------------------------------------------------------------------
 EngineDevice::~EngineDevice()
@@ -54,19 +72,23 @@ void EngineDevice::RunApp(std::shared_ptr<IApp> app)
 	m_currentApp = app;
 	if( m_currentApp->Create() )
 	{
+#if defined(__EMSCRIPTEN__)
+		emscripten_set_main_loop(mainLoop, 0, true);
+#else
 		while( !isExitRequested )
 		{
-			update();
-			render();
-			present();
+			Update();
+			Render();
+			Present();
 		}
+#endif
 	}
 	// Destroy App
 	m_currentApp->Destroy();
 	m_currentApp = nullptr;
 }
 //-----------------------------------------------------------------------------
-void EngineDevice::update()
+void EngineDevice::Update()
 {
 	gWindowSystem.Update();
 	m_timestamp.Update();
@@ -77,12 +99,12 @@ void EngineDevice::update()
 	m_timestamp.UpdateAverageFrameTime();
 }
 //-----------------------------------------------------------------------------
-void EngineDevice::render()
+void EngineDevice::Render()
 {
 	m_currentApp->Render();
 }
 //-----------------------------------------------------------------------------
-void EngineDevice::present()
+void EngineDevice::Present()
 {
 	gWindowSystem.Present();
 }

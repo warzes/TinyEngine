@@ -8,6 +8,8 @@ bool GraphicsSystem::Create()
 {
 	DebugDraw::Init();
 
+	LogPrint("GraphicsSystem Create");
+
 	return true;
 }
 //-----------------------------------------------------------------------------

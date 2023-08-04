@@ -23,9 +23,11 @@ enum class ImageFormat : uint8_t
 	RG8,
 	RGBA8,
 	A8,
+#if !PLATFORM_EMSCRIPTEN
 	R16,
 	RG16,
 	RGBA16,
+#endif
 	R16F,
 	RG16F,
 	RGBA16F,
@@ -37,12 +39,16 @@ enum class ImageFormat : uint8_t
 	RG32U,
 	RGBA32U,
 	D16,
+#if !PLATFORM_EMSCRIPTEN
 	D32,
+#endif
 	D24S8,
 
+#if !PLATFORM_EMSCRIPTEN
 	DXT1,
 	DXT3,
 	DXT5,
+#endif
 };
 
 //=============================================================================
@@ -103,10 +109,12 @@ enum class BlendFactor : uint8_t
 	ConstantAlpha,
 	InverseConstantAlpha,
 	SourceAlphaSaturation,
+#if !PLATFORM_EMSCRIPTEN
 	Source1Color,
 	InverseSource1Color,
 	Source1Alpha,
 	InverseSource1Alpha
+#endif
 };
 
 //=============================================================================
@@ -126,12 +134,14 @@ enum class FaceOrientation : uint8_t
 	CounterClockwiseFace,
 };
 
+#if !PLATFORM_EMSCRIPTEN
 enum class RasterizerFillMode : uint8_t
 {
 	Solid,
 	Wireframe,
 	Point
 };
+#endif
 
 //=============================================================================
 // Shader enum
@@ -141,10 +151,12 @@ enum class ShaderPipelineStage : uint8_t
 {
 	Vertex,
 	Fragment,
+#if !PLATFORM_EMSCRIPTEN
 	Geometry,
 	Compute,
 	TessControl,
 	Evaluation
+#endif
 };
 
 //=============================================================================
@@ -155,16 +167,22 @@ enum class ShaderPipelineStage : uint8_t
 enum class BufferType : uint8_t
 {
 	ArrayBuffer, // aka VertexBuffer
+#if !PLATFORM_EMSCRIPTEN
 	AtomicCounterBuffer,
+#endif
 	CopyReadBuffer,
 	CopyWriteBuffer,
+#if !PLATFORM_EMSCRIPTEN
 	DispatchIndirectBuffer,
 	DrawIndirectBuffer,
+#endif
 	ElementArrayBuffer, // aka Index Buffer
 	PixelPackBuffer,
 	PixelUnpackBuffer,
+#if !PLATFORM_EMSCRIPTEN
 	ShaderStorageBuffer,
 	TextureBuffer,
+#endif
 	TransformFeedbackBuffer,
 	UniformBuffer
 };
@@ -184,26 +202,34 @@ enum class BufferUsage : uint8_t
 	DynamicCopy
 };
 
+#if !PLATFORM_EMSCRIPTEN
 enum class BufferMapAccess : uint8_t
 {
 	Read,
 	Write,
 	ReadWrite
 };
+#endif
 
 enum class BufferBinding : uint8_t
 {
 	ArrayBufferBinding,
+#if !PLATFORM_EMSCRIPTEN
 	AtomicCounterBufferBinding,
+#endif
 	CopyReadBuffer,
 	CopyWriteBuffer,
+#if !PLATFORM_EMSCRIPTEN
 	DispatchIndirectBufferBinding,
 	DrawIndirectBufferBinding,
+#endif
 	ElementArrayBufferBinding,
 	PixelPackBufferBinding,
 	PixelUnpackBufferBinding,
+#if !PLATFORM_EMSCRIPTEN
 	ShaderStorageBufferBinding,
 	TextureBindingBuffer,
+#endif
 	TransformFeedbackBufferBinding,
 	UniformBufferBinding
 };
@@ -216,8 +242,10 @@ enum class BufferMapAccessFlags : uint8_t
 	MapInvalidateBufferBit,
 	MapFlushExplicitBit,
 	MapUnsynchronizedBit,
+#if !PLATFORM_EMSCRIPTEN
 	MapPersistentBit,
 	MapCoherentBit
+#endif
 };
 
 //=============================================================================
@@ -243,11 +271,13 @@ enum class PrimitiveTopology : uint8_t
 	Triangles,
 	TriangleStrip,
 	TriangleFan,
+#if !PLATFORM_EMSCRIPTEN
 	LinesAdjacency,
 	LineStripAdjacency,
 	TrianglesAdjacency,
 	TriangleStripAdjacency,
 	Patches
+#endif
 };
 
 //=============================================================================
@@ -256,11 +286,15 @@ enum class PrimitiveTopology : uint8_t
 
 enum class TextureType : uint8_t // TODO: использовать
 {
+#if !PLATFORM_EMSCRIPTEN
 	Texture1D,
+#endif
 	Texture2D,
 	Texture3D,
+#if !PLATFORM_EMSCRIPTEN
 	TextureRectangle,
 	Texture1DArray,
+#endif
 	Texture2DArray,
 	TextureCubeMap,
 };
@@ -286,7 +320,7 @@ enum class TextureAddressMode : uint8_t
 	Repeat,
 	MirroredRepeat,
 	ClampToEdge,
-#if !defined(__EMSCRIPTEN__) // not support in webGL
+#if !PLATFORM_EMSCRIPTEN // not support in webGL
 	ClampToBorder
 #endif
 };
@@ -357,11 +391,15 @@ enum class FramebufferStatus : uint8_t
 	FramebufferUndefined,
 	FramebufferIncompleteAttachment,
 	FramebufferIncompleteMissingAttachment,
+#if !PLATFORM_EMSCRIPTEN
 	FramebufferIncompleteDrawBuffer,
 	FramebufferIncompleteReadBuffer,
+#endif
 	FramebufferUnsupported,
 	FramebufferIncompleteMultisample,
+#if !PLATFORM_EMSCRIPTEN
 	FramebufferIncompleteLayerTargets
+#endif
 };
 
 enum class FramebufferBinding : uint8_t

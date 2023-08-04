@@ -1,7 +1,7 @@
 #pragma once
 
 template<typename T, typename L>
-bool RemoveElement(L& list, T& object, bool uniqueObject = true)
+inline bool RemoveElement(L& list, T& object, bool uniqueObject = true)
 {
 	if (!object) return false;
 
@@ -23,7 +23,7 @@ bool RemoveElement(L& list, T& object, bool uniqueObject = true)
 }
 
 template <class T>
-bool RemoveElement(std::list<T>& list, T& object, bool uniqueObject = true)
+inline bool RemoveElement(std::list<T>& list, T& object, bool uniqueObject = true)
 {
 	return RemoveElement<T, std::list<T>>(list, object, uniqueObject);
 }

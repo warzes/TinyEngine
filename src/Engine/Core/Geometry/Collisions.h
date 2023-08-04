@@ -232,7 +232,7 @@ void SupportRay(const void* r, const Vqs& xform, const glm::vec3& dir, glm::vec3
 
 #define GJK_FLT_MAX FLT_MAX     // 3.40282347E+38F
 #define GJK_EPSILON FLT_EPSILON // 1.19209290E-07F
-#define GJK_MAX_ITERATIONS 64
+//#define GJK_MAX_ITERATIONS 64
 
 #define EPA_TOLERANCE 0.0001
 #define EPA_MAX_NUM_FACES 64

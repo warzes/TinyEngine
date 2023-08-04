@@ -26,15 +26,15 @@ public:
 
 	void RunApp(std::shared_ptr<IApp> startApp);
 
+	void Update();
+	void Render();
+	void Present();
+
 private:
 	EngineDevice(EngineDevice&&) = delete;
 	EngineDevice(const EngineDevice&) = delete;
 	EngineDevice& operator=(EngineDevice&&) = delete;
 	EngineDevice& operator=(const EngineDevice&) = delete;
-
-	void update();
-	void render();
-	void present();
 
 	std::shared_ptr<IApp> m_currentApp = nullptr;
 	EngineTimestamp m_timestamp;

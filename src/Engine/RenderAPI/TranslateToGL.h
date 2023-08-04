@@ -10,9 +10,11 @@
 	case ImageFormat::RG8:             return GL_RG8;
 	case ImageFormat::RGBA8:           return GL_RGBA8;
 	case ImageFormat::A8:              return GL_ALPHA;
+#if !PLATFORM_EMSCRIPTEN
 	case ImageFormat::R16:             return GL_R16;
 	case ImageFormat::RG16:            return GL_RG16;
 	case ImageFormat::RGBA16:          return GL_RGBA16;
+#endif
 	case ImageFormat::R16F:            return GL_R16F;
 	case ImageFormat::RG16F:           return GL_RG16F;
 	case ImageFormat::RGBA16F:         return GL_RGBA16F;
@@ -24,11 +26,15 @@
 	case ImageFormat::RG32U:           return GL_RG32UI;
 	case ImageFormat::RGBA32U:         return GL_RGBA32UI;
 	case ImageFormat::D16:             return GL_DEPTH_COMPONENT16;
+#if !PLATFORM_EMSCRIPTEN
 	case ImageFormat::D32:             return GL_DEPTH_COMPONENT32;
+#endif
 	case ImageFormat::D24S8:           return GL_DEPTH24_STENCIL8;
+#if !PLATFORM_EMSCRIPTEN
 	case ImageFormat::DXT1:            return GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
 	case ImageFormat::DXT3:            return GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
 	case ImageFormat::DXT5:            return GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+#endif
 	case ImageFormat::None:
 	default: break;
 	}
@@ -107,10 +113,12 @@
 	case BlendFactor::ConstantAlpha:           return GL_CONSTANT_ALPHA;
 	case BlendFactor::InverseConstantAlpha:    return GL_ONE_MINUS_CONSTANT_ALPHA;
 	case BlendFactor::SourceAlphaSaturation:   return GL_SRC_ALPHA_SATURATE;
+#if !PLATFORM_EMSCRIPTEN
 	case BlendFactor::Source1Color:            return GL_SRC1_COLOR;
 	case BlendFactor::InverseSource1Color:     return GL_ONE_MINUS_SRC1_COLOR;
 	case BlendFactor::Source1Alpha:            return GL_SRC1_ALPHA;
 	case BlendFactor::InverseSource1Alpha:     return GL_ONE_MINUS_SRC1_ALPHA;
+#endif
 	default: break;
 	}
 	assert(false && "Unknown BlendFactor");
@@ -142,6 +150,7 @@
 	return 0;
 }
 //-----------------------------------------------------------------------------
+#if !PLATFORM_EMSCRIPTEN
 [[nodiscard]] inline GLenum TranslateToGL(RasterizerFillMode fillMode)
 {
 	switch( fillMode )
@@ -154,7 +163,7 @@
 	assert(false && "Unknown RasterizerFillMode");
 	return 0;
 }
-
+#endif
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLenum TranslateToGL(ShaderPipelineStage usage)
 {
@@ -162,10 +171,12 @@
 	{
 	case ShaderPipelineStage::Vertex:      return GL_VERTEX_SHADER;
 	case ShaderPipelineStage::Fragment:    return GL_FRAGMENT_SHADER;
+#if !PLATFORM_EMSCRIPTEN
 	case ShaderPipelineStage::Geometry:    return GL_GEOMETRY_SHADER;
 	case ShaderPipelineStage::Compute:     return GL_COMPUTE_SHADER;
 	case ShaderPipelineStage::TessControl: return GL_TESS_CONTROL_SHADER;
 	case ShaderPipelineStage::Evaluation:  return GL_TESS_EVALUATION_SHADER;
+#endif
 	default: break;
 	}
 	assert(false && "Unknown ShaderPipelineStage");
@@ -178,10 +189,12 @@
 	{
 	case ShaderPipelineStage::Vertex:      return "Vertex";
 	case ShaderPipelineStage::Fragment:    return "Fragment";
+#if !PLATFORM_EMSCRIPTEN
 	case ShaderPipelineStage::Geometry:    return "Geometry";
 	case ShaderPipelineStage::Compute:     return "Compute";
 	case ShaderPipelineStage::TessControl: return "TessControl";
 	case ShaderPipelineStage::Evaluation:  return "Evaluation";
+#endif
 	default: break;
 	}
 	assert(false && "Unknown ShaderType");
@@ -193,16 +206,22 @@
 	switch( type )
 	{
 	case BufferType::ArrayBuffer:             return GL_ARRAY_BUFFER;
+#if !PLATFORM_EMSCRIPTEN
 	case BufferType::AtomicCounterBuffer:     return GL_ATOMIC_COUNTER_BUFFER;
+#endif
 	case BufferType::CopyReadBuffer:          return GL_COPY_READ_BUFFER;
 	case BufferType::CopyWriteBuffer:         return GL_COPY_WRITE_BUFFER;
+#if !PLATFORM_EMSCRIPTEN
 	case BufferType::DispatchIndirectBuffer:  return GL_DISPATCH_INDIRECT_BUFFER;
 	case BufferType::DrawIndirectBuffer:      return GL_DRAW_INDIRECT_BUFFER;
+#endif
 	case BufferType::ElementArrayBuffer:      return GL_ELEMENT_ARRAY_BUFFER;
 	case BufferType::PixelPackBuffer:         return GL_PIXEL_PACK_BUFFER;
 	case BufferType::PixelUnpackBuffer:       return GL_PIXEL_UNPACK_BUFFER;
+#if !PLATFORM_EMSCRIPTEN
 	case BufferType::ShaderStorageBuffer:     return GL_SHADER_STORAGE_BUFFER;
 	case BufferType::TextureBuffer:           return GL_TEXTURE_BUFFER;
+#endif
 	case BufferType::TransformFeedbackBuffer: return GL_TRANSFORM_FEEDBACK_BUFFER;
 	case BufferType::UniformBuffer:           return GL_UNIFORM_BUFFER;
 	default: break;
@@ -230,6 +249,7 @@
 	return 0;
 }
 //-----------------------------------------------------------------------------
+#if !PLATFORM_EMSCRIPTEN
 [[nodiscard]] inline GLenum TranslateToGL(BufferMapAccess access)
 {
 	switch( access )
@@ -242,22 +262,29 @@
 	assert(false && "Unknown BufferMapAccess");
 	return 0;
 }
+#endif
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLenum TranslateToGL(BufferBinding binding)
 {
 	switch( binding )
 	{
 	case BufferBinding::ArrayBufferBinding:             return GL_ARRAY_BUFFER_BINDING;
+#if !PLATFORM_EMSCRIPTEN
 	case BufferBinding::AtomicCounterBufferBinding:     return GL_ATOMIC_COUNTER_BUFFER_BINDING;
+#endif
 	case BufferBinding::CopyReadBuffer:                 return GL_COPY_READ_BUFFER;
 	case BufferBinding::CopyWriteBuffer:                return GL_COPY_WRITE_BUFFER;
+#if !PLATFORM_EMSCRIPTEN
 	case BufferBinding::DispatchIndirectBufferBinding:  return GL_DISPATCH_INDIRECT_BUFFER_BINDING;
 	case BufferBinding::DrawIndirectBufferBinding:      return GL_DRAW_INDIRECT_BUFFER_BINDING;
+#endif
 	case BufferBinding::ElementArrayBufferBinding:      return GL_ELEMENT_ARRAY_BUFFER_BINDING;
 	case BufferBinding::PixelPackBufferBinding:         return GL_PIXEL_PACK_BUFFER_BINDING;
 	case BufferBinding::PixelUnpackBufferBinding:       return GL_PIXEL_UNPACK_BUFFER_BINDING;
+#if !PLATFORM_EMSCRIPTEN
 	case BufferBinding::ShaderStorageBufferBinding:     return GL_SHADER_STORAGE_BUFFER_BINDING;
 	case BufferBinding::TextureBindingBuffer:           return GL_TEXTURE_BINDING_BUFFER;
+#endif
 	case BufferBinding::TransformFeedbackBufferBinding: return GL_TRANSFORM_FEEDBACK_BUFFER_BINDING;
 	case BufferBinding::UniformBufferBinding:           return GL_UNIFORM_BUFFER_BINDING;
 	default: break;
@@ -272,16 +299,22 @@
 	switch( type )
 	{
 	case BufferType::ArrayBuffer:             target = BufferBinding::ArrayBufferBinding; break;
+#if !PLATFORM_EMSCRIPTEN
 	case BufferType::AtomicCounterBuffer:     target = BufferBinding::AtomicCounterBufferBinding; break;
+#endif
 	case BufferType::CopyReadBuffer:          target = BufferBinding::CopyReadBuffer; break;
 	case BufferType::CopyWriteBuffer:         target = BufferBinding::CopyWriteBuffer; break;
+#if !PLATFORM_EMSCRIPTEN
 	case BufferType::DispatchIndirectBuffer:  target = BufferBinding::DispatchIndirectBufferBinding; break;
 	case BufferType::DrawIndirectBuffer:      target = BufferBinding::DrawIndirectBufferBinding; break;
+#endif
 	case BufferType::ElementArrayBuffer:      target = BufferBinding::ElementArrayBufferBinding; break;
 	case BufferType::PixelPackBuffer:         target = BufferBinding::PixelPackBufferBinding; break;
 	case BufferType::PixelUnpackBuffer:       target = BufferBinding::PixelUnpackBufferBinding; break;
+#if !PLATFORM_EMSCRIPTEN
 	case BufferType::ShaderStorageBuffer:     target = BufferBinding::ShaderStorageBufferBinding; break;
 	case BufferType::TextureBuffer:           target = BufferBinding::TextureBindingBuffer; break;
+#endif
 	case BufferType::TransformFeedbackBuffer: target = BufferBinding::TransformFeedbackBufferBinding; break;
 	case BufferType::UniformBuffer:           target = BufferBinding::UniformBufferBinding; break;
 	default: break;
@@ -300,8 +333,10 @@
 	case BufferMapAccessFlags::MapInvalidateBufferBit: return GL_MAP_INVALIDATE_BUFFER_BIT;
 	case BufferMapAccessFlags::MapFlushExplicitBit:    return GL_MAP_FLUSH_EXPLICIT_BIT;
 	case BufferMapAccessFlags::MapUnsynchronizedBit:   return GL_MAP_UNSYNCHRONIZED_BIT;
+#if !PLATFORM_EMSCRIPTEN
 	case BufferMapAccessFlags::MapPersistentBit:       return GL_MAP_PERSISTENT_BIT;
 	case BufferMapAccessFlags::MapCoherentBit:         return GL_MAP_COHERENT_BIT;
+#endif
 	default: break;
 	}
 	assert(false && "Unknown BufferMapAccessFlags");
@@ -358,11 +393,13 @@
 	case PrimitiveTopology::Triangles:              return GL_TRIANGLES;
 	case PrimitiveTopology::TriangleStrip:          return GL_TRIANGLE_STRIP;
 	case PrimitiveTopology::TriangleFan:            return GL_TRIANGLE_FAN;
+#if !PLATFORM_EMSCRIPTEN
 	case PrimitiveTopology::LinesAdjacency:         return GL_LINES_ADJACENCY;
 	case PrimitiveTopology::LineStripAdjacency:     return GL_LINE_STRIP_ADJACENCY;
 	case PrimitiveTopology::TrianglesAdjacency:     return GL_TRIANGLES_ADJACENCY;
 	case PrimitiveTopology::TriangleStripAdjacency: return GL_TRIANGLE_STRIP_ADJACENCY;
 	case PrimitiveTopology::Patches:                return GL_PATCHES;
+#endif
 	default: break;
 	}
 	assert(false && "Unknown PrimitiveTopology");
@@ -373,11 +410,15 @@
 {
 	switch( type )
 	{
+#if !PLATFORM_EMSCRIPTEN
 	case TextureType::Texture1D:        return GL_TEXTURE_1D;
+#endif
 	case TextureType::Texture2D:        return GL_TEXTURE_2D;
 	case TextureType::Texture3D:        return GL_TEXTURE_3D;
+#if !PLATFORM_EMSCRIPTEN
 	case TextureType::TextureRectangle: return GL_TEXTURE_RECTANGLE;
 	case TextureType::Texture1DArray:   return GL_TEXTURE_1D_ARRAY;
+#endif
 	case TextureType::Texture2DArray:   return GL_TEXTURE_2D_ARRAY;
 	case TextureType::TextureCubeMap:   return GL_TEXTURE_CUBE_MAP;
 	default: break;
@@ -421,7 +462,7 @@
 	case TextureAddressMode::Repeat:         return GL_REPEAT;
 	case TextureAddressMode::MirroredRepeat: return GL_MIRRORED_REPEAT;
 	case TextureAddressMode::ClampToEdge:    return GL_CLAMP_TO_EDGE;
-#if !defined(__EMSCRIPTEN__)
+#if !PLATFORM_EMSCRIPTEN
 	case TextureAddressMode::ClampToBorder:  return GL_CLAMP_TO_BORDER;
 #endif
 	default: break;
@@ -463,7 +504,7 @@
 		const GLint swizzleMask[] = { GL_RED, GL_RED, GL_RED, GL_GREEN };
 		glTexParameteriv(textureType, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask); // TODO: могут быть проблемы с браузерами, тогда только грузить stb с указанием нужного формата
 #endif // _WIN32
-#if defined(__EMSCRIPTEN__)
+#if PLATFORM_EMSCRIPTEN
 		LogFatal("TexelsFormat::RG_U8 not support in web platform");
 		return false;
 #endif
@@ -568,11 +609,15 @@
 	case FramebufferStatus::FramebufferUndefined:                   return GL_FRAMEBUFFER_UNDEFINED;
 	case FramebufferStatus::FramebufferIncompleteAttachment:        return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
 	case FramebufferStatus::FramebufferIncompleteMissingAttachment: return GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT;
+#if !PLATFORM_EMSCRIPTEN
 	case FramebufferStatus::FramebufferIncompleteDrawBuffer:        return GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER;
 	case FramebufferStatus::FramebufferIncompleteReadBuffer:        return GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER;
+#endif
 	case FramebufferStatus::FramebufferUnsupported:                 return GL_FRAMEBUFFER_UNSUPPORTED;
 	case FramebufferStatus::FramebufferIncompleteMultisample:       return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE;
+#if !PLATFORM_EMSCRIPTEN
 	case FramebufferStatus::FramebufferIncompleteLayerTargets:      return GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS;
+#endif
 	default: break;
 	}
 	assert(false && "Unknown FramebufferStatus");

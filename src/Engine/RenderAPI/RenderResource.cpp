@@ -30,6 +30,30 @@ bool ShaderBytecode::LoadFromFile(const std::string& file)
 	return true;
 }
 //-----------------------------------------------------------------------------
+std::string ShaderBytecode::GetHeaderVertexShader()
+{
+#if PLATFORM_EMSCRIPTEN
+	std::string str = "#version 300 es\n";
+#else
+	std::string str = R"(
+#version 330 core
+)";
+#endif
+	return str;
+}
+//-----------------------------------------------------------------------------
+std::string ShaderBytecode::GetHeaderFragmentShader()
+{
+#if PLATFORM_EMSCRIPTEN
+	std::string str = "#version 300 es\n precision mediump float;\n";
+#else
+	std::string str = R"(
+#version 330 core
+)";
+	return str;
+#endif
+}
+//-----------------------------------------------------------------------------
 ShaderProgramRef RenderSystem::CreateShaderProgram(const ShaderBytecode& vertexShaderSource, const ShaderBytecode& fragmentShaderSource)
 {
 	if( !vertexShaderSource.IsValid() )
@@ -44,17 +68,38 @@ ShaderProgramRef RenderSystem::CreateShaderProgram(const ShaderBytecode& vertexS
 		return {};
 	}
 
-	ShaderRef glShaderVertex   = compileShader(ShaderPipelineStage::Vertex, vertexShaderSource.GetSource());
-	ShaderRef glShaderFragment = compileShader(ShaderPipelineStage::Fragment, fragmentShaderSource.GetSource());
-
+#if PLATFORM_EMSCRIPTEN // TODO: тут крашится, в будущем пофиксить, а пока так
+	LogPrint("01");
+	std::string vertexShaderSourceCode = ShaderBytecode::GetHeaderVertexShader() + vertexShaderSource.GetSource();
+	LogPrint("02");
+	std::string fragmentShaderSourceCode = ShaderBytecode::GetHeaderFragmentShader() + fragmentShaderSource.GetSource();
+#else
+	std::string vertexShaderSourceCode = vertexShaderSource.GetSource();
+	std::string fragmentShaderSourceCode = fragmentShaderSource.GetSource();
+	{
+		size_t posVS = vertexShaderSourceCode.find("#version");
+		if (posVS == std::string::npos)
+			vertexShaderSourceCode = ShaderBytecode::GetHeaderVertexShader() + vertexShaderSourceCode;
+		
+		size_t posFS = fragmentShaderSourceCode.find("#version");
+		if (posFS == std::string::npos)
+			fragmentShaderSourceCode = ShaderBytecode::GetHeaderFragmentShader() + fragmentShaderSourceCode;
+	}
+#endif
+	LogPrint("03");
+	ShaderRef glShaderVertex   = compileShader(ShaderPipelineStage::Vertex, vertexShaderSourceCode);
+	ShaderRef glShaderFragment = compileShader(ShaderPipelineStage::Fragment, fragmentShaderSourceCode);
+	LogPrint("04");
 	ShaderProgramRef resource;
 	if( IsValid(glShaderVertex) && IsValid(glShaderFragment) )
 	{
+		LogPrint("05");
 		resource.reset(new ShaderProgram());
+		LogPrint("06");
 		glAttachShader(*resource, *glShaderVertex);
 		glAttachShader(*resource, *glShaderFragment);
 		glLinkProgram(*resource);
-
+		LogPrint("07");
 		GLint linkStatus = 0;
 		glGetProgramiv(*resource, GL_LINK_STATUS, &linkStatus);
 		if( linkStatus == GL_FALSE )
@@ -68,6 +113,7 @@ ShaderProgramRef RenderSystem::CreateShaderProgram(const ShaderBytecode& vertexS
 		}
 		glDetachShader(*resource, *glShaderVertex);
 		glDetachShader(*resource, *glShaderFragment);
+		LogPrint("08");
 	}
 
 	return resource;
@@ -503,13 +549,17 @@ void RenderSystem::attachmentFrameBufferColor(FramebufferRef fbo, RenderbufferRe
 	if( colorBuffer )
 	{
 		fbo->size = colorBuffer->size;
-		glDrawBuffer(GL_COLOR_ATTACHMENT0);
+#if !PLATFORM_EMSCRIPTEN
+		glDrawBuffer(GL_COLOR_ATTACHMENT0); // TODO: нужно ли?
+#endif
 		glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, *colorBuffer);
 		fbo->colorBuffer = colorBuffer;
 	}
 	else
 	{
-		glDrawBuffer(GL_NONE);
+#if !PLATFORM_EMSCRIPTEN
+		glDrawBuffer(GL_NONE); // TODO: нужно ли?
+#endif
 		glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, 0);
 	}
 }
@@ -519,13 +569,17 @@ void RenderSystem::attachmentFrameBufferColor(FramebufferRef fbo, Texture2DRef c
 	if( colorTexture )
 	{
 		fbo->size = { colorTexture->width, colorTexture->height };
-		glDrawBuffer(GL_COLOR_ATTACHMENT0);
+#if !PLATFORM_EMSCRIPTEN
+		glDrawBuffer(GL_COLOR_ATTACHMENT0); // TODO: нужно ли?
+#endif
 		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, *colorTexture, 0);
 		fbo->colorTextures[0] = colorTexture;
 	}
 	else
 	{
-		glDrawBuffer(GL_NONE);
+#if !PLATFORM_EMSCRIPTEN
+		glDrawBuffer(GL_NONE); // TODO: нужно ли?
+#endif
 		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
 	}
 }
@@ -534,7 +588,9 @@ void RenderSystem::attachmentFrameBufferColor(FramebufferRef fbo, const std::vec
 {
 	if (colorTextures.empty() || !colorTextures[0])
 	{
-		glDrawBuffer(GL_NONE);
+#if !PLATFORM_EMSCRIPTEN
+		glDrawBuffer(GL_NONE); // TODO: нужно ли?
+#endif
 		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
 	}
 	else

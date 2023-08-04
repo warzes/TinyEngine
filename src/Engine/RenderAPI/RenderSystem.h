@@ -121,7 +121,9 @@ public:
 	//-------------------------------------------------------------------------
 	void UpdateBuffer(GPUBufferRef buffer, unsigned offset, unsigned count, unsigned size, const void* data);
 
+#if !PLATFORM_EMSCRIPTEN
 	void* MapBuffer(GPUBufferRef buffer);
+#endif
 	void* MapBuffer(GPUBufferRef buffer, unsigned offset, unsigned size);
 	bool UnmapBuffer(GPUBufferRef buffer);
 
