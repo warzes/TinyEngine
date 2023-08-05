@@ -64,7 +64,11 @@ void EngineDevice::RunApp(std::shared_ptr<IApp> app)
 {
 	assert(app);
 	assert(!isExitRequested);
-	if( !app || isExitRequested ) return;
+	if (!app || isExitRequested) return;
+#if PLATFORM_EMSCRIPTEN
+	assert(thisEngineDevice);
+	if (!thisEngineDevice) return;
+#endif
 
 	LogPrint("EngineDevice RunApp");
 
@@ -72,7 +76,7 @@ void EngineDevice::RunApp(std::shared_ptr<IApp> app)
 	m_currentApp = app;
 	if( m_currentApp->Create() )
 	{
-#if defined(__EMSCRIPTEN__)
+#if PLATFORM_EMSCRIPTEN
 		emscripten_set_main_loop(mainLoop, 0, true);
 #else
 		while( !isExitRequested )

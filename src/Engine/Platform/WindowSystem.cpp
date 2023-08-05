@@ -136,6 +136,8 @@ void WindowSystem::SetTitle(const char* title)
 {
 #if PLATFORM_DESKTOP
 	glfwSetWindowTitle(m_window, title);
+#elif PLATFORM_EMSCRIPTEN
+	emscripten_set_window_title((title != 0) ? title : " ");
 #endif
 }
 //-----------------------------------------------------------------------------
