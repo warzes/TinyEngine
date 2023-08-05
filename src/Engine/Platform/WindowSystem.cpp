@@ -22,6 +22,11 @@ void GLFWFramebufferSizeCallback(GLFWwindow* window, int width, int height) noex
 bool WindowSystem::Create(const WindowCreateInfo& createInfo)
 {
 	m_requestedVSync = createInfo.vsyncEnabled;
+#if PLATFORM_EMSCRIPTEN
+	m_requestedVSync = true; // TODO: ???
+#endif
+
+	glfwSetErrorCallback(GLFWErrorCallback);
 
 	if( glfwInit() != GLFW_TRUE )
 	{
@@ -33,22 +38,23 @@ bool WindowSystem::Create(const WindowCreateInfo& createInfo)
 		+ std::to_string(GLFW_VERSION_MINOR) + "."
 		+ std::to_string(GLFW_VERSION_REVISION) + " initialized."
 	);
-	glfwSetErrorCallback(GLFWErrorCallback);
 
 	// OpenGL Config
 #if PLATFORM_EMSCRIPTEN
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+	glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_NATIVE_CONTEXT_API);
 #else
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-#endif
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_FALSE);
-#if defined(_DEBUG)
+#	if defined(_DEBUG)
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
-#else
+#	else
 	glfwWindowHint(GLFW_CONTEXT_NO_ERROR, GLFW_TRUE);
+#	endif
 #endif
 
 	// Window Config

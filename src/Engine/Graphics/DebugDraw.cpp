@@ -729,14 +729,10 @@ void main()
 )";
 	auto& renderSystem = GetRenderSystem();
 	shaderProgram = renderSystem.CreateShaderProgram({ vertexSource.c_str() }, { fragmentSource.c_str() });
-	LogPrint("3");
 	uniformProjectionMatrix = renderSystem.GetUniform(shaderProgram, "uMVP");
-	LogPrint("4");
 	uniformColor = renderSystem.GetUniform(shaderProgram, "uColor");
 
-	LogPrint("5");
 	vb = renderSystem.CreateVertexBuffer(BufferUsage::DynamicDraw, 1, (unsigned)sizeof(glm::vec3), nullptr);
-	LogPrint("6");
 	vao = renderSystem.CreateVertexArray(vb, nullptr, shaderProgram);
 
 	return true;

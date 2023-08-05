@@ -33,24 +33,25 @@ bool ShaderBytecode::LoadFromFile(const std::string& file)
 std::string ShaderBytecode::GetHeaderVertexShader()
 {
 #if PLATFORM_EMSCRIPTEN
-	std::string str = "#version 300 es\n";
+	return "#version 300 es";
 #else
-	std::string str = R"(
+	return R"(
 #version 330 core
 )";
 #endif
-	return str;
 }
 //-----------------------------------------------------------------------------
 std::string ShaderBytecode::GetHeaderFragmentShader()
 {
 #if PLATFORM_EMSCRIPTEN
-	std::string str = "#version 300 es\n precision mediump float;\n";
+	return R"(#version 300 es
+precision mediump float;
+
+)";
 #else
-	std::string str = R"(
+	return R"(
 #version 330 core
 )";
-	return str;
 #endif
 }
 //-----------------------------------------------------------------------------
@@ -68,12 +69,6 @@ ShaderProgramRef RenderSystem::CreateShaderProgram(const ShaderBytecode& vertexS
 		return {};
 	}
 
-#if PLATFORM_EMSCRIPTEN // TODO: тут крашится, в будущем пофиксить, а пока так
-	LogPrint("01");
-	std::string vertexShaderSourceCode = ShaderBytecode::GetHeaderVertexShader() + vertexShaderSource.GetSource();
-	LogPrint("02");
-	std::string fragmentShaderSourceCode = ShaderBytecode::GetHeaderFragmentShader() + fragmentShaderSource.GetSource();
-#else
 	std::string vertexShaderSourceCode = vertexShaderSource.GetSource();
 	std::string fragmentShaderSourceCode = fragmentShaderSource.GetSource();
 	{
@@ -85,21 +80,16 @@ ShaderProgramRef RenderSystem::CreateShaderProgram(const ShaderBytecode& vertexS
 		if (posFS == std::string::npos)
 			fragmentShaderSourceCode = ShaderBytecode::GetHeaderFragmentShader() + fragmentShaderSourceCode;
 	}
-#endif
-	LogPrint("03");
+
 	ShaderRef glShaderVertex   = compileShader(ShaderPipelineStage::Vertex, vertexShaderSourceCode);
 	ShaderRef glShaderFragment = compileShader(ShaderPipelineStage::Fragment, fragmentShaderSourceCode);
-	LogPrint("04");
 	ShaderProgramRef resource;
 	if( IsValid(glShaderVertex) && IsValid(glShaderFragment) )
 	{
-		LogPrint("05");
 		resource.reset(new ShaderProgram());
-		LogPrint("06");
 		glAttachShader(*resource, *glShaderVertex);
 		glAttachShader(*resource, *glShaderFragment);
 		glLinkProgram(*resource);
-		LogPrint("07");
 		GLint linkStatus = 0;
 		glGetProgramiv(*resource, GL_LINK_STATUS, &linkStatus);
 		if( linkStatus == GL_FALSE )
@@ -113,7 +103,6 @@ ShaderProgramRef RenderSystem::CreateShaderProgram(const ShaderBytecode& vertexS
 		}
 		glDetachShader(*resource, *glShaderVertex);
 		glDetachShader(*resource, *glShaderFragment);
-		LogPrint("08");
 	}
 
 	return resource;
