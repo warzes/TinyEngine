@@ -153,10 +153,11 @@ public:
 	bool Create();
 	void Update();
 
-	bool IsKeyPressed(int key) const;
+	bool IsKeyPressed(int key);
 	bool IsKeyDown(int key) const;
-	bool IsKeyReleased(int key) const;
+	bool IsKeyReleased(int key);
 	bool IsKeyUp(int key) const;
+
 	int GetKeyPressed();
 	int GetCharPressed();
 
@@ -173,14 +174,6 @@ public:
 	void SetMouseLock(bool lock);
 	bool IsCursorOnScreen() const;
 
-	[[nodiscard]] float GetKeyAxis(int posKey, int negKey) const
-	{
-		float value = 0.0f;
-		if( IsKeyDown(posKey) ) value += 1.0f;
-		if( IsKeyDown(negKey) ) value -= 1.0f;
-		return value;
-	}
-
 private:
 	InputSystem(InputSystem&&) = delete;
 	InputSystem(const InputSystem&) = delete;
@@ -189,8 +182,18 @@ private:
 
 	struct
 	{
+#if 0 // OLD Input system
 		char currentKeyState[MAX_KEYBOARD_KEYS] = { 0 };
 		char previousKeyState[MAX_KEYBOARD_KEYS] = { 0 };
+#else
+		/*
+		0 - key up
+		1 - key released
+		2 - key pressed
+		3 - key down
+		*/
+		char keyState[MAX_KEYBOARD_KEYS] = { 0 }; // TODO: rename currentKeyState
+#endif
 
 		int keyPressedQueue[MAX_KEY_PRESSED_QUEUE] = { 0 };
 		int keyPressedQueueCount = 0;

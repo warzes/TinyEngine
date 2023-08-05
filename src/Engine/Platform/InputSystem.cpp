@@ -5,12 +5,34 @@
 //-----------------------------------------------------------------------------
 InputSystem gInputSystem;
 //-----------------------------------------------------------------------------
-void GLFWKeyCallback(GLFWwindow* /*window*/, int key, int /*scancode*/, int action, int /*mods*/) noexcept
+void GLFWKeyCallback(GLFWwindow* /*window*/, int key, int /*scancode*/, int action, int mods) noexcept
 {
 	if (key < 0) return;
 
-	if (action == GLFW_RELEASE) gInputSystem.m_keyboard.currentKeyState[key] = 0;
-	else gInputSystem.m_keyboard.currentKeyState[key] = 1;
+	if (action == GLFW_RELEASE)
+	{
+#if 0 // OLD Input system
+		gInputSystem.m_keyboard.currentKeyState[key] = 0;
+#else
+		if (gInputSystem.m_keyboard.keyState[key] > 1)
+			gInputSystem.m_keyboard.keyState[key] = 1;
+#endif
+	}
+	else
+	{
+#if 0 // OLD Input system
+		gInputSystem.m_keyboard.currentKeyState[key] = 1;
+#else
+		if (gInputSystem.m_keyboard.keyState[key] < 2)
+			gInputSystem.m_keyboard.keyState[key] = 2;
+#endif
+	}
+
+#if !PLATFORM_EMSCRIPTEN && 0 // TODO: fix
+	// WARNING: Check if CAPS/NUM key modifiers are enabled and force down state for those keys
+	if (((key == Input::KEY_CAPS_LOCK) && ((mods & GLFW_MOD_CAPS_LOCK) > 0)) ||
+		((key == Input::KEY_NUM_LOCK) && ((mods & GLFW_MOD_NUM_LOCK) > 0))) gInputSystem.m_keyboard.currentKeyState[key] = 1;
+#endif
 
 	if ((gInputSystem.m_keyboard.keyPressedQueueCount < MAX_KEY_PRESSED_QUEUE) && (action == GLFW_PRESS))
 	{
@@ -73,8 +95,12 @@ void InputSystem::Update()
 	m_keyboard.keyPressedQueueCount = 0;
 	m_keyboard.charPressedQueueCount = 0;
 
+#if 0 // OLD Input system
 	for (int i = 0; i < MAX_KEYBOARD_KEYS; i++) m_keyboard.previousKeyState[i] = m_keyboard.currentKeyState[i];
 	for (int i = 0; i < MAX_MOUSE_BUTTONS; i++) m_mouse.previousButtonState[i] = m_mouse.currentButtonState[i];
+#endif
+
+	// TODO: если игра свернута - нужно стирать все состояния клавиш и мыши
 
 	m_mouse.previousWheelMove = m_mouse.currentWheelMove;
 	m_mouse.currentWheelMove = { 0.0f, 0.0f };
@@ -83,28 +109,58 @@ void InputSystem::Update()
 	glfwPollEvents();
 }
 //-----------------------------------------------------------------------------
-bool InputSystem::IsKeyPressed(int key) const
+bool InputSystem::IsKeyPressed(int key)
 {
-	if ((m_keyboard.previousKeyState[key] == 0) && (m_keyboard.currentKeyState[key] == 1)) return true;
-	return false;
+#if 0 // OLD Input system
+	bool pressed = false;
+	if ((m_keyboard.previousKeyState[key] == 0) && (m_keyboard.currentKeyState[key] == 1)) pressed = true;
+	return pressed;
+#else
+	if (m_keyboard.keyState[key] == 2)
+	{
+		m_keyboard.keyState[key] = 3;
+		return true;
+	}
+	else return false;
+#endif
 }
 //-----------------------------------------------------------------------------
 bool InputSystem::IsKeyDown(int key) const
 {
+#if 0 // OLD Input system
 	if (m_keyboard.currentKeyState[key] == 1) return true;
 	else return false;
+#else
+	if (m_keyboard.keyState[key] >= 2) return true;
+	else return false;
+#endif
+
 }
 //-----------------------------------------------------------------------------
-bool InputSystem::IsKeyReleased(int key) const
+bool InputSystem::IsKeyReleased(int key)
 {
+#if 0 // OLD Input system
 	if ((m_keyboard.previousKeyState[key] == 1) && (m_keyboard.currentKeyState[key] == 0)) return true;
 	return false;
+#else
+	if (m_keyboard.keyState[key] == 1)
+	{
+		m_keyboard.keyState[key] = 0;
+		return true;
+	}
+	else return false;
+#endif
 }
 //-----------------------------------------------------------------------------
 bool InputSystem::IsKeyUp(int key) const
 {
+#if 0 // OLD Input system
 	if (m_keyboard.currentKeyState[key] == 0) return true;
 	else return false;
+#else
+	if (m_keyboard.keyState[key] <= 1) return true;
+	else return false;
+#endif
 }
 //-----------------------------------------------------------------------------
 int InputSystem::GetKeyPressed()
