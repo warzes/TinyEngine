@@ -263,7 +263,8 @@ glm::vec2 InputSystem::GetMouseWheelMoveV() const
 //-----------------------------------------------------------------------------
 void InputSystem::SetMouseLock(bool lock)
 {
-	if (m_mouse.cursorHidden == lock) return;
+	//if (m_mouse.cursorHidden == lock) return;
+	LogPrint(std::string("mouse=") + (lock ? "true": "false"));
 
 #if PLATFORM_EMSCRIPTEN
 	if (lock) emscripten_request_pointerlock("#canvas", 1);

@@ -19,6 +19,20 @@ void GLFWFramebufferSizeCallback(GLFWwindow* window, int width, int height) noex
 	app->m_windowHeight = height;
 }
 //-----------------------------------------------------------------------------
+#if PLATFORM_EMSCRIPTEN
+static EM_BOOL EmscriptenFullscreenChangeCallback(int eventType, const EmscriptenFullscreenChangeEvent* event, void* userData)
+{
+	return 1;
+}
+#endif
+//-----------------------------------------------------------------------------
+#if PLATFORM_EMSCRIPTEN
+static EM_BOOL EmscriptenMouseCallback(int eventType, const EmscriptenMouseEvent* mouseEvent, void* userData)
+{
+	return 1;
+}
+#endif
+//-----------------------------------------------------------------------------
 bool WindowSystem::Create(const WindowCreateInfo& createInfo)
 {
 	m_requestedVSync = createInfo.vsyncEnabled;
@@ -84,6 +98,11 @@ bool WindowSystem::Create(const WindowCreateInfo& createInfo)
 	glfwSwapInterval(m_requestedVSync ? 1 : 0);
 
 	glfwGetFramebufferSize(m_window, &m_windowWidth, &m_windowHeight);
+
+#if PLATFORM_EMSCRIPTEN
+	emscripten_set_fullscreenchange_callback("#canvas", NULL, 1, EmscriptenFullscreenChangeCallback);
+	emscripten_set_click_callback("#canvas", NULL, 1, EmscriptenMouseCallback);
+#endif
 
 	LogPrint("WindowSystem Create");
 
