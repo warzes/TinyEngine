@@ -20,16 +20,27 @@ void GLFWFramebufferSizeCallback(GLFWwindow* window, int width, int height) noex
 }
 //-----------------------------------------------------------------------------
 #if PLATFORM_EMSCRIPTEN
-static EM_BOOL EmscriptenFullscreenChangeCallback(int eventType, const EmscriptenFullscreenChangeEvent* event, void* userData)
+static EM_BOOL EmscriptenFullscreenChangeCallback(int /*eventType*/, const EmscriptenFullscreenChangeEvent* /*emscEvent*/, void* /*userData*/)
 {
 	return 1;
 }
 #endif
 //-----------------------------------------------------------------------------
 #if PLATFORM_EMSCRIPTEN
-static EM_BOOL EmscriptenMouseCallback(int eventType, const EmscriptenMouseEvent* mouseEvent, void* userData)
+EM_BOOL EmscriptenBlurCallback(int /*eventType*/, const EmscriptenFocusEvent* /*emscEvent*/, void* /*userData*/)
 {
-	return 1;
+	gWindowSystem.m_focused = false;
+	LogPrint("window unfocused");
+	return true;
+}
+#endif
+//-----------------------------------------------------------------------------
+#if PLATFORM_EMSCRIPTEN
+EM_BOOL EmscriptenfocusCallback(int /*eventType*/, const EmscriptenFocusEvent* /*emscEvent*/, void* /*userData*/)
+{
+	gWindowSystem.m_focused = true;
+	LogPrint("window focused");
+	return true;
 }
 #endif
 //-----------------------------------------------------------------------------
@@ -53,6 +64,8 @@ bool WindowSystem::Create(const WindowCreateInfo& createInfo)
 		+ std::to_string(GLFW_VERSION_REVISION) + " initialized."
 	);
 
+	glfwDefaultWindowHints();
+
 	// OpenGL Config
 #if PLATFORM_EMSCRIPTEN
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -74,6 +87,7 @@ bool WindowSystem::Create(const WindowCreateInfo& createInfo)
 	// Window Config
 	glfwWindowHint(GLFW_RESIZABLE, createInfo.resizable ? GL_TRUE : GL_FALSE);
 	glfwWindowHint(GLFW_MAXIMIZED, createInfo.maximized ? GLFW_TRUE : GLFW_FALSE);
+	//glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_TRUE);
 
 	m_window = glfwCreateWindow(createInfo.width, createInfo.height, createInfo.title.c_str(), nullptr, nullptr);
 	if( !m_window )
@@ -100,8 +114,9 @@ bool WindowSystem::Create(const WindowCreateInfo& createInfo)
 	glfwGetFramebufferSize(m_window, &m_windowWidth, &m_windowHeight);
 
 #if PLATFORM_EMSCRIPTEN
+	emscripten_set_blur_callback(EMSCRIPTEN_EVENT_TARGET_WINDOW, 0, true, EmscriptenBlurCallback); // TODO: glfw events?
+	emscripten_set_focus_callback(EMSCRIPTEN_EVENT_TARGET_WINDOW, 0, true, EmscriptenfocusCallback);
 	emscripten_set_fullscreenchange_callback("#canvas", NULL, 1, EmscriptenFullscreenChangeCallback);
-	emscripten_set_click_callback("#canvas", NULL, 1, EmscriptenMouseCallback);
 #endif
 
 	LogPrint("WindowSystem Create");
@@ -170,6 +185,11 @@ void WindowSystem::SetPosition(int x, int y)
 void WindowSystem::SetSize(int width, int height)
 {
 	glfwSetWindowSize(m_window, width, height);
+}
+//-----------------------------------------------------------------------------
+bool WindowSystem::IsFocused() const
+{
+	return m_focused;
 }
 //-----------------------------------------------------------------------------
 WindowSystem& GetWindowSystem()

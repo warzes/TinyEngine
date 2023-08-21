@@ -147,6 +147,11 @@ class InputSystem final
 	friend void GLFWMouseCursorPosCallback(GLFWwindow*, double, double) noexcept;
 	friend void GLFWMouseScrollCallback(GLFWwindow*, double, double) noexcept;
 	friend void GLFWCursorEnterCallback(GLFWwindow*, int) noexcept;
+
+#if PLATFORM_EMSCRIPTEN
+	friend EM_BOOL EmscriptenPointerlockchangeCallback(int, const EmscriptenPointerlockChangeEvent*, void*);
+	friend EM_BOOL EmscriptenPointerlockerrorCallback(int, const void*, void*);
+#endif
 public:
 	InputSystem() = default;
 
@@ -173,6 +178,7 @@ public:
 	glm::vec2 GetMouseWheelMoveV() const;
 	void SetMouseLock(bool lock);
 	bool IsCursorOnScreen() const;
+	bool IsMouseLock() const;
 
 private:
 	InputSystem(InputSystem&&) = delete;
@@ -206,8 +212,10 @@ private:
 	{
 		glm::vec2 currentPosition = glm::vec2(0.0f);
 		glm::vec2 previousPosition = glm::vec2(0.0f);
+		glm::vec2 deltaPosition = glm::vec2(0.0f);
 
-		bool cursorHidden = false;
+		bool cursorLocked = false;
+		bool cursorLockRequested = false;
 		bool cursorOnScreen = false;
 
 		char currentButtonState[MAX_MOUSE_BUTTONS] = { 0 };

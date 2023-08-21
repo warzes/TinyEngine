@@ -9,6 +9,8 @@ void GLFWKeyCallback(GLFWwindow* /*window*/, int key, int /*scancode*/, int acti
 {
 	if (key < 0) return;
 
+	LogPrint("key " + std::to_string(key));
+
 	if (action == GLFW_RELEASE)
 	{
 #if 0 // OLD Input system
@@ -71,6 +73,30 @@ void GLFWCursorEnterCallback(GLFWwindow* /*window*/, int enter) noexcept
 	gInputSystem.m_mouse.cursorOnScreen = (enter == GLFW_TRUE);
 }
 //-----------------------------------------------------------------------------
+#if PLATFORM_EMSCRIPTEN
+EM_BOOL EmscriptenMouseCallback(int /*eventType*/, const EmscriptenMouseEvent* /*mouseEvent*/, void* /*userData*/)
+{
+	return 1;
+}
+#endif
+//-----------------------------------------------------------------------------
+#if PLATFORM_EMSCRIPTEN
+EM_BOOL EmscriptenPointerlockchangeCallback(int /*eventType*/, const EmscriptenPointerlockChangeEvent* emscEvent, void* /*userData*/)
+{
+	gInputSystem.m_mouse.cursorLocked = emscEvent->isActive;
+	return EM_TRUE;
+}
+#endif
+//-----------------------------------------------------------------------------
+#if PLATFORM_EMSCRIPTEN
+EM_BOOL EmscriptenPointerlockerrorCallback(int /*eventType*/, const void* /*reserved*/, void* /*userData*/)
+{
+	gInputSystem.m_mouse.cursorLocked = false;
+	gInputSystem.m_mouse.cursorLockRequested = false;
+	return EM_TRUE;
+}
+#endif
+//-----------------------------------------------------------------------------
 bool InputSystem::Create()
 {
 	WindowSystem& wnd = GetWindowSystem();
@@ -81,6 +107,12 @@ bool InputSystem::Create()
 	glfwSetCursorPosCallback(wnd.m_window, GLFWMouseCursorPosCallback);
 	glfwSetScrollCallback(wnd.m_window, GLFWMouseScrollCallback);
 	glfwSetCursorEnterCallback(wnd.m_window, GLFWCursorEnterCallback);
+
+#if PLATFORM_EMSCRIPTEN
+	emscripten_set_click_callback("#canvas", NULL, 1, EmscriptenMouseCallback);
+	emscripten_set_pointerlockchange_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, 0, true, EmscriptenPointerlockchangeCallback);
+	emscripten_set_pointerlockerror_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, 0, true, EmscriptenPointerlockerrorCallback);
+#endif
 
 	m_mouse.currentPosition.x = (float)wnd.m_windowWidth / 2.0f;
 	m_mouse.currentPosition.y = (float)wnd.m_windowHeight / 2.0f;
@@ -104,6 +136,8 @@ void InputSystem::Update()
 
 	m_mouse.previousWheelMove = m_mouse.currentWheelMove;
 	m_mouse.currentWheelMove = { 0.0f, 0.0f };
+
+	m_mouse.deltaPosition = m_mouse.currentPosition - m_mouse.previousPosition;
 	m_mouse.previousPosition = m_mouse.currentPosition;
 
 	glfwPollEvents();
@@ -233,11 +267,12 @@ glm::vec2 InputSystem::GetMousePosition() const
 //-----------------------------------------------------------------------------
 glm::vec2 InputSystem::GetMouseDeltaPosition() const
 {
-	return
-	{
-		m_mouse.currentPosition.x - m_mouse.previousPosition.x,
-		m_mouse.currentPosition.y - m_mouse.previousPosition.y
-	};
+	return m_mouse.deltaPosition;
+	//return
+	//{
+	//	m_mouse.currentPosition.x - m_mouse.previousPosition.x,
+	//	m_mouse.currentPosition.y - m_mouse.previousPosition.y
+	//};
 }
 //-----------------------------------------------------------------------------
 void InputSystem::SetMousePosition(int x, int y)
@@ -263,7 +298,7 @@ glm::vec2 InputSystem::GetMouseWheelMoveV() const
 //-----------------------------------------------------------------------------
 void InputSystem::SetMouseLock(bool lock)
 {
-	//if (m_mouse.cursorHidden == lock) return;
+	//if (m_mouse.cursorLocked == lock) return;
 	LogPrint(std::string("mouse=") + (lock ? "true": "false"));
 
 #if PLATFORM_EMSCRIPTEN
@@ -275,12 +310,17 @@ void InputSystem::SetMouseLock(bool lock)
 #endif
 	SetMousePosition(GetWindowWidth() / 2, GetWindowHeight() / 2);
 
-	m_mouse.cursorHidden = lock;
+	m_mouse.cursorLocked = lock;
 }
 //-----------------------------------------------------------------------------
 bool InputSystem::IsCursorOnScreen() const
 {
 	return m_mouse.cursorOnScreen;
+}
+//-----------------------------------------------------------------------------
+bool InputSystem::IsMouseLock() const
+{
+	return m_mouse.cursorLocked;
 }
 //-----------------------------------------------------------------------------
 InputSystem& GetInputSystem()

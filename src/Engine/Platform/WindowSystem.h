@@ -15,6 +15,10 @@ class WindowSystem final
 {
 	friend class InputSystem;
 	friend void GLFWFramebufferSizeCallback(GLFWwindow*, int, int) noexcept;
+#if PLATFORM_EMSCRIPTEN
+	friend EM_BOOL EmscriptenBlurCallback(int, const EmscriptenFocusEvent*, void*);
+	friend EM_BOOL EmscriptenfocusCallback(int, const EmscriptenFocusEvent*, void*);
+#endif
 public:
 	WindowSystem() = default;
 
@@ -35,6 +39,8 @@ public:
 	void SetPosition(int x, int y);
 	void SetSize(int width, int height);
 
+	bool IsFocused() const;
+
 private:
 	WindowSystem(WindowSystem&&) = delete;
 	WindowSystem(const WindowSystem&) = delete;
@@ -45,6 +51,8 @@ private:
 	bool m_requestedVSync = false;
 	int m_windowWidth = 0;
 	int m_windowHeight = 0;
+
+	bool m_focused = true;
 };
 
 WindowSystem& GetWindowSystem();
