@@ -137,7 +137,7 @@ void _009DiffuseLighting::Render()
 //-----------------------------------------------------------------------------
 void _009DiffuseLighting::Update(float deltaTime)
 {
-	if (GetInput().IsKeyDown(Input::KEY_ESCAPE))
+	if (GetInputSystem().IsKeyDown(Input::KEY_ESCAPE))
 	{
 		ExitRequest();
 		return;

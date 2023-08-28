@@ -234,7 +234,7 @@ void _011SpecularLighting::Render()
 //-----------------------------------------------------------------------------
 void _011SpecularLighting::Update(float deltaTime)
 {
-	if (GetInput().IsKeyDown(Input::KEY_ESCAPE))
+	if (GetInputSystem().IsKeyDown(Input::KEY_ESCAPE))
 	{
 		ExitRequest();
 		return;

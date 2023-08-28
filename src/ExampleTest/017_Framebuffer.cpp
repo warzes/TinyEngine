@@ -163,14 +163,14 @@ void main()
 	renderSystem.Bind(m_fbo);
 	m_fbo = renderSystem.CreateFramebuffer(m_textureColorbuffer, m_rbo);
 
-	GetInput().SetMouseLock(true);
+	GetInputSystem().SetMouseLock(true);
 
 	return true;
 }
 //-----------------------------------------------------------------------------
 void _017Framebuffer::Destroy()
 {
-	GetInput().SetMouseLock(false);
+	GetInputSystem().SetMouseLock(false);
 	m_shader.reset();
 	screenShader.reset();
 	m_geomBox.reset();
@@ -238,13 +238,13 @@ void _017Framebuffer::Render()
 
 	glDisable(GL_DEPTH_TEST);
 	renderSystem.Bind(screenShader);
-	renderSystem.Bind(m_fbo->colorTexture, 0);
+	renderSystem.Bind(m_fbo->colorTextures[0], 0);
 	renderSystem.Draw(m_geomQuad->vao);
 }
 //-----------------------------------------------------------------------------
 void _017Framebuffer::Update(float deltaTime)
 {
-	if( GetInput().IsKeyDown(Input::KEY_ESCAPE) )
+	if( GetInputSystem().IsKeyDown(Input::KEY_ESCAPE) )
 	{
 		ExitRequest();
 		return;
@@ -254,12 +254,12 @@ void _017Framebuffer::Update(float deltaTime)
 	const float moveSpeed = 10.0f * deltaTime;
 	const glm::vec3 oldCameraPos = m_camera.position;
 
-	if( GetInput().IsKeyDown(Input::KEY_W) ) m_camera.MoveBy(moveSpeed);
-	if( GetInput().IsKeyDown(Input::KEY_S) ) m_camera.MoveBy(-moveSpeed);
-	if( GetInput().IsKeyDown(Input::KEY_A) ) m_camera.StrafeBy(moveSpeed);
-	if( GetInput().IsKeyDown(Input::KEY_D) ) m_camera.StrafeBy(-moveSpeed);
+	if( GetInputSystem().IsKeyDown(Input::KEY_W) ) m_camera.MoveBy(moveSpeed);
+	if( GetInputSystem().IsKeyDown(Input::KEY_S) ) m_camera.MoveBy(-moveSpeed);
+	if( GetInputSystem().IsKeyDown(Input::KEY_A) ) m_camera.StrafeBy(moveSpeed);
+	if( GetInputSystem().IsKeyDown(Input::KEY_D) ) m_camera.StrafeBy(-moveSpeed);
 
-	glm::vec2 delta = GetInput().GetMouseDeltaPosition();
+	glm::vec2 delta = GetInputSystem().GetMouseDeltaPosition();
 	if( delta.x != 0.0f )  m_camera.RotateLeftRight(delta.x * mouseSensitivity);
 	if( delta.y != 0.0f )  m_camera.RotateUpDown(-delta.y * mouseSensitivity);
 }

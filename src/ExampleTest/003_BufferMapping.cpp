@@ -100,7 +100,7 @@ void _003BufferMapping::Update(float deltaTime)
 	if (pos < -1.0f || pos > 1.0f)
 		invert = !invert;
 
-	if (GetInput().IsKeyDown(Input::KEY_ESCAPE))
+	if (GetInputSystem().IsKeyDown(Input::KEY_ESCAPE))
 	{
 		ExitRequest();
 		return;

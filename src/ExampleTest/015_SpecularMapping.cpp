@@ -400,7 +400,7 @@ void _015SpecularMapping::Render()
 //-----------------------------------------------------------------------------
 void _015SpecularMapping::Update(float deltaTime)
 {
-	if (GetInput().IsKeyDown(Input::KEY_ESCAPE))
+	if (GetInputSystem().IsKeyDown(Input::KEY_ESCAPE))
 	{
 		ExitRequest();
 		return;

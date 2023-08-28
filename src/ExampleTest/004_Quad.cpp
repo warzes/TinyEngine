@@ -89,7 +89,7 @@ void _004Quad::Render()
 //-----------------------------------------------------------------------------
 void _004Quad::Update(float /*deltaTime*/)
 {
-	if( GetInput().IsKeyDown(Input::KEY_ESCAPE) )
+	if( GetInputSystem().IsKeyDown(Input::KEY_ESCAPE) )
 	{
 		ExitRequest();
 		return;

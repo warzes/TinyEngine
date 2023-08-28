@@ -107,7 +107,7 @@ void _007LightMaps::Render()
 //-----------------------------------------------------------------------------
 void _007LightMaps::Update(float /*deltaTime*/)
 {
-	if (GetInput().IsKeyDown(Input::KEY_ESCAPE))
+	if (GetInputSystem().IsKeyDown(Input::KEY_ESCAPE))
 	{
 		ExitRequest();
 		return;

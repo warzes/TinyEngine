@@ -82,7 +82,7 @@ void _001Triangle::Render()
 //-----------------------------------------------------------------------------
 void _001Triangle::Update(float /*deltaTime*/)
 {
-	if( GetInput().IsKeyDown(Input::KEY_ESCAPE) )
+	if( GetInputSystem().IsKeyDown(Input::KEY_ESCAPE) )
 	{
 		ExitRequest();
 		return;

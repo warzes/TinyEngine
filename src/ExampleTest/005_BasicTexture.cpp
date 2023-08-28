@@ -96,7 +96,7 @@ void _005BasicTexture::Render()
 //-----------------------------------------------------------------------------
 void _005BasicTexture::Update(float /*deltaTime*/)
 {
-	if (GetInput().IsKeyDown(Input::KEY_ESCAPE))
+	if (GetInputSystem().IsKeyDown(Input::KEY_ESCAPE))
 	{
 		ExitRequest();
 		return;

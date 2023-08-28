@@ -181,7 +181,7 @@ void _010AmbientLighting::Render()
 //-----------------------------------------------------------------------------
 void _010AmbientLighting::Update(float deltaTime)
 {
-	if (GetInput().IsKeyDown(Input::KEY_ESCAPE))
+	if (GetInputSystem().IsKeyDown(Input::KEY_ESCAPE))
 	{
 		ExitRequest();
 		return;

@@ -347,7 +347,7 @@ void _014NormalMapping::Render()
 //-----------------------------------------------------------------------------
 void _014NormalMapping::Update(float deltaTime)
 {
-	if (GetInput().IsKeyDown(Input::KEY_ESCAPE))
+	if (GetInputSystem().IsKeyDown(Input::KEY_ESCAPE))
 	{
 		ExitRequest();
 		return;

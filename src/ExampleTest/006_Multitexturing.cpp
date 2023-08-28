@@ -109,7 +109,7 @@ void _006Multitexturing::Render()
 //-----------------------------------------------------------------------------
 void _006Multitexturing::Update(float /*deltaTime*/)
 {
-	if (GetInput().IsKeyDown(Input::KEY_ESCAPE))
+	if (GetInputSystem().IsKeyDown(Input::KEY_ESCAPE))
 	{
 		ExitRequest();
 		return;
