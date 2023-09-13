@@ -14,7 +14,7 @@
     <ClCompile Include="Core\Logging\LogSystem.cpp">
       <Filter>Core\Logging</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Geometry\BoundingBox.cpp">
+    <ClCompile Include="Core\Geometry\BoundingAABB.cpp">
       <Filter>Core\Geometry</Filter>
     </ClCompile>
     <ClCompile Include="Platform\InputSystem.cpp">
@@ -112,7 +112,7 @@
     <ClInclude Include="Core\Math\MathCoreFunc.h">
       <Filter>Core\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Geometry\BoundingBox.h">
+    <ClInclude Include="Core\Geometry\BoundingAABB.h">
       <Filter>Core\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Platform\WindowSystem.h">
@@ -169,9 +169,6 @@
     <ClInclude Include="Core\Geometry\Collisions.h">
       <Filter>Core\Geometry\old</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Geometry\GeometryCore.h">
-      <Filter>Core\Geometry\old</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Geometry\GeometryShapes.h">
       <Filter>Core\Geometry\old</Filter>
     </ClInclude>
@@ -194,6 +191,9 @@
       <Filter>Core\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Core\Geometry\Plane.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\GeometryCore.h">
       <Filter>Core\Geometry</Filter>
     </ClInclude>
   </ItemGroup>

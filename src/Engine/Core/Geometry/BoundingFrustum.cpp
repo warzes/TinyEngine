@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "BoundingFrustum.h"
-#include "BoundingBox.h"
+#include "BoundingAABB.h"
 #include "BoundingSphere.h"
 #include "Ray.h"
 //-----------------------------------------------------------------------------
@@ -147,7 +147,7 @@ ContainmentType BoundingFrustum::Contains(const glm::vec3& point) const noexcept
 #endif
 }
 //-----------------------------------------------------------------------------
-ContainmentType BoundingFrustum::Contains(const BoundingBox& box) const noexcept
+ContainmentType BoundingFrustum::Contains(const BoundingAABB& box) const noexcept
 {
 	bool intersects = false;
 	for( auto& plane : m_planes )
@@ -213,7 +213,7 @@ ContainmentType BoundingFrustum::Contains(const BoundingSphere& sphere) const no
 	return ContainmentType::Contains;
 }
 //-----------------------------------------------------------------------------
-bool BoundingFrustum::Intersects(const BoundingBox& box) const noexcept
+bool BoundingFrustum::Intersects(const BoundingAABB& box) const noexcept
 {
 	for( auto& plane : m_planes )
 	{

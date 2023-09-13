@@ -14,7 +14,7 @@ public:
 	bool operator==(const Ray& rhs) const { return position == rhs.position && direction == rhs.direction; }
 	bool operator!=(const Ray& rhs) const { return position != rhs.position || direction != rhs.direction; }
 
-	[[nodiscard]] std::optional<float> Intersects(const BoundingBox& box) const;
+	[[nodiscard]] std::optional<float> Intersects(const BoundingAABB& box) const;
 	[[nodiscard]] std::optional<float> Intersects(const BoundingFrustum& frustum) const;
 	[[nodiscard]] std::optional<float> Intersects(const BoundingSphere& sphere) const;
 	[[nodiscard]] std::optional<float> Intersects(const Plane& plane) const;

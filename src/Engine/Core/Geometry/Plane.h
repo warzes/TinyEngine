@@ -22,7 +22,7 @@ public:
 	[[nodiscard]] float GetDistanceToPoint(const glm::vec3& point) const noexcept;
 
 	[[nodiscard]] PlaneIntersectionType Intersects(const glm::vec3& point) const noexcept;
-	[[nodiscard]] PlaneIntersectionType Intersects(const BoundingBox& box) const noexcept;
+	[[nodiscard]] PlaneIntersectionType Intersects(const BoundingAABB& box) const noexcept;
 	[[nodiscard]] PlaneIntersectionType Intersects(const BoundingFrustum& frustum) const noexcept;
 	[[nodiscard]] PlaneIntersectionType Intersects(const BoundingSphere& sphere) const noexcept;
 

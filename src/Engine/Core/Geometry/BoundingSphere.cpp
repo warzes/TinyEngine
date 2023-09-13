@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "BoundingSphere.h"
-#include "BoundingBox.h"
+#include "BoundingAABB.h"
 #include "Ray.h"
 #include "Plane.h"
 #include "Core/Math/MathCoreFunc.h"
@@ -14,7 +14,7 @@ ContainmentType BoundingSphere::Contains(const glm::vec3& point) const noexcept
 	return ContainmentType::Intersects;
 }
 //-----------------------------------------------------------------------------
-ContainmentType BoundingSphere::Contains(const BoundingBox& box) const noexcept
+ContainmentType BoundingSphere::Contains(const BoundingAABB& box) const noexcept
 {
 	bool inside = true;
 	for( auto& corner : box.GetCorners() )
@@ -38,7 +38,7 @@ ContainmentType BoundingSphere::Contains(const BoundingSphere& sphere) const noe
 	return ContainmentType::Intersects;
 }
 //-----------------------------------------------------------------------------
-bool BoundingSphere::Intersects(const BoundingBox& box) const noexcept
+bool BoundingSphere::Intersects(const BoundingAABB& box) const noexcept
 {
 	return box.Intersects(*this);
 }

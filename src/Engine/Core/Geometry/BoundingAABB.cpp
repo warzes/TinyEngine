@@ -1,11 +1,39 @@
 #include "stdafx.h"
-#include "BoundingBox.h"
+#include "BoundingAABB.h"
 #include "Plane.h"
 #include "BoundingSphere.h"
 #include "Ray.h"
 #include "Core/Math/MathCoreFunc.h"
 //-----------------------------------------------------------------------------
-ContainmentType BoundingBox::Contains(const glm::vec3& point) const noexcept
+glm::vec3 minCoords(const glm::vec3& a, const glm::vec3& b)
+{
+	return { std::min(a.x, b.x), std::min(a.y, b.y), std::min(a.z, b.z) };
+}
+//-----------------------------------------------------------------------------
+glm::vec3 maxCoords(const glm::vec3& a, const glm::vec3& b)
+{
+	return { std::max(a.x, b.x), std::max(a.y, b.y), std::max(a.z, b.z) };
+}
+//-----------------------------------------------------------------------------
+void BoundingAABB::AddPoint(const glm::vec3& point)
+{
+	min = minCoords(point, min);
+	max = maxCoords(point, max);
+}
+//-----------------------------------------------------------------------------
+void BoundingAABB::Merge(const BoundingAABB& rhs)
+{
+	AddPoint(rhs.min);
+	AddPoint(rhs.max);
+}
+//-----------------------------------------------------------------------------
+void BoundingAABB::Translate(const glm::vec3& v)
+{
+	min += v;
+	max += v;
+}
+//-----------------------------------------------------------------------------
+ContainmentType BoundingAABB::Contains(const glm::vec3& point) const noexcept
 {
 	if( (point.x < min.x) ||
 		(point.y < min.y) ||
@@ -28,7 +56,7 @@ ContainmentType BoundingBox::Contains(const glm::vec3& point) const noexcept
 	return ContainmentType::Contains;
 }
 //-----------------------------------------------------------------------------
-ContainmentType BoundingBox::Contains(const BoundingBox& box) const noexcept
+ContainmentType BoundingAABB::Contains(const BoundingAABB& box) const noexcept
 {
 	if( (min.x > box.max.x || max.x < box.min.x) ||
 		(min.y > box.max.y || max.y < box.min.y) ||
@@ -45,7 +73,7 @@ ContainmentType BoundingBox::Contains(const BoundingBox& box) const noexcept
 	return ContainmentType::Intersects;
 }
 //-----------------------------------------------------------------------------
-ContainmentType BoundingBox::Contains(const BoundingSphere& sphere) const noexcept
+ContainmentType BoundingAABB::Contains(const BoundingSphere& sphere) const noexcept
 {
 	const auto clamped = glm::clamp(sphere.center, min, max);
 	const auto distanceSquared = DistanceSquared(sphere.center, clamped);
@@ -66,7 +94,7 @@ ContainmentType BoundingBox::Contains(const BoundingSphere& sphere) const noexce
 	return ContainmentType::Intersects;
 }
 //-----------------------------------------------------------------------------
-bool BoundingBox::Intersects(const BoundingBox& box) const noexcept
+bool BoundingAABB::Intersects(const BoundingAABB& box) const noexcept
 {
 	return 
 		(max.x >= box.min.x && min.x <= box.max.x) &&
@@ -74,26 +102,26 @@ bool BoundingBox::Intersects(const BoundingBox& box) const noexcept
 		(max.z >= box.min.z && min.z <= box.max.z);
 }
 //-----------------------------------------------------------------------------
-bool BoundingBox::Intersects(const BoundingSphere& sphere) const noexcept
+bool BoundingAABB::Intersects(const BoundingSphere& sphere) const noexcept
 {
 	const auto clamped = glm::clamp(sphere.center, min, max);
 	const auto distanceSquared = DistanceSquared(sphere.center, clamped);
 	return distanceSquared <= sphere.radius * sphere.radius;
 }
 //-----------------------------------------------------------------------------
-PlaneIntersectionType BoundingBox::Intersects(const Plane& plane) const noexcept
+PlaneIntersectionType BoundingAABB::Intersects(const Plane& plane) const noexcept
 {
 	return plane.Intersects(*this);
 }
 //-----------------------------------------------------------------------------
-std::optional<float> BoundingBox::Intersects(const Ray& ray) const noexcept
+std::optional<float> BoundingAABB::Intersects(const Ray& ray) const noexcept
 {
 	return ray.Intersects(*this);
 }
 //-----------------------------------------------------------------------------
-std::array<glm::vec3, BoundingBox::CornerCount> BoundingBox::GetCorners() const noexcept
+std::array<glm::vec3, BoundingAABB::CornerCount> BoundingAABB::GetCorners() const noexcept
 {
-	return std::array<glm::vec3, BoundingBox::CornerCount>{{
+	return std::array<glm::vec3, BoundingAABB::CornerCount>{{
 			{ min.x, max.y, max.z },
 			{ max.x, max.y, max.z },
 			{ max.x, min.y, max.z },

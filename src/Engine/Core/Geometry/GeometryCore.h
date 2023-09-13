@@ -1,7 +1,7 @@
 #pragma once
 
 class Plane;
-class BoundingBox;
+class BoundingAABB;
 class BoundingFrustum;
 class BoundingSphere;
 class Ray;

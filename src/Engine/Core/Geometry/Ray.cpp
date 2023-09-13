@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "Ray.h"
-#include "BoundingBox.h"
+#include "BoundingAABB.h"
 #include "BoundingFrustum.h"
 #include "BoundingSphere.h"
 #include "Plane.h"
 #include "Core/Math/MathCoreFunc.h"
 //-----------------------------------------------------------------------------
-std::optional<float> Ray::Intersects(const BoundingBox& box) const
+std::optional<float> Ray::Intersects(const BoundingAABB& box) const
 {
 	using T = float;
 

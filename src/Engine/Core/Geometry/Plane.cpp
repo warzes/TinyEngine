@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Plane.h"
-#include "BoundingBox.h"
+#include "BoundingAABB.h"
 #include "BoundingSphere.h"
 #include "BoundingFrustum.h"
 #include "Core/Math/MathCoreFunc.h"
@@ -64,7 +64,7 @@ PlaneIntersectionType Plane::Intersects(const glm::vec3& point) const noexcept
 	return PlaneIntersectionType::Intersecting;
 }
 //-----------------------------------------------------------------------------
-PlaneIntersectionType Plane::Intersects(const BoundingBox& box) const noexcept
+PlaneIntersectionType Plane::Intersects(const BoundingAABB& box) const noexcept
 {
 	glm::vec3 positiveVertex{ box.min.x, box.min.y, box.min.z };
 	glm::vec3 negativeVertex{ box.max.x, box.max.y, box.max.z };
