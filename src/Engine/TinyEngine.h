@@ -82,6 +82,7 @@
 #include "Core/Geometry/AABB.h"
 #include "Core/Geometry/GeometryShapes.h"
 #include "Core/Geometry/Collisions.h"
+#include "Core/Geometry/Intersect.h"
 //-----------------------------------------------------------------------------
 // Utilities
 //-----------------------------------------------------------------------------

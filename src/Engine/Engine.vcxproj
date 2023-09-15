@@ -99,6 +99,7 @@
     <ClCompile Include="Core\Geometry\BoundingFrustum.cpp" />
     <ClCompile Include="Core\Geometry\BoundingSphere.cpp" />
     <ClCompile Include="Core\Geometry\Collisions.cpp" />
+    <ClCompile Include="Core\Geometry\Intersect.cpp" />
     <ClCompile Include="Core\Geometry\Plane.cpp" />
     <ClCompile Include="Core\Geometry\Ray.cpp" />
     <ClCompile Include="Core\IO\FileSystem.cpp" />
@@ -136,6 +137,7 @@
     <ClInclude Include="Core\Geometry\GeometryCore.h" />
     <ClInclude Include="Core\Geometry\GeometryShapes.h" />
     <ClInclude Include="Core\Geometry\GJK.h" />
+    <ClInclude Include="Core\Geometry\Intersect.h" />
     <ClInclude Include="Core\Geometry\Plane.h" />
     <ClInclude Include="Core\Geometry\Ray.h" />
     <ClInclude Include="Core\Geometry\Sphere.h" />
@@ -170,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Core\Geometry\Collisions.inl" />
+    <None Include="Core\Geometry\Intersect.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

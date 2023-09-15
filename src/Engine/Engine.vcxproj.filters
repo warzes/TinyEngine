@@ -71,6 +71,9 @@
     <ClCompile Include="Core\Geometry\Plane.cpp">
       <Filter>Core\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Geometry\Intersect.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -196,6 +199,9 @@
     <ClInclude Include="Core\Geometry\GeometryCore.h">
       <Filter>Core\Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Geometry\Intersect.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -250,6 +256,9 @@
   <ItemGroup>
     <None Include="Core\Geometry\Collisions.inl">
       <Filter>Core\Geometry\old</Filter>
+    </None>
+    <None Include="Core\Geometry\Intersect.inl">
+      <Filter>Core\Geometry</Filter>
     </None>
   </ItemGroup>
 </Project>

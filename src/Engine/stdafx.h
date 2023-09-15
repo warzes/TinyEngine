@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "EngineConfiguration.h"
 #include "Core/Base/PlatformMacros.h"
+#include "EngineConfiguration.h"
 
 #if defined(_MSC_VER)
 #	pragma warning(disable : 4514)
