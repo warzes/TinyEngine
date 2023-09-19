@@ -158,7 +158,7 @@ inline bool RayTestSphere(float* t0, float* t1, const OldRay& r, const Sphere& s
 	return true;
 }
 
-inline bool RayTestAABB(float* t0, float* t1, const OldRay& r, const AABB& a)
+inline bool RayTestAABB(float* t0, float* t1, const OldRay& r, const BoundingAABB& a)
 {
 	const float t0x = (a.min.x - r.p.x) / r.d.x;
 	const float t0y = (a.min.y - r.p.y) / r.d.y;
@@ -224,7 +224,7 @@ inline Hit RayHitSphere(const OldRay& r, const Sphere& s)
 	return hit;
 }
 
-inline Hit RayHitAABB(const OldRay& r, const AABB& a)
+inline Hit RayHitAABB(const OldRay& r, const BoundingAABB& a)
 {
 	Hit hit;
 	if (!RayTestAABB(&hit.t0, &hit.t1, r, a))
@@ -309,7 +309,7 @@ inline glm::vec3 SphereClosestPoint(const Sphere& s, const glm::vec3& p)
 	return (s.center + d * s.radius);
 }
 
-inline bool SphereTestAABB(const Sphere& s, const AABB& a)
+inline bool SphereTestAABB(const Sphere& s, const BoundingAABB& a)
 {
 	return AABBTestSphere(a, s);
 }
@@ -333,7 +333,7 @@ inline bool SphereTestSphere(const Sphere& a, const Sphere& b)
 	return true;
 }
 
-inline Hit SphereHitAABB(const Sphere& s, const AABB& a)
+inline Hit SphereHitAABB(const Sphere& s, const BoundingAABB& a)
 {
 	/* find closest aabb point to sphere center point */
 	const glm::vec3 ap = AABBClosestPoint(a, s.center);
@@ -420,7 +420,7 @@ inline Hit SphereHitSphere(const Sphere& a, const Sphere& b)
 //-----------------------------------------------------------------------------
 // AABB
 //-----------------------------------------------------------------------------
-inline float AABBDistance2Point(const AABB& a, const glm::vec3& p)
+inline float AABBDistance2Point(const BoundingAABB& a, const glm::vec3& p)
 {
 	float r = 0;
 	for (int i = 0; i < 3; ++i) 
@@ -432,7 +432,7 @@ inline float AABBDistance2Point(const AABB& a, const glm::vec3& p)
 	return r;
 }
 
-inline glm::vec3 AABBClosestPoint(const AABB& a, const glm::vec3& p)
+inline glm::vec3 AABBClosestPoint(const BoundingAABB& a, const glm::vec3& p)
 {
 	glm::vec3 res;
 	for (int i = 0; i < 3; ++i)
@@ -445,7 +445,7 @@ inline glm::vec3 AABBClosestPoint(const AABB& a, const glm::vec3& p)
 	return res;
 }
 
-inline bool AABBContainsPoint(const AABB& a, const glm::vec3& p)
+inline bool AABBContainsPoint(const BoundingAABB& a, const glm::vec3& p)
 {
 	if (p.x < a.min.x || p.x > a.max.x) return false;
 	if (p.y < a.min.y || p.y > a.max.y) return false;
@@ -453,7 +453,7 @@ inline bool AABBContainsPoint(const AABB& a, const glm::vec3& p)
 	return true;
 }
 
-inline bool AABBTestAABB(const AABB& a, const AABB& b)
+inline bool AABBTestAABB(const BoundingAABB& a, const BoundingAABB& b)
 {
 	if (a.max.x < b.min.x || a.min.x > b.max.x) return false;
 	if (a.max.y < b.min.y || a.min.y > b.max.y) return false;
@@ -461,17 +461,17 @@ inline bool AABBTestAABB(const AABB& a, const AABB& b)
 	return true;
 }
 
-inline bool AABBTestCapsule(const AABB& a, const Capsule& c)
+inline bool AABBTestCapsule(const BoundingAABB& a, const Capsule& c)
 {
 	return CapsuleTestAABB(c, a);
 }
 
-inline bool AABBTestPoly(const AABB& a, const Poly& p)
+inline bool AABBTestPoly(const BoundingAABB& a, const Poly& p)
 {
 	return PolyTestAABB(p, a);
 }
 
-inline bool AABBTestSphere(const AABB& a, const Sphere& s)
+inline bool AABBTestSphere(const BoundingAABB& a, const Sphere& s)
 {
 	/* compute squared distance between sphere center and aabb */
 	const float d2 = AABBDistance2Point(a, s.center);
@@ -479,7 +479,7 @@ inline bool AABBTestSphere(const AABB& a, const Sphere& s)
 	return d2 <= s.radius * s.radius;
 }
 
-inline Hit AABBHitAABB(const AABB& a, const AABB& b)
+inline Hit AABBHitAABB(const BoundingAABB& a, const BoundingAABB& b)
 {
 	if (!AABBTestAABB(a, b))
 		return NotHit;
@@ -514,7 +514,7 @@ inline Hit AABBHitAABB(const AABB& a, const AABB& b)
 	return hit;
 }
 
-inline Hit AABBHitCapsule(const AABB& a, const Capsule& c)
+inline Hit AABBHitCapsule(const BoundingAABB& a, const Capsule& c)
 {
 	/* calculate aabb center point */
 	const glm::vec3 ac = a.min + ((a.max - a.min) * 0.5f);
@@ -543,7 +543,7 @@ inline Hit AABBHitCapsule(const AABB& a, const Capsule& c)
 	return hit;
 }
 
-inline Hit AABBHitSphere(const AABB& a, const Sphere& s)
+inline Hit AABBHitSphere(const BoundingAABB& a, const Sphere& s)
 {
 	/* find closest aabb point to sphere center point */
 	Hit hit;
@@ -590,7 +590,7 @@ inline glm::vec3 CapsuleClosestPoint(const Capsule& c, const glm::vec3& p)
 	return (pp + (d * c.r));
 }
 
-inline bool CapsuleTestAABB(const Capsule& c, const AABB& a)
+inline bool CapsuleTestAABB(const Capsule& c, const BoundingAABB& a)
 {
 	/* calculate aabb center point */
 	const glm::vec3 ac = (a.max - a.min) * 0.5f;
@@ -694,7 +694,7 @@ inline bool CapsuleTestSphere(const Capsule& c, const Sphere& s)
 	return d2 <= r * r;
 }
 
-inline Hit CapsuleHitAABB(const Capsule& c, const AABB& a)
+inline Hit CapsuleHitAABB(const Capsule& c, const BoundingAABB& a)
 {
 	/* calculate aabb center point */
 	const glm::vec3 ac = a.min + ((a.max - a.min) * 0.5f);
@@ -777,7 +777,7 @@ inline bool PolyTestSphere(const Poly& p, const Sphere& s)
 	return PolyHitSphere(&res, p, s);
 }
 
-inline bool PolyTestAABB(const Poly& p, const AABB& a)
+inline bool PolyTestAABB(const Poly& p, const BoundingAABB& a)
 {
 	gjk_result res;
 	return PolyHitAABB(&res, p, a);
@@ -802,7 +802,7 @@ inline bool PolyTestSphereTransform(const Poly& p, const glm::vec3& pos3, mat33 
 	return PolyHitSphereTransform(&res, p, pos3, rot33, s);
 }
 
-inline bool PolyTestAABBTransform(const Poly& p, const glm::vec3& apos3, mat33 arot33, const AABB& a)
+inline bool PolyTestAABBTransform(const Poly& p, const glm::vec3& apos3, mat33 arot33, const BoundingAABB& a)
 {
 	gjk_result res;
 	return PolyHitAABBTransform(&res, p, apos3, arot33, a);
@@ -841,7 +841,7 @@ inline bool PolyHitSphere(gjk_result* res, const Poly& p, const Sphere& s)
 	return res->distance_squared <= s.radius * s.radius;
 }
 
-inline bool PolyHitAABB(gjk_result* res, const Poly& p, const AABB& a)
+inline bool PolyHitAABB(gjk_result* res, const Poly& p, const BoundingAABB& a)
 {
 	Poly poly;
 	poly.verts.resize(8);
@@ -926,7 +926,7 @@ inline bool PolyHitSphereTransform(gjk_result* res, const Poly& p, const glm::ve
 	return res->distance_squared <= s.radius * s.radius;
 }
 
-inline bool PolyHitAABBTransform(gjk_result* res, const Poly& p, const glm::vec3& pos3, mat33 rot33, const AABB& a)
+inline bool PolyHitAABBTransform(gjk_result* res, const Poly& p, const glm::vec3& pos3, mat33 rot33, const BoundingAABB& a)
 {
 	glm::vec3 zero = glm::vec3{ 0 };
 	float id[] = { 1.0f,0.0f,0.0f, 0.0f,1.0f,0.0f, 0.0f,0.0f,1.0f };
@@ -1034,7 +1034,7 @@ inline bool FrustumTestSphere(const Frustum& f, const Sphere& s)
 	return true;
 }
 
-inline bool FrustumTestAABB(const Frustum& f, const AABB& a)
+inline bool FrustumTestAABB(const Frustum& f, const BoundingAABB& a)
 {
 	for (int i = 0; i < 6; i++)
 	{
@@ -1112,7 +1112,7 @@ inline void SupportSphere(const void* _o, const Vqs& xform, const glm::vec3& dir
 
 inline void SupportAABB(const void* _o, const Vqs& xform, const glm::vec3& dir, glm::vec3* out)
 {
-	const AABB* a = (AABB*)_o;
+	const BoundingAABB* a = (BoundingAABB*)_o;
 
 	// Bring direction vector into rotation space
 	glm::quat qinv = _quat_inverse(xform.rotation);
@@ -1258,19 +1258,19 @@ inline void SupportRay(const void* _r, const Vqs& xform, const glm::vec3& dir, g
 _COLLIDE_FUNC_IMPL(Sphere, Sphere, SupportSphere, SupportSphere);      // Sphere vs. Sphere 
 _COLLIDE_FUNC_IMPL(Sphere, Cylinder, SupportSphere, SupportCylinder);  // Sphere vs. Cylinder
 _COLLIDE_FUNC_IMPL(Sphere, Cone, SupportSphere, SupportCone);          // Sphere vs. Cone
-_COLLIDE_FUNC_IMPL(Sphere, AABB, SupportSphere, SupportAABB);          // Sphere vs. AABB
+_COLLIDE_FUNC_IMPL(Sphere, BoundingAABB, SupportSphere, SupportAABB);          // Sphere vs. AABB
 _COLLIDE_FUNC_IMPL(Sphere, capsule_t, SupportSphere, SupportCapsule);    // Sphere vs. Capsule
 _COLLIDE_FUNC_IMPL(Sphere, Poly, SupportSphere, SupportPoly);          // Sphere vs. Poly 
 _COLLIDE_FUNC_IMPL(Sphere, ray_t, SupportSphere, SupportRay);            // Sphere vs. Ray
 /* AABB */
 
-_COLLIDE_FUNC_IMPL(AABB, AABB, SupportAABB, SupportAABB);          // AABB vs. AABB
-_COLLIDE_FUNC_IMPL(AABB, Cylinder, SupportAABB, SupportCylinder);  // AABB vs. Cylinder
-_COLLIDE_FUNC_IMPL(AABB, Cone, SupportAABB, SupportCone);          // AABB vs. Cone
-_COLLIDE_FUNC_IMPL(AABB, Sphere, SupportAABB, SupportSphere);      // AABB vs. Sphere
-_COLLIDE_FUNC_IMPL(AABB, capsule_t, SupportAABB, SupportCapsule);    // AABB vs. Capsule
-_COLLIDE_FUNC_IMPL(AABB, Poly, SupportAABB, SupportPoly);          // AABB vs. Poly
-_COLLIDE_FUNC_IMPL(AABB, ray_t, SupportAABB, SupportRay);            // AABB vs. Ray
+_COLLIDE_FUNC_IMPL(BoundingAABB, BoundingAABB, SupportAABB, SupportAABB);          // AABB vs. AABB
+_COLLIDE_FUNC_IMPL(BoundingAABB, Cylinder, SupportAABB, SupportCylinder);  // AABB vs. Cylinder
+_COLLIDE_FUNC_IMPL(BoundingAABB, Cone, SupportAABB, SupportCone);          // AABB vs. Cone
+_COLLIDE_FUNC_IMPL(BoundingAABB, Sphere, SupportAABB, SupportSphere);      // AABB vs. Sphere
+_COLLIDE_FUNC_IMPL(BoundingAABB, capsule_t, SupportAABB, SupportCapsule);    // AABB vs. Capsule
+_COLLIDE_FUNC_IMPL(BoundingAABB, Poly, SupportAABB, SupportPoly);          // AABB vs. Poly
+_COLLIDE_FUNC_IMPL(BoundingAABB, ray_t, SupportAABB, SupportRay);            // AABB vs. Ray
 
 /* Capsule */
 
@@ -1278,7 +1278,7 @@ _COLLIDE_FUNC_IMPL(capsule_t, capsule_t, SupportCapsule, SupportCapsule);    // 
 _COLLIDE_FUNC_IMPL(capsule_t, Cylinder, SupportCapsule, SupportCylinder);  // Capsule vs. Cylinder
 _COLLIDE_FUNC_IMPL(capsule_t, Cone, SupportCapsule, SupportCone);          // Capsule vs. Cone
 _COLLIDE_FUNC_IMPL(capsule_t, Sphere, SupportCapsule, SupportSphere);      // Capsule vs. Sphere
-_COLLIDE_FUNC_IMPL(capsule_t, AABB, SupportCapsule, SupportAABB);          // Capsule vs. AABB
+_COLLIDE_FUNC_IMPL(capsule_t, BoundingAABB, SupportCapsule, SupportAABB);          // Capsule vs. AABB
 _COLLIDE_FUNC_IMPL(capsule_t, Poly, SupportCapsule, SupportPoly);          // Capsule vs. Poly
 _COLLIDE_FUNC_IMPL(capsule_t, ray_t, SupportCapsule, SupportRay);            // Capsule vs. Ray
 
@@ -1288,7 +1288,7 @@ _COLLIDE_FUNC_IMPL(Poly, Poly, SupportPoly, SupportPoly);          // Poly vs. P
 _COLLIDE_FUNC_IMPL(Poly, Cylinder, SupportPoly, SupportCylinder);  // Poly vs. Cylinder
 _COLLIDE_FUNC_IMPL(Poly, Cone, SupportPoly, SupportCone);          // Poly vs. Cone
 _COLLIDE_FUNC_IMPL(Poly, Sphere, SupportPoly, SupportSphere);      // Poly vs. Sphere
-_COLLIDE_FUNC_IMPL(Poly, AABB, SupportPoly, SupportAABB);          // Poly vs. AABB
+_COLLIDE_FUNC_IMPL(Poly, BoundingAABB, SupportPoly, SupportAABB);          // Poly vs. AABB
 _COLLIDE_FUNC_IMPL(Poly, capsule_t, SupportPoly, SupportCapsule);    // Poly vs. Capsule
 _COLLIDE_FUNC_IMPL(Poly, ray_t, SupportPoly, SupportRay);            // Poly vs. Ray
 
@@ -1298,7 +1298,7 @@ _COLLIDE_FUNC_IMPL(Cylinder, Cylinder, SupportCylinder, SupportCylinder);  // Cy
 _COLLIDE_FUNC_IMPL(Cylinder, Poly, SupportPoly, SupportPoly);              // Cylinder vs. Poly
 _COLLIDE_FUNC_IMPL(Cylinder, Cone, SupportCylinder, SupportCone);          // Cylinder vs. Cone
 _COLLIDE_FUNC_IMPL(Cylinder, Sphere, SupportCylinder, SupportSphere);      // Cylinder vs. Sphere
-_COLLIDE_FUNC_IMPL(Cylinder, AABB, SupportCylinder, SupportAABB);          // Cylinder vs. AABB
+_COLLIDE_FUNC_IMPL(Cylinder, BoundingAABB, SupportCylinder, SupportAABB);          // Cylinder vs. AABB
 _COLLIDE_FUNC_IMPL(Cylinder, capsule_t, SupportCylinder, SupportCapsule);    // Cylinder vs. Capsule
 _COLLIDE_FUNC_IMPL(Cylinder, ray_t, SupportCylinder, SupportRay);            // Cylinder vs. Ray
 
@@ -1308,6 +1308,6 @@ _COLLIDE_FUNC_IMPL(Cone, Cone, SupportCone, SupportCone);          // Cone vs. C
 _COLLIDE_FUNC_IMPL(Cone, Poly, SupportPoly, SupportPoly);          // Cone vs. Poly
 _COLLIDE_FUNC_IMPL(Cone, Cylinder, SupportCone, SupportCylinder);  // Cone vs. Cylinder
 _COLLIDE_FUNC_IMPL(Cone, Sphere, SupportCone, SupportSphere);      // Cone vs. Sphere
-_COLLIDE_FUNC_IMPL(Cone, AABB, SupportCone, SupportAABB);          // Cone vs. AABB
+_COLLIDE_FUNC_IMPL(Cone, BoundingAABB, SupportCone, SupportAABB);          // Cone vs. AABB
 _COLLIDE_FUNC_IMPL(Cone, capsule_t, SupportCone, SupportCapsule);    // Cone vs. Capsule
 _COLLIDE_FUNC_IMPL(Cone, ray_t, SupportCone, SupportRay);            // Cone vs. Ray

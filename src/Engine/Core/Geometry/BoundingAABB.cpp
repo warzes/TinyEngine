@@ -5,20 +5,10 @@
 #include "Ray.h"
 #include "Core/Math/MathCoreFunc.h"
 //-----------------------------------------------------------------------------
-glm::vec3 minCoords(const glm::vec3& a, const glm::vec3& b)
-{
-	return { std::min(a.x, b.x), std::min(a.y, b.y), std::min(a.z, b.z) };
-}
-//-----------------------------------------------------------------------------
-glm::vec3 maxCoords(const glm::vec3& a, const glm::vec3& b)
-{
-	return { std::max(a.x, b.x), std::max(a.y, b.y), std::max(a.z, b.z) };
-}
-//-----------------------------------------------------------------------------
 void BoundingAABB::AddPoint(const glm::vec3& point)
 {
-	min = minCoords(point, min);
-	max = maxCoords(point, max);
+	min = glm::min(point, min);
+	max = glm::max(point, max);
 }
 //-----------------------------------------------------------------------------
 void BoundingAABB::Merge(const BoundingAABB& rhs)

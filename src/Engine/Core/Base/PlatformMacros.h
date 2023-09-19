@@ -29,8 +29,3 @@
 #	undef  PLATFORM_DESKTOP
 #	define PLATFORM_DESKTOP 1
 #endif
-
-#if PLATFORM_EMSCRIPTEN
-#	undef USE_SSE
-#	define USE_SSE 0
-#endif

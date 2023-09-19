@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "RenderAPI/RenderResource.h"
-#include "Core/Geometry/AABB.h"
+#include "Core/Geometry/BoundingAABB.h"
 
 class Material final
 {
@@ -51,9 +51,9 @@ public:
 	Mesh& operator=(const Mesh&) = delete;
 
 	glm::vec3 GetMeshPos() const { return globalAABB.GetCenter(); }
-	AABB GetLocalAABB() const 
+	BoundingAABB GetLocalAABB() const
 	{ 
-		AABB temp;
+		BoundingAABB temp;
 		temp.min = globalAABB.min - GetMeshPos();
 		temp.max = globalAABB.max - GetMeshPos();
 		return temp;
@@ -67,7 +67,7 @@ public:
 	GeometryBufferRef geometry;
 
 	// global bouncing box
-	AABB globalAABB;
+	BoundingAABB globalAABB;
 };
 
 class Model final
@@ -82,6 +82,6 @@ public:
 
 	std::vector<Mesh> subMeshes;
 	// bouncing box
-	AABB aabb;
+	BoundingAABB aabb;
 };
 using ModelRef = std::shared_ptr<Model>;

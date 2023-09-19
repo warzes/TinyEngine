@@ -4,6 +4,10 @@
 #if defined(_MSC_VER)
 #	pragma comment( lib, "3rdparty.lib" )
 #endif
+
+physic
+terrain
+skeletal anim
 //-----------------------------------------------------------------------------
 bool isExitRequested = true;
 //-----------------------------------------------------------------------------

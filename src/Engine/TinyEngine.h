@@ -79,10 +79,13 @@
 // Geometry
 //-----------------------------------------------------------------------------
 #include "Core/Geometry/Plane.h"
-#include "Core/Geometry/AABB.h"
+#include "Core/Geometry/BoundingAABB.h"
+//#include "Core/Geometry/BoundingFrustum.h"
+#include "Core/Geometry/BoundingSphere.h"
 #include "Core/Geometry/GeometryShapes.h"
 #include "Core/Geometry/Collisions.h"
 #include "Core/Geometry/Intersect.h"
+
 //-----------------------------------------------------------------------------
 // Utilities
 //-----------------------------------------------------------------------------

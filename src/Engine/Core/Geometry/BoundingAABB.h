@@ -10,29 +10,19 @@ public:
 
 	BoundingAABB() noexcept = default;
 	BoundingAABB(const BoundingAABB&) noexcept = default;
-	BoundingAABB(const glm::vec3& min, const glm::vec3& max) noexcept : min(min), max(max) {}
+	BoundingAABB(const glm::vec3& _min, const glm::vec3& _max) noexcept : min(_min), max(_max) {}
 	BoundingAABB(float fmin, float fmax) noexcept : min(glm::vec3(fmin)), max(glm::vec3(fmax)) {}
 
-#if USE_SSE
-	BoundingAABB(__m128 smin, __m128 smax) noexcept
-	{
-		_mm_storeu_ps(&min.x, smin);
-		_mm_storeu_ps(&max.x, smax);
-	}
-#endif // USE_SSE
-
-	BoundingAABB& operator=(const BoundingAABB& rhs) noexcept 
-	{
-		min = rhs.min;
-		max = rhs.max;
-		return *this;
-	}
+	BoundingAABB& operator=(const BoundingAABB&) noexcept = default;
 
 	bool operator==(const BoundingAABB& rhs) const { return (min == rhs.min && max == rhs.max); }
 	bool operator!=(const BoundingAABB& rhs) const { return (min != rhs.min || max != rhs.max); }
 
 	void AddPoint(const glm::vec3& point);
 	void Merge(const BoundingAABB& rhs);
+	// expands the volume to include v
+	void Include(const glm::vec3& v) { AddPoint(v); }
+	void Include(const BoundingAABB& aabb) { Merge(aabb); }
 
 	void Translate(const glm::vec3& v);
 
