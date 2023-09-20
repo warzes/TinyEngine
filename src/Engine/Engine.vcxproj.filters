@@ -77,30 +77,6 @@
     <ClCompile Include="Physics\PhysicsSystem.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
-    <ClCompile Include="Physics\Collision\BodyState\IslandElement.cpp">
-      <Filter>Physics\Collision\BodyState</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics\Body\PhysicsBody.cpp">
-      <Filter>Physics\Body</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics\Utils\math\PhysicsTransform.cpp">
-      <Filter>Physics\Utils\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics\Object\CollisionConvexObject.cpp">
-      <Filter>Physics\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics\Object\CollisionConvexObjectPool.cpp">
-      <Filter>Physics\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Pattern\Singleton.cpp">
-      <Filter>Core\Pattern</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics\Object\CollisionConvexObjectTypes.cpp">
-      <Filter>Physics\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics\Core\Geometry\ConvexObject3D.cpp">
-      <Filter>Physics\Core\Geometry</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -226,38 +202,8 @@
     <ClInclude Include="Physics\PhysicsSystem.h">
       <Filter>Physics</Filter>
     </ClInclude>
-    <ClInclude Include="Physics\Collision\BodyState\IslandElement.h">
-      <Filter>Physics\Collision\BodyState</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\Body\PhysicsBody.h">
-      <Filter>Physics\Body</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\Utils\math\PhysicsTransform.h">
-      <Filter>Physics\Utils\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\Object\CollisionConvexObject.h">
-      <Filter>Physics\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Containers\FixedSizePool.h">
-      <Filter>Core\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Utilities\CoreUtilities.h">
       <Filter>Core\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Containers\SyncFixedSizePool.h">
-      <Filter>Core\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\Object\CollisionConvexObjectPool.h">
-      <Filter>Physics\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Pattern\Singleton.h">
-      <Filter>Core\Pattern</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\Object\CollisionConvexObjectTypes.h">
-      <Filter>Physics\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\Core\Geometry\ConvexObject3D.h">
-      <Filter>Physics\Core\Geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -312,38 +258,8 @@
     <Filter Include="Physics">
       <UniqueIdentifier>{ef016039-d78e-46f2-a0f5-8fad53db01c4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Physics\Collision">
-      <UniqueIdentifier>{29a35a39-ddcb-4d75-b4b0-18c3b0e49d1f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Physics\Collision\BodyState">
-      <UniqueIdentifier>{8c48e396-fd89-4cde-be2f-ec88c9a124b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Physics\Body">
-      <UniqueIdentifier>{f4fc4c93-2df5-4850-9577-e428cb7e3147}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Physics\Shape">
-      <UniqueIdentifier>{b3b36dd9-40dc-4ed9-9deb-850703c25f3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Physics\Character">
-      <UniqueIdentifier>{421f841e-ec03-46cb-a245-e03fe16c83f7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Physics\Object">
-      <UniqueIdentifier>{d2f9d058-efb7-4975-9242-9b024afa576a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Physics\Utils">
-      <UniqueIdentifier>{1dfd9127-5133-4544-88e9-9c7e5d161e12}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Physics\Core">
-      <UniqueIdentifier>{8b046628-2ce7-47be-a718-fd3318372a21}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Physics\Utils\Math">
-      <UniqueIdentifier>{78ab0c50-17b3-47ea-b824-461f19d1e2c7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Pattern">
       <UniqueIdentifier>{4752e7b3-adeb-471e-b109-21a7f25ae89e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Physics\Core\Geometry">
-      <UniqueIdentifier>{94b601b3-3ead-4ad4-bffe-be9d2cc3b0f6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
