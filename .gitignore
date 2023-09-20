@@ -12,3 +12,5 @@ Thumbs.db
 
 /bin/Debug/ExampleTest.*
 /bin/Release/ExampleTest.*
+/bin/Debug/PhysicsTest.*
+/bin/Release/PhysicsTest.*

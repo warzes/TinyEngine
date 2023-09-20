@@ -4,10 +4,6 @@
 #if defined(_MSC_VER)
 #	pragma comment( lib, "3rdparty.lib" )
 #endif
-
-physic
-terrain
-skeletal anim
 //-----------------------------------------------------------------------------
 bool isExitRequested = true;
 //-----------------------------------------------------------------------------
@@ -16,6 +12,9 @@ extern InputSystem gInputSystem;
 extern WindowSystem gWindowSystem;
 extern RenderSystem gRenderSystem;
 extern GraphicsSystem gGraphicsSystem;
+#if USE_PHYSICS
+extern PhysicsSystem gPhysicsSystem;
+#endif
 #if PLATFORM_EMSCRIPTEN
 EngineDevice* thisEngineDevice = nullptr;
 #endif
@@ -40,6 +39,12 @@ EngineDevice::EngineDevice(const EngineDeviceCreateInfo& createInfo)
 	if (!gRenderSystem.Create(createInfo.render)) return;
 	if (!gGraphicsSystem.Create()) return;
 
+#if USE_PHYSICS	
+	m_physicsSystemEnable = createInfo.physics.enable;
+	if (m_physicsSystemEnable)
+		if (!gPhysicsSystem.Create(createInfo.physics)) return;
+#endif
+
 	m_timestamp.PreviousFrameTimestamp = EngineTimestamp::GetTime();
 #if PLATFORM_EMSCRIPTEN
 	thisEngineDevice = this;
@@ -53,6 +58,10 @@ EngineDevice::~EngineDevice()
 {
 	LogPrint("EngineDevice Destroy");
 
+#if USE_PHYSICS
+	m_physicsSystemEnable = false;
+	gPhysicsSystem.Destroy();
+#endif
 	gGraphicsSystem.Destroy();
 	gRenderSystem.Destroy();
 	gWindowSystem.Destroy();
@@ -101,6 +110,11 @@ void EngineDevice::Update()
 	gWindowSystem.Update();
 	m_timestamp.Update();
 	gInputSystem.Update();
+
+#if USE_PHYSICS
+	if (m_physicsSystemEnable)
+		gPhysicsSystem.Update();
+#endif
 
 	m_currentApp->Update(static_cast<float>(m_timestamp.ElapsedTime));
 

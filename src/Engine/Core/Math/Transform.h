@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-class Transform
+class Transform final
 {
 public:
 	void SetPosition(const glm::vec3& position)

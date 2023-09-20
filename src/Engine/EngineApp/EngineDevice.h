@@ -7,6 +7,7 @@
 #include "Platform/InputSystem.h"
 #include "RenderAPI/RenderSystem.h"
 #include "Graphics/GraphicsSystem.h"
+#include "Physics/PhysicsSystem.h"
 #include "IApp.h"
 
 struct EngineDeviceCreateInfo final
@@ -14,6 +15,7 @@ struct EngineDeviceCreateInfo final
 	LogCreateInfo log;
 	WindowCreateInfo window;
 	RenderCreateInfo render;
+	PhysicsCreateInfo physics;
 };
 
 class EngineDevice final
@@ -38,6 +40,7 @@ private:
 
 	std::shared_ptr<IApp> m_currentApp = nullptr;
 	EngineTimestamp m_timestamp;
+	bool m_physicsSystemEnable = false;
 };
 
 void ExitRequest();

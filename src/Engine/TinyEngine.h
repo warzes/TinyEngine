@@ -62,6 +62,11 @@
 #include "Core/Base/BaseMacros.h"
 #include "Core/Base/BaseFunc.h"
 //-----------------------------------------------------------------------------
+// Containers
+//-----------------------------------------------------------------------------
+#include "Core/Containers/FixedSizePool.h"
+#include "Core/Containers/SyncFixedSizePool.h"
+//-----------------------------------------------------------------------------
 // IO
 //-----------------------------------------------------------------------------
 #include "Core/IO/FileSystem.h"
@@ -85,11 +90,10 @@
 #include "Core/Geometry/GeometryShapes.h"
 #include "Core/Geometry/Collisions.h"
 #include "Core/Geometry/Intersect.h"
-
 //-----------------------------------------------------------------------------
 // Utilities
 //-----------------------------------------------------------------------------
-#include "CoreUtilities.h"
+#include "Core/Utilities/CoreUtilities.h"
 
 //=============================================================================
 // Platform
