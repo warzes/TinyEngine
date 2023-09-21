@@ -79,12 +79,11 @@ const char* FileSystem::GetFileExtension(const char* fileName)
 	return dot;
 }
 //-----------------------------------------------------------------------------
-const char* FileSystem::GetFileName(const char* filePath)
+std::string FileSystem::GetFileName(std::string_view filePath)
 {
-	const char* latestMatch = nullptr;
-	for (; filePath = strpbrk(filePath, "\\/"), filePath != nullptr; latestMatch = filePath++) {}
-	const char* fileName = latestMatch;
-	if (!fileName) return filePath;
-	return fileName + 1;
+	std::size_t fileNamePos = filePath.find_last_of("/\\");
+	if (fileNamePos == std::string::npos)
+		return std::string(filePath);
+	return std::string(filePath.substr(fileNamePos + 1));
 }
 //-----------------------------------------------------------------------------

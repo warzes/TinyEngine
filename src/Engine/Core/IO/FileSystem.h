@@ -15,5 +15,5 @@ namespace FileSystem
 	// Get pointer to extension for a filename string (includes the dot: .png)
 	[[nodiscard]] const char* GetFileExtension(const char* fileName);
 	// Get pointer to filename for a path string
-	[[nodiscard]] const char* GetFileName(const char* filePath);
+	[[nodiscard]] std::string GetFileName(std::string_view filePath);
 }
