@@ -2,7 +2,7 @@
 #include "RenderResource.h"
 #include "RenderSystem.h"
 #include "TranslateToGL.h"
-#include "Core/IO/STBImageLoader.h"
+#include "Core/IO/ImageLoader.h"
 //-----------------------------------------------------------------------------
 Shader::Shader(ShaderPipelineStage stage)
 {
@@ -306,15 +306,15 @@ GeometryBufferRef RenderSystem::CreateGeometryBuffer(BufferUsage usage, unsigned
 	return CreateGeometryBuffer(usage, vertexCount, vertexSize, vertexData, 0, {}, nullptr, attribs);
 }
 //-----------------------------------------------------------------------------
-TexelsFormat Convert(ImagePixelFormat format)
+TexelsFormat Convert(ImageLoader::ImageFormat format)
 {
 	switch (format)
 	{
-	case ImagePixelFormat::R_U8: return TexelsFormat::R_U8;
-	case ImagePixelFormat::RG_U8: return TexelsFormat::RG_U8;
-	case ImagePixelFormat::RGB_U8: return TexelsFormat::RGB_U8;
-	case ImagePixelFormat::RGBA_U8: return TexelsFormat::RGBA_U8;
-	case ImagePixelFormat::None:
+	case ImageLoader::R_U8:    return TexelsFormat::R_U8;
+	case ImageLoader::RG_U8:   return TexelsFormat::RG_U8;
+	case ImageLoader::RGB_U8:  return TexelsFormat::RGB_U8;
+	case ImageLoader::RGBA_U8: return TexelsFormat::RGBA_U8;
+	case ImageLoader::None:
 	default: return TexelsFormat::None;
 	}
 }
@@ -330,17 +330,19 @@ Texture2DRef RenderSystem::CreateTexture2D(const char* fileName, bool useCache, 
 
 	LogPrint("Load texture: " + std::string(fileName));
 
-	STBImageLoader imageLoad(fileName);
-	if( imageLoad.pixelData == nullptr )
+	ImageLoader imageLoad(fileName);
+	auto* pixelData = imageLoad.GetTexels();
+	if( pixelData == nullptr )
 	{
 		LogError("Image loading failed! Filename='" + std::string(fileName) + "'");
 		return {};
 	}
 	const Texture2DCreateInfo createInfo = {
-		.format = Convert(imageLoad.imageFormat),
-		.width = static_cast<uint16_t>(imageLoad.width),
-		.height = static_cast<uint16_t>(imageLoad.height),
-		.pixelData = imageLoad.pixelData,
+		.format = Convert(imageLoad.GetImageFormat()),
+		.width = static_cast<uint16_t>(imageLoad.GetWidth()),
+		.height = static_cast<uint16_t>(imageLoad.GetHeight()),
+		.pixelData = pixelData,
+		.hasTransparency = imageLoad.HasTransparency()
 	};
 
 	m_cacheFileTextures2D[fileName] = CreateTexture2D(createInfo, textureInfo);
@@ -350,6 +352,7 @@ Texture2DRef RenderSystem::CreateTexture2D(const char* fileName, bool useCache, 
 Texture2DRef RenderSystem::CreateTexture2D(const Texture2DCreateInfo& createInfo, const Texture2DInfo& textureInfo)
 {
 	Texture2DRef resource(new Texture2D(createInfo.width, createInfo.height, createInfo.format));
+	resource->hasTransparency = createInfo.hasTransparency;
 	// gen texture res
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, *resource);

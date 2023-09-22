@@ -153,6 +153,7 @@ struct Texture2DCreateInfo final
 	uint16_t height = 1;
 	uint8_t* pixelData = nullptr;
 	unsigned mipMapCount = 1; // TODO: only compressed
+	bool hasTransparency = false;
 };
 
 //=============================================================================
@@ -307,18 +308,19 @@ class Texture2D final : public Texture
 public:
 	Texture2D() = delete;
 	Texture2D(GLuint handle, unsigned Width, unsigned Height, TexelsFormat Format) : Texture(handle), width(Width), height(Height), format(Format) {}
-	Texture2D(unsigned Width, unsigned Height, TexelsFormat Format) : Texture(), width(Width), height(Height), format(Format) { }
+	Texture2D(unsigned Width, unsigned Height, TexelsFormat Format, bool HasTransparency = false) : Texture(), width(Width), height(Height), format(Format), hasTransparency(HasTransparency) { }
 	Texture2D(Texture2D&&) = default;
 	Texture2D(const Texture2D&) = delete;
 	~Texture2D() { if( m_ownership ) glDeleteTextures(1, &m_handle); }
 	Texture2D& operator=(Texture2D&&) = default;
 	Texture2D& operator=(const Texture2D&) = delete;
 
-	bool operator==(const Texture2D& ref) noexcept { return m_handle == ref.m_handle && m_ownership == ref.m_ownership && width == ref.width && height == ref.height && format == ref.format; }
+	bool operator==(const Texture2D& ref) noexcept { return m_handle == ref.m_handle && m_ownership == ref.m_ownership && width == ref.width && height == ref.height && format == ref.format && hasTransparency == ref.hasTransparency; }
 
 	unsigned width = 0;
 	unsigned height = 0;
-	TexelsFormat format = TexelsFormat::RGBA_U8; 
+	TexelsFormat format = TexelsFormat::RGBA_U8;
+	bool hasTransparency = false;
 };
 
 using Texture2DRef = std::shared_ptr<Texture2D>;

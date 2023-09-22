@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="Core\IO\STBImageLoader.cpp">
+    <ClCompile Include="Core\IO\ImageLoader.cpp">
       <Filter>Core\IO</Filter>
     </ClCompile>
     <ClCompile Include="Core\IO\FileSystem.cpp">
@@ -97,7 +97,7 @@
     <ClInclude Include="Core\IO\FileSystem.h">
       <Filter>Core\IO</Filter>
     </ClInclude>
-    <ClInclude Include="Core\IO\STBImageLoader.h">
+    <ClInclude Include="Core\IO\ImageLoader.h">
       <Filter>Core\IO</Filter>
     </ClInclude>
     <ClInclude Include="Core\Logging\LogSystem.h">
