@@ -15,6 +15,31 @@ namespace std
 	};
 } // namespace std
 //-----------------------------------------------------------------------------
+RenderTargetRef GraphicsSystem::CreateRenderTarget(uint16_t width, uint16_t height)
+{
+	auto& renderSystem = GetRenderSystem();
+
+	RenderTargetRef rt = std::make_shared<RenderTarget>();
+
+	Texture2DCreateInfo createInfo = {
+		.format = TexelsFormat::RGBA_U8,
+		.width = width,
+		.height = height,
+	};
+	Texture2DInfo info = {
+		.minFilter = TextureMinFilter::Linear,
+		.magFilter = TextureMagFilter::Linear,
+		.mipmap = false
+	};
+	rt->colorTexture = renderSystem.CreateTexture2D(createInfo, info);
+	rt->rbo = renderSystem.CreateRenderbuffer({ width, height }, ImageFormat::D24S8);
+	rt->fb = renderSystem.CreateFramebuffer(rt->colorTexture, rt->rbo);
+	rt->width = width;
+	rt->height = height;
+
+	return std::move(rt);
+}
+//-----------------------------------------------------------------------------
 ModelRef GraphicsSystem::CreateModel(const char* fileName, const char* pathMaterialFiles)
 {
 	// TODO: переделать сделав нормальное получение расшиерия

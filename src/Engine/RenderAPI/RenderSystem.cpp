@@ -133,6 +133,8 @@ void RenderSystem::MainScreen()
 	{
 		m_cache.CurrentFramebuffer = 0;
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		// TODO: set current viewport and clear color?
+		ClearFrame();
 	}
 }
 //-----------------------------------------------------------------------------

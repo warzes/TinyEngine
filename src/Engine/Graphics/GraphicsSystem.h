@@ -17,8 +17,15 @@ public:
 	bool Create();
 	void Destroy();
 
+	RenderTargetRef CreateRenderTarget(uint16_t width, uint16_t height);
+
 	ModelRef CreateModel(const char* fileName, const char* pathMaterialFiles = "./");
 	ModelRef CreateModel(std::vector<Mesh>&& meshes);
+
+	void ResizeRenderTarget(RenderTargetRef rt, uint16_t width, uint16_t height);
+
+	void BindRenderTarget(RenderTargetRef rt);
+	void BindRenderTargetAsTexture(RenderTargetRef rt, unsigned textureSlot);
 
 	void Draw(Mesh& subMesh);
 	void Draw(ModelRef model);

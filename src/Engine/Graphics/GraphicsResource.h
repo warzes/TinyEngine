@@ -3,6 +3,31 @@
 #include "RenderAPI/RenderResource.h"
 #include "Core/Geometry/BoundingAABB.h"
 
+class RenderTarget final
+{
+public:
+	RenderTarget() = default;
+	RenderTarget(RenderTarget&&) = default;
+	RenderTarget(const RenderTarget&) = delete;
+	~RenderTarget()
+	{
+		colorTexture.reset();
+		rbo.reset();
+		fb.reset();
+	}
+	RenderTarget& operator=(RenderTarget&&) = default;
+	RenderTarget& operator=(const RenderTarget&) = delete;
+
+	bool IsValid() const { return width > 0 && height >> 0 && fb > 0; }
+
+	Texture2DRef colorTexture;
+	RenderbufferRef rbo;
+	FramebufferRef fb;
+	unsigned width = 0;
+	unsigned height = 0;
+};
+using RenderTargetRef = std::shared_ptr<RenderTarget>;
+
 class Material final
 {
 public:
