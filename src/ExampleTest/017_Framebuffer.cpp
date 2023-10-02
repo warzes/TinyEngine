@@ -160,7 +160,6 @@ void main()
 	m_textureColorbuffer = renderSystem.CreateTexture2D(createInfo, info);
 	m_rbo = renderSystem.CreateRenderbuffer({ GetWindowWidth(),  GetWindowHeight() }, ImageFormat::D24S8);
 
-	renderSystem.Bind(m_fbo);
 	m_fbo = renderSystem.CreateFramebuffer(m_textureColorbuffer, m_rbo);
 
 	GetInputSystem().SetMouseLock(true);
