@@ -25,6 +25,8 @@ public:
 	FramebufferRef fb;
 	unsigned width = 0;
 	unsigned height = 0;
+
+	// TODO: color
 };
 using RenderTargetRef = std::shared_ptr<RenderTarget>;
 

@@ -134,14 +134,12 @@ enum class FaceOrientation : uint8_t
 	CounterClockwiseFace,
 };
 
-#if !PLATFORM_EMSCRIPTEN
 enum class RasterizerFillMode : uint8_t
 {
 	Solid,
 	Wireframe,
 	Point
 };
-#endif
 
 //=============================================================================
 // Shader enum
