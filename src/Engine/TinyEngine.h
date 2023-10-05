@@ -87,6 +87,8 @@
 //#include "Core/Geometry/BoundingFrustum.h"
 #include "Core/Geometry/BoundingSphere.h"
 #include "Core/Geometry/GeometryShapes.h"
+#include "Core/Geometry/Triangle.h"
+
 #include "Core/Geometry/Collisions.h"
 #include "Core/Geometry/Intersect.h"
 //-----------------------------------------------------------------------------

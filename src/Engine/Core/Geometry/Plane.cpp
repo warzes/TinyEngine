@@ -3,6 +3,7 @@
 #include "BoundingAABB.h"
 #include "BoundingSphere.h"
 #include "BoundingFrustum.h"
+#include "Triangle.h"
 #include "Core/Math/MathCoreFunc.h"
 //-----------------------------------------------------------------------------
 Plane::Plane(const glm::vec3& point0, const glm::vec3& point1, const glm::vec3& point2) noexcept
@@ -12,6 +13,10 @@ Plane::Plane(const glm::vec3& point0, const glm::vec3& point1, const glm::vec3& 
 	const auto vector2 = point2 - point0;
 	normal = glm::normalize(glm::cross(vector1, vector2));
 	distance = -glm::dot(normal, point0);
+}
+//-----------------------------------------------------------------------------
+Plane::Plane(const Triangle& tri) noexcept : Plane(tri.p0, tri.p1, tri.p2)
+{
 }
 //-----------------------------------------------------------------------------
 void Plane::Normalize() noexcept

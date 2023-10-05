@@ -148,7 +148,7 @@ ModelRef GraphicsSystem::createMeshBuffer(std::vector<Mesh>&& meshes)
 
 		// compute AABB
 		{
-			model->aabb.Include(model->subMeshes[i].globalAABB);
+			model->aabb.Insert(model->subMeshes[i].globalAABB);
 		}
 	}
 	return model;
@@ -276,7 +276,7 @@ void GraphicsSystem::computeSubMeshesAABB(std::vector<Mesh>& meshes)
 	{
 		for( size_t j = 0; j < meshes[i].vertices.size(); j++ )
 		{
-			meshes[i].globalAABB.Include(meshes[i].vertices[j].position);
+			meshes[i].globalAABB.Insert(meshes[i].vertices[j].position);
 		}
 	}
 }

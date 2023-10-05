@@ -6,7 +6,7 @@
 #include "Plane.h"
 #include "Core/Math/MathCoreFunc.h"
 //-----------------------------------------------------------------------------
-std::optional<float> Ray::Intersects(const BoundingAABB& box) const
+std::optional<float> Ray::Intersects(const BoundingAABB& box) const noexcept
 {
 	using T = float;
 
@@ -114,12 +114,12 @@ std::optional<float> Ray::Intersects(const BoundingAABB& box) const
 	return tNear;
 }
 //-----------------------------------------------------------------------------
-std::optional<float> Ray::Intersects(const BoundingFrustum& frustum) const
+std::optional<float> Ray::Intersects(const BoundingFrustum& frustum) const noexcept
 {
 	return frustum.Intersects(*this);
 }
 //-----------------------------------------------------------------------------
-std::optional<float> Ray::Intersects(const BoundingSphere& sphere) const
+std::optional<float> Ray::Intersects(const BoundingSphere& sphere) const noexcept
 {
 	const auto toSphere = sphere.center - position;
 	const auto toSphereLengthSquared = LengthSquared(toSphere);
@@ -144,7 +144,7 @@ std::optional<float> Ray::Intersects(const BoundingSphere& sphere) const
 	return glm::max(distance - std::sqrt(discriminant), 0.0f);
 }
 //-----------------------------------------------------------------------------
-std::optional<float> Ray::Intersects(const Plane& plane) const
+std::optional<float> Ray::Intersects(const Plane& plane) const noexcept
 {
 	constexpr auto Epsilon = 1e-6f;
 

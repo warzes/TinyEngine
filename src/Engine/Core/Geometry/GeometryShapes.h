@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core/Geometry/Triangle.h"
+
 struct Line
 {
 	glm::vec3 a, b;
@@ -34,25 +36,11 @@ struct capsule_t
 	float r, height;
 };
 
-class OldRay
-{
-public:
-	glm::vec3 p;
-	glm::vec3 d;
-};
-
 struct ray_t
 {
 	glm::vec3 p;
 	glm::vec3 d;
 	float len;
-};
-
-struct Triangle
-{
-	glm::vec3 p0;
-	glm::vec3 p1;
-	glm::vec3 p2;
 };
 
 struct Poly

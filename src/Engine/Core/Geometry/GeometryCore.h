@@ -1,6 +1,7 @@
 #pragma once
 
 class Plane;
+class Triangle;
 class BoundingAABB;
 class BoundingFrustum;
 class BoundingSphere;

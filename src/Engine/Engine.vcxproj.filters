@@ -77,6 +77,9 @@
     <ClCompile Include="Physics\PhysicsSystem.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Geometry\Triangle.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -175,9 +178,6 @@
     <ClInclude Include="Core\Geometry\GJK.h">
       <Filter>Core\Geometry\old</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Geometry\Sphere.h">
-      <Filter>Core\Geometry\old</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Geometry\Temp.h">
       <Filter>Core\Geometry\old</Filter>
     </ClInclude>
@@ -204,6 +204,9 @@
     </ClInclude>
     <ClInclude Include="Core\Utilities\CoreUtilities.h">
       <Filter>Core\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Triangle.h">
+      <Filter>Core\Geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

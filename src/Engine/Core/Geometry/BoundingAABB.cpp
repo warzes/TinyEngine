@@ -5,61 +5,47 @@
 #include "Ray.h"
 #include "Core/Math/MathCoreFunc.h"
 //-----------------------------------------------------------------------------
-void BoundingAABB::AddPoint(const glm::vec3& point)
+void BoundingAABB::Insert(const glm::vec3& point) noexcept
 {
 	min = glm::min(point, min);
 	max = glm::max(point, max);
 }
 //-----------------------------------------------------------------------------
-void BoundingAABB::Merge(const BoundingAABB& rhs)
+void BoundingAABB::Insert(const BoundingAABB& otherAABB) noexcept
 {
-	AddPoint(rhs.min);
-	AddPoint(rhs.max);
+	Insert(otherAABB.min);
+	Insert(otherAABB.max);
 }
 //-----------------------------------------------------------------------------
-void BoundingAABB::Translate(const glm::vec3& v)
+void BoundingAABB::Translate(const glm::vec3& position) noexcept
 {
-	min += v;
-	max += v;
+	min += position;
+	max += position;
 }
 //-----------------------------------------------------------------------------
 ContainmentType BoundingAABB::Contains(const glm::vec3& point) const noexcept
 {
-	if( (point.x < min.x) ||
-		(point.y < min.y) ||
-		(point.z < min.z) ||
-		(point.x > max.x) ||
-		(point.y > max.y) ||
-		(point.z > max.z) )
-	{
+	if( (point.x < min.x) || (point.y < min.y) || (point.z < min.z) ||
+		(point.x > max.x) || (point.y > max.y) || (point.z > max.z) )
 		return ContainmentType::Disjoint;
-	}
-	if( (point.x == min.x) ||
-		(point.y == min.y) ||
-		(point.z == min.z) ||
-		(point.x == max.x) ||
-		(point.y == max.y) ||
-		(point.z == max.z) )
-	{
+	if( (point.x == min.x) || (point.y == min.y) || (point.z == min.z) ||
+		(point.x == max.x) || (point.y == max.y) || (point.z == max.z) )
 		return ContainmentType::Intersects;
-	}
+
 	return ContainmentType::Contains;
 }
 //-----------------------------------------------------------------------------
-ContainmentType BoundingAABB::Contains(const BoundingAABB& box) const noexcept
+ContainmentType BoundingAABB::Contains(const BoundingAABB& aabb) const noexcept
 {
-	if( (min.x > box.max.x || max.x < box.min.x) ||
-		(min.y > box.max.y || max.y < box.min.y) ||
-		(min.z > box.max.z || max.z < box.min.z) )
-	{
+	if( (min.x > aabb.max.x || max.x < aabb.min.x) ||
+		(min.y > aabb.max.y || max.y < aabb.min.y) ||
+		(min.z > aabb.max.z || max.z < aabb.min.z) )
 		return ContainmentType::Disjoint;
-	}
-	if( (min.x <= box.min.x && box.max.x <= max.x) &&
-		(min.y <= box.min.y && box.max.y <= max.y) &&
-		(min.z <= box.min.z && box.max.z <= max.z) )
-	{
+	if( (min.x <= aabb.min.x && aabb.max.x <= max.x) &&
+		(min.y <= aabb.min.y && aabb.max.y <= max.y) &&
+		(min.z <= aabb.min.z && aabb.max.z <= max.z) )
 		return ContainmentType::Contains;
-	}
+
 	return ContainmentType::Intersects;
 }
 //-----------------------------------------------------------------------------
@@ -69,27 +55,25 @@ ContainmentType BoundingAABB::Contains(const BoundingSphere& sphere) const noexc
 	const auto distanceSquared = DistanceSquared(sphere.center, clamped);
 
 	if( distanceSquared > sphere.radius * sphere.radius )
-	{
 		return ContainmentType::Disjoint;
-	}
+
 	if( (sphere.radius <= sphere.center.x - min.x) &&
 		(sphere.radius <= sphere.center.y - min.y) &&
 		(sphere.radius <= sphere.center.z - min.z) &&
 		(sphere.radius <= max.x - sphere.center.x) &&
 		(sphere.radius <= max.y - sphere.center.y) &&
 		(sphere.radius <= max.z - sphere.center.z) )
-	{
 		return ContainmentType::Contains;
-	}
+
 	return ContainmentType::Intersects;
 }
 //-----------------------------------------------------------------------------
-bool BoundingAABB::Intersects(const BoundingAABB& box) const noexcept
+bool BoundingAABB::Intersects(const BoundingAABB& aabb) const noexcept
 {
 	return 
-		(max.x >= box.min.x && min.x <= box.max.x) &&
-		(max.y >= box.min.y && min.y <= box.max.y) &&
-		(max.z >= box.min.z && min.z <= box.max.z);
+		(max.x >= aabb.min.x && min.x <= aabb.max.x) &&
+		(max.y >= aabb.min.y && min.y <= aabb.max.y) &&
+		(max.z >= aabb.min.z && min.z <= aabb.max.z);
 }
 //-----------------------------------------------------------------------------
 bool BoundingAABB::Intersects(const BoundingSphere& sphere) const noexcept

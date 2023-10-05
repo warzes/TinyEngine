@@ -102,6 +102,7 @@
     <ClCompile Include="Core\Geometry\Intersect.cpp" />
     <ClCompile Include="Core\Geometry\Plane.cpp" />
     <ClCompile Include="Core\Geometry\Ray.cpp" />
+    <ClCompile Include="Core\Geometry\Triangle.cpp" />
     <ClCompile Include="Core\IO\FileSystem.cpp" />
     <ClCompile Include="Core\IO\ImageLoader.cpp" />
     <ClCompile Include="Core\Logging\Log.cpp" />
@@ -140,8 +141,8 @@
     <ClInclude Include="Core\Geometry\Intersect.h" />
     <ClInclude Include="Core\Geometry\Plane.h" />
     <ClInclude Include="Core\Geometry\Ray.h" />
-    <ClInclude Include="Core\Geometry\Sphere.h" />
     <ClInclude Include="Core\Geometry\Temp.h" />
+    <ClInclude Include="Core\Geometry\Triangle.h" />
     <ClInclude Include="Core\IO\FileSystem.h" />
     <ClInclude Include="Core\IO\ImageLoader.h" />
     <ClInclude Include="Core\Logging\Log.h" />

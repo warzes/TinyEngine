@@ -7,10 +7,11 @@ class Plane final
 public:
 	Plane() = default;
 	Plane(const Plane&) noexcept = default;
-	Plane(const glm::vec3& normal, float distance) : normal(normal), distance(distance) {}
+	Plane(const glm::vec3& normal, float distance) noexcept : normal(normal), distance(distance) {}
 	Plane(const glm::vec3& point0, const glm::vec3& point1, const glm::vec3& point2) noexcept;
+	Plane(const Triangle& tri) noexcept;
 
-	Plane& operator =(const Plane&) noexcept = default;
+	Plane& operator=(const Plane&) noexcept = default;
 
 	void Normalize() noexcept;
 	[[nodiscard]] static Plane Normalize(const Plane& plane) noexcept;
@@ -22,7 +23,7 @@ public:
 	[[nodiscard]] float GetDistanceToPoint(const glm::vec3& point) const noexcept;
 
 	[[nodiscard]] PlaneIntersectionType Intersects(const glm::vec3& point) const noexcept;
-	[[nodiscard]] PlaneIntersectionType Intersects(const BoundingAABB& box) const noexcept;
+	[[nodiscard]] PlaneIntersectionType Intersects(const BoundingAABB& aabb) const noexcept;
 	[[nodiscard]] PlaneIntersectionType Intersects(const BoundingFrustum& frustum) const noexcept;
 	[[nodiscard]] PlaneIntersectionType Intersects(const BoundingSphere& sphere) const noexcept;
 
@@ -30,6 +31,6 @@ public:
 
 	[[nodiscard]] static Plane CreateFromPointNormal(const glm::vec3& point, const glm::vec3& normal);
 
-	glm::vec3 normal = glm::vec3(0.0f);
-	float distance = 0.0f;
+	glm::vec3 normal = glm::vec3(0.0f); // Normal vector of the plane.
+	float distance = 0.0f; // Signed distance to the origin of the coordinate system.
 };

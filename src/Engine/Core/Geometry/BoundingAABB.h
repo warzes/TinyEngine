@@ -2,7 +2,7 @@
 
 #include "GeometryCore.h"
 
-// BoundingBox is an axis-aligned bounding box in 3D space.
+// BoundingAABB is an Axis-Aligned Bounding-Box in 3D space.
 class BoundingAABB final
 {
 public:
@@ -15,26 +15,23 @@ public:
 
 	BoundingAABB& operator=(const BoundingAABB&) noexcept = default;
 
-	bool operator==(const BoundingAABB& rhs) const { return (min == rhs.min && max == rhs.max); }
-	bool operator!=(const BoundingAABB& rhs) const { return (min != rhs.min || max != rhs.max); }
+	bool operator==(const BoundingAABB& rhs) const noexcept { return (min == rhs.min && max == rhs.max); }
+	bool operator!=(const BoundingAABB& rhs) const noexcept { return (min != rhs.min || max != rhs.max); }
 
-	void AddPoint(const glm::vec3& point);
-	void Merge(const BoundingAABB& rhs);
-	// expands the volume to include v
-	void Include(const glm::vec3& v) { AddPoint(v); }
-	void Include(const BoundingAABB& aabb) { Merge(aabb); }
+	void Insert(const glm::vec3& point) noexcept;
+	void Insert(const BoundingAABB& otherAABB) noexcept;
 
-	void Translate(const glm::vec3& v);
+	void Translate(const glm::vec3& position) noexcept;
 
-	glm::vec3 GetCenter() const { return (max + min) * 0.5f; }
-	glm::vec3 GetSize() const { return max - min; }
-	glm::vec3 GetHalfSize() const { return (max - min) * 0.5f; }
+	[[nodiscard]] glm::vec3 GetCenter() const noexcept { return (max + min) * 0.5f; }
+	[[nodiscard]] glm::vec3 GetSize() const noexcept { return max - min; }
+	[[nodiscard]] glm::vec3 GetHalfSize() const noexcept { return (max - min) * 0.5f; }
 
 	[[nodiscard]] ContainmentType Contains(const glm::vec3& point) const noexcept;
-	[[nodiscard]] ContainmentType Contains(const BoundingAABB& box) const noexcept;
+	[[nodiscard]] ContainmentType Contains(const BoundingAABB& aabb) const noexcept;
 	[[nodiscard]] ContainmentType Contains(const BoundingSphere& sphere) const noexcept;
 
-	[[nodiscard]] bool Intersects(const BoundingAABB& box) const noexcept;
+	[[nodiscard]] bool Intersects(const BoundingAABB& aabb) const noexcept;
 	[[nodiscard]] bool Intersects(const BoundingSphere& sphere) const noexcept;
 	[[nodiscard]] PlaneIntersectionType Intersects(const Plane& plane) const noexcept;
 	[[nodiscard]] std::optional<float> Intersects(const Ray& ray) const noexcept;
