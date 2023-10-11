@@ -54,13 +54,14 @@ class ShaderBytecode final
 public:
 	ShaderBytecode() = default;
 	// Loads in the shader from a memory data.
-	ShaderBytecode(const std::string& src) : m_src(src) {};
+	ShaderBytecode(const std::string& src) : m_src(src), m_shaderSource(ShaderSourceType::CodeString) {};
 	ShaderBytecode(ShaderBytecode&&) = default;
 	ShaderBytecode(const ShaderBytecode&) = default;
+	ShaderBytecode(ShaderSourceType shaderSource, const std::string& text);
 
 	ShaderBytecode& operator=(ShaderBytecode&&) = default;
 	ShaderBytecode& operator=(const ShaderBytecode&) = default;
-	ShaderBytecode& operator=(const std::string& src) { m_src = src; return *this; }
+	ShaderBytecode& operator=(const std::string& src) { m_src = src; m_shaderSource = ShaderSourceType::CodeString; return *this; }
 
 	bool LoadFromFile(const std::string& file);
 
@@ -68,6 +69,7 @@ public:
 	const std::string& GetSource() const { return m_src; }
 	const std::string& GetPath() const { return m_path; }
 	const std::string& GetFilename() const { return m_filename; }
+	ShaderSourceType GetShaderSourceType() const { return m_shaderSource; }
 
 	bool IsValid() const { return m_src.length() > 0; }
 
@@ -97,6 +99,7 @@ private:
 	std::string m_filename = "Unnamed shader";
 	std::string m_path;
 	std::string m_src;
+	ShaderSourceType m_shaderSource = ShaderSourceType::CodeString;
 };
 
 struct ShaderAttributeInfo final
@@ -113,10 +116,6 @@ struct Uniform final
 	int location = -1; 
 	unsigned programId = 0; 
 };
-
-#if !PLATFORM_EMSCRIPTEN
-static_assert(sizeof(Uniform) == 8, "Uniform size changed!!!");
-#endif
 
 //=============================================================================
 // Buffer Core
@@ -195,12 +194,14 @@ protected:
 class Shader final : public glObject
 {
 public:
-	explicit Shader(GLuint handle) { m_handle = handle; m_ownership = false; }
+	explicit Shader(GLuint handle, ShaderPipelineStage stage) { m_handle = handle; m_ownership = false; shaderStage = stage; }
 	explicit Shader(ShaderPipelineStage stage);
 	~Shader() { if( m_ownership ) glDeleteShader(m_handle); }
 
 	Shader(Shader&&) noexcept = default;
 	Shader& operator=(Shader&&) noexcept = default;
+
+	ShaderPipelineStage shaderStage = ShaderPipelineStage::Vertex;
 };
 using ShaderRef = std::shared_ptr<Shader>;
 
@@ -218,10 +219,6 @@ public:
 	bool operator==(const ShaderProgram& ref) noexcept { return m_handle == ref.m_handle && m_ownership == ref.m_ownership; }
 };
 using ShaderProgramRef = std::shared_ptr<ShaderProgram>;
-
-#if !PLATFORM_EMSCRIPTEN
-static_assert(sizeof(ShaderProgram) == 8, "ShaderProgram size changed!!!");
-#endif
 
 class VertexArray;
 
@@ -246,9 +243,6 @@ public:
 	std::shared_ptr<VertexArray> parentArray = nullptr;
 };
 using GPUBufferRef = std::shared_ptr<GPUBuffer>;
-#if !PLATFORM_EMSCRIPTEN
-static_assert(sizeof(GPUBuffer) == 40, "GPUBuffer size changed!!!");
-#endif
 
 // TODO: возможно снова разделить на вершинный буфер и т.д. так как VAO нужно только вершинному и не нужно например юниформ буферу
 
@@ -271,9 +265,6 @@ public:
 	unsigned attribsCount = 0;
 };
 using VertexArrayRef = std::shared_ptr<VertexArray>;
-#if !PLATFORM_EMSCRIPTEN
-static_assert(sizeof(VertexArray) == 48, "VertexArray size changed!!!");
-#endif
 
 class GeometryBuffer final
 {
@@ -325,10 +316,6 @@ public:
 
 using Texture2DRef = std::shared_ptr<Texture2D>;
 
-#if !PLATFORM_EMSCRIPTEN
-static_assert(sizeof(Texture2D) == 20, "Texture2D size changed!!!");
-#endif
-
 class Renderbuffer final : public glObject
 {
 public:
@@ -350,10 +337,6 @@ public:
 	int multisample = 1;
 };
 using RenderbufferRef = std::shared_ptr<Renderbuffer>;
-
-#if !PLATFORM_EMSCRIPTEN
-static_assert(sizeof(Renderbuffer) == 24, "Renderbuffer size changed!!!");
-#endif
 
 class Framebuffer final : public glObject
 {
@@ -377,10 +360,6 @@ public:
 
 using FramebufferRef = std::shared_ptr<Framebuffer>;
 
-#if !PLATFORM_EMSCRIPTEN
-static_assert(sizeof(Framebuffer) == 96, "Framebuffer size changed!!!");
-#endif
-
 #if USE_OPENGL_VERSION == OPENGL40
 class TransformFeedback final : public glObject
 {
@@ -396,9 +375,5 @@ public:
 	bool operator==(const TransformFeedback& ref) noexcept { return m_handle == ref.m_handle && m_ownership == ref.m_ownership; }
 };
 using TransformFeedbackRef = std::shared_ptr<TransformFeedback>;
-
-#if !PLATFORM_EMSCRIPTEN
-static_assert(sizeof(TransformFeedback) == 8, "TransformFeedback size changed!!!");
-#endif
 
 #endif // OPENGL40

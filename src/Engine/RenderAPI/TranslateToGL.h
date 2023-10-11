@@ -169,14 +169,14 @@
 {
 	switch( usage )
 	{
-	case ShaderPipelineStage::Vertex:      return GL_VERTEX_SHADER;
-	case ShaderPipelineStage::Fragment:    return GL_FRAGMENT_SHADER;
+	case ShaderPipelineStage::Vertex:         return GL_VERTEX_SHADER;
+	case ShaderPipelineStage::Fragment:       return GL_FRAGMENT_SHADER;
 #if !PLATFORM_EMSCRIPTEN
-	case ShaderPipelineStage::Geometry:    return GL_GEOMETRY_SHADER;
-	case ShaderPipelineStage::Compute:     return GL_COMPUTE_SHADER;
-	case ShaderPipelineStage::TessControl: return GL_TESS_CONTROL_SHADER;
-	case ShaderPipelineStage::Evaluation:  return GL_TESS_EVALUATION_SHADER;
-#endif
+	case ShaderPipelineStage::Geometry:       return GL_GEOMETRY_SHADER;
+	case ShaderPipelineStage::Compute:        return GL_COMPUTE_SHADER;
+	case ShaderPipelineStage::TessControl:    return GL_TESS_CONTROL_SHADER;
+	case ShaderPipelineStage::TessEvaluation: return GL_TESS_EVALUATION_SHADER;
+#endif // PLATFORM_EMSCRIPTEN
 	default: break;
 	}
 	assert(false && "Unknown ShaderPipelineStage");
@@ -187,14 +187,14 @@
 {
 	switch( usage )
 	{
-	case ShaderPipelineStage::Vertex:      return "Vertex";
-	case ShaderPipelineStage::Fragment:    return "Fragment";
+	case ShaderPipelineStage::Vertex:         return "Vertex";
+	case ShaderPipelineStage::Fragment:       return "Fragment";
 #if !PLATFORM_EMSCRIPTEN
-	case ShaderPipelineStage::Geometry:    return "Geometry";
-	case ShaderPipelineStage::Compute:     return "Compute";
-	case ShaderPipelineStage::TessControl: return "TessControl";
-	case ShaderPipelineStage::Evaluation:  return "Evaluation";
-#endif
+	case ShaderPipelineStage::Geometry:       return "Geometry";
+	case ShaderPipelineStage::Compute:        return "Compute";
+	case ShaderPipelineStage::TessControl:    return "TessControl";
+	case ShaderPipelineStage::TessEvaluation: return "TessEvaluation";
+#endif // PLATFORM_EMSCRIPTEN
 	default: break;
 	}
 	assert(false && "Unknown ShaderType");

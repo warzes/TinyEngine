@@ -145,16 +145,24 @@ enum class RasterizerFillMode : uint8_t
 // Shader enum
 //=============================================================================
 
+enum class ShaderSourceType : uint8_t
+{
+	CodeString,   // Refers to <code>sourceSize+1</code> bytes, describing shader high-level code (including null terminator).
+	CodeFile,     // Refers to <code>sourceSize+1</code> bytes, describing the filename of the shader high-level code (including null terminator).
+	BinaryBuffer, // Refers to <code>sourceSize</code> bytes, describing shader binary code.
+	BinaryFile,   // Refers to <code>sourceSize+1</code> bytes, describing the filename of the shader binary code (including null terminator).
+};
+
 enum class ShaderPipelineStage : uint8_t
 {
-	Vertex,
-	Fragment,
+	Vertex,        // Vertex shader type
+	Fragment,      // Fragment shader type (also "Pixel Shader")
 #if !PLATFORM_EMSCRIPTEN
-	Geometry,
-	Compute,
-	TessControl,
-	Evaluation
-#endif
+	Geometry,      // Geometry shader type
+	Compute,       // Compute shader type
+	TessControl,   // Tessellation control shader type (also "Hull Shader")
+	TessEvaluation // Tessellation evaluation shader type (also "Domain Shader")
+#endif // PLATFORM_EMSCRIPTEN
 };
 
 //=============================================================================

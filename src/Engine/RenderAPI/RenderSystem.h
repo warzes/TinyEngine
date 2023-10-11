@@ -18,7 +18,7 @@ public:
 	RenderSystem() = default;
 
 	//-------------------------------------------------------------------------
-	// Core
+	// Core Systen
 	//-------------------------------------------------------------------------
 	bool Create(const RenderCreateInfo& createInfo);
 	void Destroy();
@@ -26,7 +26,6 @@ public:
 	//-------------------------------------------------------------------------
 	// Config Current Frame Set
 	//-------------------------------------------------------------------------
-
 	void SetClearColor(const glm::vec3& color);
 	void ClearFrame();
 	void ClearFrame(const glm::vec3& color);
@@ -71,7 +70,7 @@ public:
 	FramebufferRef CreateFramebuffer(FramebufferAttachment attachment, Texture2DRef texture); // TODO: delete
 
 	//-------------------------------------------------------------------------
-	// Validation
+	// Validation Resource
 	//-------------------------------------------------------------------------
 	inline bool IsValid(ShaderRef resource) const { return resource && resource->IsValid(); }
 	inline bool IsValid(ShaderProgramRef resource) const { return resource && resource->IsValid(); }
@@ -84,9 +83,8 @@ public:
 	bool IsReadyUniform(const Uniform& uniform) const;
 
 	//-------------------------------------------------------------------------
-	// Shader Op
+	// Shader Operations
 	//-------------------------------------------------------------------------
-
 	std::vector<ShaderAttributeInfo> GetAttributesInfo(ShaderProgramRef program) const;
 	Uniform GetUniform(ShaderProgramRef program, const char* uniformName) const;
 
@@ -117,7 +115,7 @@ public:
 	void SetUniform(const std::string& uniformName, const glm::mat4& value);
 
 	//-------------------------------------------------------------------------
-	// Buffer Op
+	// Buffer Operations
 	//-------------------------------------------------------------------------
 	void UpdateBuffer(GPUBufferRef buffer, unsigned offset, unsigned count, unsigned size, const void* data);
 

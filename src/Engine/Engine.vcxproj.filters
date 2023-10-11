@@ -80,6 +80,9 @@
     <ClCompile Include="Core\Geometry\Triangle.cpp">
       <Filter>Core\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="RenderAPI\RenderSystem_Create.cpp">
+      <Filter>RenderAPI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
