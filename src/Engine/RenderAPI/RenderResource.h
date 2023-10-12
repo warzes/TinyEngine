@@ -8,6 +8,24 @@
 // Pipeline State Core
 //=============================================================================
 
+// Depth bias descriptor structure to control fragment depth values.
+struct DepthBiasDescriptor
+{
+	// Specifies a scalar factor controlling the constant depth value added to each fragment. By default 0.0.
+	float constantFactor = 0.0f;
+	// Specifies a scalar factor applied to a fragment's slope in depth bias calculations. By default 0.0.
+	float slopeFactor = 0.0f;
+	// Specifies the maximum (or minimum) depth bias of a fragment. By default 0.0.	
+	float clamp = 0.0f;
+};
+
+inline bool IsPolygonOffsetEnabled(const DepthBiasDescriptor& desc)
+{
+	// Ignore clamp factor for this check, since it's useless without the other two parameters
+	return (desc.slopeFactor != 0.0f || desc.constantFactor != 0.0f);
+}
+
+
 struct DepthState final
 {
 	ComparisonFunction depthFunc = ComparisonFunction::Less;
@@ -36,7 +54,23 @@ struct StencilState final
 
 struct RasterizerState final
 {
-
+	RasterizerFillMode polygonMode = RasterizerFillMode::Solid;
+	RasterizerCullMode cullMode = RasterizerCullMode::FrontAndBack;
+	// Specifies the parameters to bias fragment depth values.
+	DepthBiasDescriptor depthBias;
+	FaceOrientation face = FaceOrientation::CounterClockwiseFace;
+	// If enabled, primitives are discarded after optional stream-outputs but before the rasterization stage.
+	bool discardEnabled = false;
+	// If enabled, there is effectively no near and far clipping plane.
+	bool depthClampEnabled = false;
+	// Specifies whether scissor test is enabled or disabled.
+	bool scissorTestEnabled = false;
+	// Specifies whether multi-sampling is enabled or disabled.
+	bool multiSampleEnabled = false;
+	// Specifies whether lines are rendered with or without anti-aliasing.
+	bool antiAliasedLineEnabled = false;
+	// Specifies the width of all generated line primitives. 
+	float lineWidth = 1.0f;
 };
 
 struct BlendState final
@@ -218,14 +252,14 @@ class GPUBuffer : public glObject
 {
 public:
 	GPUBuffer() = delete;
-	GPUBuffer(BufferTarget Type, BufferUsage Usage, unsigned Count, unsigned Size);
+	GPUBuffer(BufferTarget Type, BufferUsage Usage, unsigned Count = 0, unsigned Size = 0);
 	GPUBuffer(GPUBuffer&&) noexcept = default;
 	GPUBuffer(const GPUBuffer&) = delete;
 	~GPUBuffer() { glDeleteBuffers(1, &m_handle); }
 	GPUBuffer& operator=(GPUBuffer&&) noexcept = default;
 	GPUBuffer& operator=(const GPUBuffer&) = delete;
 
-	bool operator==(const GPUBuffer& ref) noexcept { return m_handle == ref.m_handle && usage == ref.usage && count == ref.count && size == ref.size && type == ref.type; }
+	bool operator==(const GPUBuffer& ref) noexcept { return m_handle == ref.m_handle && type == ref.type && usage == ref.usage && count == ref.count && size == ref.size; }
 
 	BufferTarget type = BufferTarget::ArrayBuffer;
 	BufferUsage usage = BufferUsage::StaticDraw;
@@ -239,14 +273,14 @@ class VertexBuffer final : public GPUBuffer
 {
 public:
 	VertexBuffer() = delete;
-	VertexBuffer(BufferUsage Usage, unsigned Count, unsigned Size) : GPUBuffer(BufferTarget::ArrayBuffer, Usage, Count, Size) {}
+	VertexBuffer(BufferUsage Usage, unsigned Count = 0, unsigned Size = 0) : GPUBuffer(BufferTarget::ArrayBuffer, Usage, Count, Size) {}
 	VertexBuffer(VertexBuffer&&) noexcept = default;
 	VertexBuffer(const VertexBuffer&) = delete;
 	~VertexBuffer() { glDeleteBuffers(1, &m_handle); }
 	VertexBuffer& operator=(VertexBuffer&&) noexcept = default;
 	VertexBuffer& operator=(const VertexBuffer&) = delete;
 
-	bool operator==(const VertexBuffer& ref) noexcept { return m_handle == ref.m_handle && usage == ref.usage && count == ref.count && size == ref.size && type == ref.type; }
+	bool operator==(const VertexBuffer& ref) noexcept { return m_handle == ref.m_handle && type == ref.type && usage == ref.usage && count == ref.count && size == ref.size; }
 };
 using VertexBufferRef = std::shared_ptr<VertexBuffer>;
 
@@ -254,7 +288,7 @@ class IndexBuffer final : public GPUBuffer
 {
 public:
 	IndexBuffer() = delete;
-	IndexBuffer(BufferUsage Usage, unsigned Count, unsigned Size) : GPUBuffer(BufferTarget::ElementArrayBuffer, Usage, Count, Size) {}
+	IndexBuffer(BufferUsage Usage, unsigned Count = 0, unsigned Size = 0) : GPUBuffer(BufferTarget::ElementArrayBuffer, Usage, Count, Size) {}
 	IndexBuffer(IndexBuffer&&) noexcept = default;
 	IndexBuffer(const IndexBuffer&) = delete;
 	~IndexBuffer() { glDeleteBuffers(1, &m_handle); }
@@ -264,6 +298,8 @@ public:
 	bool operator==(const IndexBuffer& ref) noexcept { return m_handle == ref.m_handle && usage == ref.usage && count == ref.count && size == ref.size && type == ref.type; }
 };
 using IndexBufferRef = std::shared_ptr<IndexBuffer>;
+
+// TODO: buffer storage (OpenGl 4.4+) - ref http://steps3d.narod.ru/tutorials/buffer-storage-tutorial.html
 
 class VertexArray final : public glObject
 {

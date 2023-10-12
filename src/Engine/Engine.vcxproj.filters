@@ -80,9 +80,6 @@
     <ClCompile Include="Core\Geometry\Triangle.cpp">
       <Filter>Core\Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="RenderAPI\RenderSystem_Create.cpp">
-      <Filter>RenderAPI</Filter>
-    </ClCompile>
     <ClCompile Include="RenderAPI\OpenGLExtensions.cpp">
       <Filter>RenderAPI</Filter>
     </ClCompile>
@@ -90,6 +87,9 @@
       <Filter>RenderAPI</Filter>
     </ClCompile>
     <ClCompile Include="RenderAPI\RenderSystem_Buffer.cpp">
+      <Filter>RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\RenderSystem_State.cpp">
       <Filter>RenderAPI</Filter>
     </ClCompile>
   </ItemGroup>

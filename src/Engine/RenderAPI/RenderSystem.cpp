@@ -441,15 +441,24 @@ void RenderSystem::Bind(ShaderProgramRef resource)
 	glUseProgram(*resource);
 }
 //-----------------------------------------------------------------------------
-void RenderSystem::Bind(GPUBufferRef buffer)
+void RenderSystem::Bind(VertexBufferRef buffer)
 {
 	if( !buffer) return;
 	assert(IsValid(buffer));
 
-	unsigned& currentBufferType = getCurrentCacheBufferFromType(buffer->type);
-	if (currentBufferType == *buffer) return;
-	currentBufferType = *buffer;
-	glBindBuffer(TranslateToGL(buffer->type), *buffer);
+	if (m_cache.CurrentVBO == *buffer) return;
+	m_cache.CurrentVBO = *buffer;
+	glBindBuffer(GL_ARRAY_BUFFER, *buffer);
+}
+//-----------------------------------------------------------------------------
+void RenderSystem::Bind(IndexBufferRef buffer)
+{
+	if (!buffer) return;
+	assert(IsValid(buffer));
+
+	if (m_cache.CurrentIBO == *buffer) return;
+	m_cache.CurrentIBO = *buffer;
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *buffer);
 }
 //-----------------------------------------------------------------------------
 void RenderSystem::Bind(VertexArrayRef vao)
@@ -596,8 +605,8 @@ void RenderSystem::initializeExtensions(bool print)
 	if (print)
 	{
 		LogPrint("OpenGL: Extensions information:");
-		LogPrint("    > OpenGL Debug: " + OpenGLExtensions::coreDebug ? "enable" : "disable");
-		LogPrint("    > OpenGL Direct State Access: " + OpenGLExtensions::coreDirectStateAccess ? "enable" : "disable");
+		LogPrint(std::string("    > OpenGL Debug: ") + (OpenGLExtensions::coreDebug ? "enable" : "disable"));
+		LogPrint(std::string("    > OpenGL Direct State Access: ") + (OpenGLExtensions::coreDirectStateAccess ? "enable" : "disable"));
 	}
 }
 //-----------------------------------------------------------------------------

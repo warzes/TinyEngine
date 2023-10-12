@@ -47,7 +47,7 @@ void main()
 
 	m_shader = renderSystem.CreateShaderProgram({ vertexShaderText }, { fragmentShaderText });
 	m_uniformProjectionMatrix = renderSystem.GetUniform(m_shader, "projectionMatrix");
-	m_vb = renderSystem.CreateVertexBuffer(BufferUsage::DynamicDraw, 1, sizeof(testVertex), nullptr);
+	m_vb = renderSystem.CreateVertexBuffer(BufferUsage::DynamicDraw);
 	m_vao = renderSystem.CreateVertexArray(m_vb, nullptr, m_shader);
 
 	return true;

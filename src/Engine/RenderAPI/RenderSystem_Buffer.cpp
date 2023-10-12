@@ -1,6 +1,18 @@
 #include "stdafx.h"
 #include "RenderSystem.h"
 #include "OpenGLTranslateToGL.h"
+#include "OpenGLExtensions.h"
+//-----------------------------------------------------------------------------
+VertexBufferRef RenderSystem::CreateVertexBuffer(BufferUsage usage)
+{
+	VertexBufferRef resource(new VertexBuffer(usage));
+	if (!IsValid(resource))
+	{
+		LogError("VertexBuffer create failed!");
+		return {};
+	}
+	return resource;
+}
 //-----------------------------------------------------------------------------
 VertexBufferRef RenderSystem::CreateVertexBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* data)
 {
@@ -13,6 +25,17 @@ VertexBufferRef RenderSystem::CreateVertexBuffer(BufferUsage usage, unsigned ver
 	glBindBuffer(GL_ARRAY_BUFFER, *resource);
 	glBufferData(GL_ARRAY_BUFFER, vertexCount * vertexSize, data, TranslateToGL(usage));
 	glBindBuffer(GL_ARRAY_BUFFER, m_cache.CurrentVBO); // restore current vb
+	return resource;
+}
+//-----------------------------------------------------------------------------
+IndexBufferRef RenderSystem::CreateIndexBuffer(BufferUsage usage)
+{
+	IndexBufferRef resource(new IndexBuffer(usage));
+	if (!IsValid(resource))
+	{
+		LogError("IndexBuffer create failed!");
+		return {};
+	}
 	return resource;
 }
 //-----------------------------------------------------------------------------
@@ -45,7 +68,7 @@ VertexArrayRef RenderSystem::CreateVertexArray(VertexBufferRef vbo, IndexBufferR
 	}
 	if (ibo && ibo->type != BufferTarget::ElementArrayBuffer)
 	{
-		LogError("шbo is not IndexBuffer valid!");
+		LogError("ibo is not IndexBuffer valid!");
 		return {};
 	}
 
@@ -124,56 +147,167 @@ VertexArrayRef RenderSystem::CreateVertexArray(VertexBufferRef vbo, IndexBufferR
 	return CreateVertexArray(vbo, ibo, attribs);
 }
 //-----------------------------------------------------------------------------
-void RenderSystem::UpdateBuffer(GPUBufferRef buffer, unsigned offset, unsigned count, unsigned size, const void* data)
+void RenderSystem::UpdateBuffer(VertexBufferRef buffer, unsigned offset, unsigned count, unsigned size, const void* data)
 {
 	assert(IsValid(buffer));
 
-	// TODO: оптимизировать
-
-	// это вершинный буффер?
-	if (buffer->type == BufferTarget::ArrayBuffer)
-		Bind(buffer->parentArray);
-
-	const GLenum target = TranslateToGL(buffer->type);
 	const unsigned id = *buffer;
-	const unsigned cacheId = getCurrentCacheBufferFromType(buffer->type);
-
-	if (cacheId != id) glBindBuffer(target, id);
-
-	if (offset == 0 && (buffer->count != count || buffer->size != size))
-		glBufferData(target, count * size, data, TranslateToGL(buffer->usage));
-	else
-		glBufferSubData(target, offset, count * size, data);
-
+	const bool isNewBufferData = (offset == 0 && (buffer->count != count || buffer->size != size));
+	const GLsizeiptr numberOfBytes = count * size;
+	const GLenum glBufferUsage = TranslateToGL(buffer->usage);
 	buffer->count = count;
 	buffer->size = size;
 
-	// restore current buffer
-	//if( cacheId != id ) glBindBuffer(target, cacheId);
+#if PLATFORM_DESKTOP
+	if (OpenGLExtensions::coreDirectStateAccess)
+	{
+		if (isNewBufferData) glNamedBufferData(id, numberOfBytes, data, glBufferUsage);
+		else glNamedBufferSubData(id, offset, numberOfBytes, data);
+	}
+	else
+#endif
+	{
+		bool restorePrevState = false;
+		if (m_cache.CurrentVAO != *buffer->parentArray || m_cache.CurrentVBO != id)
+		{
+			glBindVertexArray(*buffer->parentArray);
+			glBindBuffer(GL_ARRAY_BUFFER, id);
+			restorePrevState = true;
+		}
+
+		if (isNewBufferData) glBufferData(GL_ARRAY_BUFFER, numberOfBytes, data, glBufferUsage);
+		else glBufferSubData(GL_ARRAY_BUFFER, offset, numberOfBytes, data);
+
+		// restore current buffer
+		if (restorePrevState)
+		{
+			glBindVertexArray(m_cache.CurrentVAO);
+			glBindBuffer(GL_ARRAY_BUFFER, m_cache.CurrentVBO);
+			glBindBuffer(GL_ARRAY_BUFFER, m_cache.CurrentIBO);
+		}
+	}
+}
+//-----------------------------------------------------------------------------
+void RenderSystem::UpdateBuffer(IndexBufferRef buffer, unsigned offset, unsigned count, unsigned size, const void* data)
+{
+	assert(IsValid(buffer));
+
+	const unsigned id = *buffer;
+	const bool isNewBufferData = (offset == 0 && (buffer->count != count || buffer->size != size));
+	const GLsizeiptr numberOfBytes = count * size;
+	const GLenum glBufferUsage = TranslateToGL(buffer->usage);
+	buffer->count = count;
+	buffer->size = size;
+
+#if PLATFORM_DESKTOP
+	if (OpenGLExtensions::coreDirectStateAccess)
+	{
+		if (isNewBufferData) glNamedBufferData(id, numberOfBytes, data, glBufferUsage);
+		else glNamedBufferSubData(id, offset, numberOfBytes, data);
+	}
+	else
+#endif
+	{
+		if (m_cache.CurrentIBO != id)
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
+
+		if (isNewBufferData) glBufferData(GL_ELEMENT_ARRAY_BUFFER, numberOfBytes, data, glBufferUsage);
+		else glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, numberOfBytes, data);
+
+		// restore current buffer
+		if (m_cache.CurrentIBO != id)
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_cache.CurrentIBO);
+	}
 }
 //-----------------------------------------------------------------------------
 #if !PLATFORM_EMSCRIPTEN
-void* RenderSystem::MapBuffer(GPUBufferRef buffer)
+inline void* mapBuffer(unsigned buffer, unsigned currentState, GLenum target, GLenum access)
 {
-	assert(IsValid(buffer));
-	Bind(buffer);
-	return glMapBuffer(TranslateToGL(buffer->type), GL_WRITE_ONLY);
+#if PLATFORM_DESKTOP
+	if (OpenGLExtensions::coreDirectStateAccess)
+		return glMapNamedBuffer(buffer, access);
+	else
+#endif
+	{
+		if (currentState != buffer)
+		{
+			LogError("Buffer not binding");
+			return nullptr;
+		}
+		return glMapBuffer(target, access);
+	}
 }
 #endif
 //-----------------------------------------------------------------------------
-void* RenderSystem::MapBuffer(GPUBufferRef buffer, unsigned offset, unsigned size)
+#if !PLATFORM_EMSCRIPTEN
+void* RenderSystem::MapBuffer(VertexBufferRef buffer, GLenum access)
 {
-	// TODO: нужно подключать вао
 	assert(IsValid(buffer));
-	Bind(buffer);
-	return glMapBufferRange(TranslateToGL(buffer->type), offset, size, GL_MAP_WRITE_BIT);
+	return mapBuffer(*buffer, m_cache.CurrentVBO, GL_ARRAY_BUFFER, access);
+}
+#endif
+//-----------------------------------------------------------------------------
+#if !PLATFORM_EMSCRIPTEN
+void* RenderSystem::MapBuffer(IndexBufferRef buffer, GLenum access)
+{
+	assert(IsValid(buffer));
+	return mapBuffer(*buffer, m_cache.CurrentIBO, GL_ELEMENT_ARRAY_BUFFER, access);
+}
+#endif
+//-----------------------------------------------------------------------------
+inline void* mapBuffer(unsigned buffer, unsigned currentState, GLenum target, unsigned offset, unsigned size, GLbitfield access)
+{
+#if PLATFORM_DESKTOP
+	if (OpenGLExtensions::coreDirectStateAccess)
+		return glMapNamedBufferRange(buffer, offset, size, access);
+	else
+#endif
+	{
+		if (currentState != buffer)
+		{
+			LogError("Buffer not binding");
+			return nullptr;
+		}
+		return glMapBufferRange(target, offset, size, access);
+	}
 }
 //-----------------------------------------------------------------------------
-bool RenderSystem::UnmapBuffer(GPUBufferRef buffer)
+void* RenderSystem::MapBuffer(VertexBufferRef buffer, unsigned offset, unsigned size, GLbitfield access)
 {
-	// TODO: нужно подключать вао
 	assert(IsValid(buffer));
-	assert(*buffer == getCurrentCacheBufferFromType(buffer->type));
-	return GL_TRUE == glUnmapBuffer(TranslateToGL(buffer->type));
+	return mapBuffer(*buffer, m_cache.CurrentVBO, GL_ARRAY_BUFFER, offset, size, access);
+}
+//-----------------------------------------------------------------------------
+void* RenderSystem::MapBuffer(IndexBufferRef buffer, unsigned offset, unsigned size, GLbitfield access)
+{
+	assert(IsValid(buffer));
+	return mapBuffer(*buffer, m_cache.CurrentIBO, GL_ELEMENT_ARRAY_BUFFER, offset, size, access);
+}
+//-----------------------------------------------------------------------------
+inline bool unmapBuffer(unsigned buffer, unsigned currentState, GLenum target)
+{
+	if (currentState != buffer)
+	{
+		LogError("Buffer not binding");
+		return false;
+	}
+#if PLATFORM_DESKTOP
+	if (OpenGLExtensions::coreDirectStateAccess)
+		return GL_TRUE == glUnmapNamedBuffer(buffer);
+	else
+#endif
+		return GL_TRUE == glUnmapBuffer(target);
+}
+//-----------------------------------------------------------------------------
+bool RenderSystem::UnmapBuffer(VertexBufferRef buffer)
+{
+	assert(IsValid(buffer));
+	return unmapBuffer(*buffer, m_cache.CurrentVBO, GL_ARRAY_BUFFER);
+}
+//-----------------------------------------------------------------------------
+bool RenderSystem::UnmapBuffer(IndexBufferRef buffer)
+{
+	assert(IsValid(buffer));
+	return unmapBuffer(*buffer, m_cache.CurrentIBO, GL_ELEMENT_ARRAY_BUFFER);
 }
 //-----------------------------------------------------------------------------

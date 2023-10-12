@@ -37,7 +37,9 @@ public:
 	// Create Render Resource
 	//-------------------------------------------------------------------------
 	ShaderProgramRef CreateShaderProgram(const ShaderBytecode& vertexShaderSource, const ShaderBytecode& fragmentShaderSource);
+	VertexBufferRef CreateVertexBuffer(BufferUsage usage);
 	VertexBufferRef CreateVertexBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* data);
+	IndexBufferRef CreateIndexBuffer(BufferUsage usage);
 	IndexBufferRef CreateIndexBuffer(BufferUsage usage, unsigned indexCount, IndexFormat indexFormat, const void* data);
 	VertexArrayRef CreateVertexArray(VertexBufferRef vbo, IndexBufferRef ibo, const std::vector<VertexAttribute>& attribs);
 	VertexArrayRef CreateVertexArray(VertexBufferRef vbo, IndexBufferRef ibo, ShaderProgramRef shaders);
@@ -117,13 +119,19 @@ public:
 	//-------------------------------------------------------------------------
 	// Buffer Operations
 	//-------------------------------------------------------------------------
-	void UpdateBuffer(GPUBufferRef buffer, unsigned offset, unsigned count, unsigned size, const void* data);
+	// TODO: отрефакторить убрав копипаст выделив его в приватную функцию
+	void UpdateBuffer(VertexBufferRef buffer, unsigned offset, unsigned count, unsigned size, const void* data);
+	void UpdateBuffer(IndexBufferRef buffer, unsigned offset, unsigned count, unsigned size, const void* data);
 
+	// TODO: нужно проверить как работает бинд перед мапингом с учетом текущего ВАО
 #if !PLATFORM_EMSCRIPTEN
-	void* MapBuffer(GPUBufferRef buffer);
+	void* MapBuffer(VertexBufferRef buffer, GLenum access = GL_WRITE_ONLY);
+	void* MapBuffer(IndexBufferRef buffer, GLenum access = GL_WRITE_ONLY);
 #endif
-	void* MapBuffer(GPUBufferRef buffer, unsigned offset, unsigned size);
-	bool UnmapBuffer(GPUBufferRef buffer);
+	void* MapBuffer(VertexBufferRef buffer, unsigned offset, unsigned size, GLbitfield access = GL_MAP_WRITE_BIT);
+	void* MapBuffer(IndexBufferRef buffer, unsigned offset, unsigned size, GLbitfield access = GL_MAP_WRITE_BIT);
+	bool UnmapBuffer(VertexBufferRef buffer);
+	bool UnmapBuffer(IndexBufferRef buffer);
 
 	//-------------------------------------------------------------------------
 	// Set Current State 
@@ -132,8 +140,10 @@ public:
 	void ResetState(ResourceType type);
 	void Bind(DepthState state);
 	void Bind(StencilState state);
+	void Bind(RasterizerState state);
 	void Bind(ShaderProgramRef resource);
-	void Bind(GPUBufferRef buffer);
+	void Bind(VertexBufferRef buffer);
+	void Bind(IndexBufferRef buffer);
 	void Bind(VertexArrayRef vao);
 	void Bind(const VertexAttribute& Attribute);
 	void Bind(Texture2DRef resource, unsigned slot = 0);
@@ -184,6 +194,7 @@ private:
 
 		DepthState CurrentDepthState{};
 		StencilState CurrentStencilState{};
+		RasterizerState CurrentRasterizerState{};
 
 		GLbitfield CurrentClearMask = 0;
 
@@ -194,20 +205,10 @@ private:
 				CurrentTexture2D[i] = 0;
 			CurrentDepthState = {};
 			CurrentStencilState = {};
+			CurrentRasterizerState = {};
 			CurrentClearMask = 0;
 		}
 	} m_cache;
-
-	unsigned& getCurrentCacheBufferFromType(BufferTarget type)
-	{
-		if (type == BufferTarget::ArrayBuffer) return m_cache.CurrentVBO;
-		else if(type == BufferTarget::ElementArrayBuffer) return m_cache.CurrentIBO;
-		else
-		{
-			assert(1 && "not impl!");
-			return m_cache.CurrentVBO;
-		}
-	}
 
 	std::unordered_map<std::string, Texture2DRef> m_cacheFileTextures2D;
 };

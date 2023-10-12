@@ -80,10 +80,9 @@ void _003BufferMapping::Render()
 	}
 
 	{
+		renderSystem.Bind(m_vb);
 		testVertex* data = (testVertex*)renderSystem.MapBuffer(m_vb);
-
 		data[2].pos.x = pos;
-
 		renderSystem.UnmapBuffer(m_vb);
 	}
 
