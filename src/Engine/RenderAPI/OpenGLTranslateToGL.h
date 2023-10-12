@@ -1,10 +1,10 @@
-п»ї#pragma once
+#pragma once
 
 #include "RenderResource.h"
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLenum TranslateToGL(ImageFormat format)
 {
-	switch( format )
+	switch (format)
 	{
 	case ImageFormat::R8:              return GL_R8;
 	case ImageFormat::RG8:             return GL_RG8;
@@ -81,7 +81,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLenum TranslateToGL(BlendOp op)
 {
-	switch( op )
+	switch (op)
 	{
 	case BlendOp::Add:             return GL_FUNC_ADD;
 	case BlendOp::Subrtact:        return GL_FUNC_SUBTRACT;
@@ -96,7 +96,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLenum TranslateToGL(BlendFactor func)
 {
-	switch( func )
+	switch (func)
 	{
 	case BlendFactor::Zero:                    return GL_ZERO;
 	case BlendFactor::One:                     return GL_ONE;
@@ -127,7 +127,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLenum TranslateToGL(RasterizerCullMode face)
 {
-	switch( face )
+	switch (face)
 	{
 	case RasterizerCullMode::Back:         return GL_BACK;
 	case RasterizerCullMode::Front:        return GL_FRONT;
@@ -140,7 +140,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLenum TranslateToGL(FaceOrientation orientation)
 {
-	switch( orientation )
+	switch (orientation)
 	{
 	case FaceOrientation::ClockwiseFace:        return GL_CW;
 	case FaceOrientation::CounterClockwiseFace: return GL_CCW;
@@ -153,7 +153,7 @@
 #if !PLATFORM_EMSCRIPTEN
 [[nodiscard]] inline GLenum TranslateToGL(RasterizerFillMode fillMode)
 {
-	switch( fillMode )
+	switch (fillMode)
 	{
 	case RasterizerFillMode::Solid:     return GL_FILL;
 	case RasterizerFillMode::Wireframe: return GL_LINE;
@@ -167,7 +167,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLenum TranslateToGL(ShaderPipelineStage usage)
 {
-	switch( usage )
+	switch (usage)
 	{
 	case ShaderPipelineStage::Vertex:         return GL_VERTEX_SHADER;
 	case ShaderPipelineStage::Fragment:       return GL_FRAGMENT_SHADER;
@@ -185,7 +185,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline std::string ConvertToStr(ShaderPipelineStage usage)
 {
-	switch( usage )
+	switch (usage)
 	{
 	case ShaderPipelineStage::Vertex:         return "Vertex";
 	case ShaderPipelineStage::Fragment:       return "Fragment";
@@ -201,29 +201,30 @@
 	return "";
 }
 //-----------------------------------------------------------------------------
-[[nodiscard]] inline GLenum TranslateToGL(BufferType type)
+[[nodiscard]] inline GLenum TranslateToGL(BufferTarget type)
 {
-	switch( type )
+	switch (type)
 	{
-	case BufferType::ArrayBuffer:             return GL_ARRAY_BUFFER;
+	case BufferTarget::ArrayBuffer:             return GL_ARRAY_BUFFER;
 #if !PLATFORM_EMSCRIPTEN
-	case BufferType::AtomicCounterBuffer:     return GL_ATOMIC_COUNTER_BUFFER;
+	case BufferTarget::AtomicCounterBuffer:     return GL_ATOMIC_COUNTER_BUFFER;
 #endif
-	case BufferType::CopyReadBuffer:          return GL_COPY_READ_BUFFER;
-	case BufferType::CopyWriteBuffer:         return GL_COPY_WRITE_BUFFER;
+	case BufferTarget::CopyReadBuffer:          return GL_COPY_READ_BUFFER;
+	case BufferTarget::CopyWriteBuffer:         return GL_COPY_WRITE_BUFFER;
 #if !PLATFORM_EMSCRIPTEN
-	case BufferType::DispatchIndirectBuffer:  return GL_DISPATCH_INDIRECT_BUFFER;
-	case BufferType::DrawIndirectBuffer:      return GL_DRAW_INDIRECT_BUFFER;
+	case BufferTarget::DispatchIndirectBuffer:  return GL_DISPATCH_INDIRECT_BUFFER;
+	case BufferTarget::DrawIndirectBuffer:      return GL_DRAW_INDIRECT_BUFFER;
 #endif
-	case BufferType::ElementArrayBuffer:      return GL_ELEMENT_ARRAY_BUFFER;
-	case BufferType::PixelPackBuffer:         return GL_PIXEL_PACK_BUFFER;
-	case BufferType::PixelUnpackBuffer:       return GL_PIXEL_UNPACK_BUFFER;
+	case BufferTarget::ElementArrayBuffer:      return GL_ELEMENT_ARRAY_BUFFER;
+	case BufferTarget::PixelPackBuffer:         return GL_PIXEL_PACK_BUFFER;
+	case BufferTarget::PixelUnpackBuffer:       return GL_PIXEL_UNPACK_BUFFER;
+	case BufferTarget::QueryBuffer:             return GL_QUERY_BUFFER;
 #if !PLATFORM_EMSCRIPTEN
-	case BufferType::ShaderStorageBuffer:     return GL_SHADER_STORAGE_BUFFER;
-	case BufferType::TextureBuffer:           return GL_TEXTURE_BUFFER;
+	case BufferTarget::ShaderStorageBuffer:     return GL_SHADER_STORAGE_BUFFER;
+	case BufferTarget::TextureBuffer:           return GL_TEXTURE_BUFFER;
 #endif
-	case BufferType::TransformFeedbackBuffer: return GL_TRANSFORM_FEEDBACK_BUFFER;
-	case BufferType::UniformBuffer:           return GL_UNIFORM_BUFFER;
+	case BufferTarget::TransformFeedbackBuffer: return GL_TRANSFORM_FEEDBACK_BUFFER;
+	case BufferTarget::UniformBuffer:           return GL_UNIFORM_BUFFER;
 	default: break;
 	}
 	assert(false && "Unknown BufferType");
@@ -232,7 +233,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLenum TranslateToGL(BufferUsage usage)
 {
-	switch( usage )
+	switch (usage)
 	{
 	case BufferUsage::StaticDraw:  return GL_STATIC_DRAW;
 	case BufferUsage::DynamicDraw: return GL_DYNAMIC_DRAW;
@@ -244,7 +245,7 @@
 	case BufferUsage::DynamicCopy: return GL_DYNAMIC_COPY;
 	case BufferUsage::StreamCopy:  return GL_STREAM_COPY;
 	default: break;
-	}	
+	}
 	assert(false && "Unknown BufferUsage");
 	return 0;
 }
@@ -252,7 +253,7 @@
 #if !PLATFORM_EMSCRIPTEN
 [[nodiscard]] inline GLenum TranslateToGL(BufferMapAccess access)
 {
-	switch( access )
+	switch (access)
 	{
 	case BufferMapAccess::Read:      return GL_READ_ONLY;
 	case BufferMapAccess::Write:     return GL_WRITE_ONLY;
@@ -266,7 +267,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLenum TranslateToGL(BufferBinding binding)
 {
-	switch( binding )
+	switch (binding)
 	{
 	case BufferBinding::ArrayBufferBinding:             return GL_ARRAY_BUFFER_BINDING;
 #if !PLATFORM_EMSCRIPTEN
@@ -293,30 +294,30 @@
 	return 0;
 }
 //-----------------------------------------------------------------------------
-[[nodiscard]] inline BufferBinding GetBindingTarget(BufferType type)
+[[nodiscard]] inline BufferBinding GetBindingTarget(BufferTarget type)
 {
 	BufferBinding target;
-	switch( type )
+	switch (type)
 	{
-	case BufferType::ArrayBuffer:             target = BufferBinding::ArrayBufferBinding; break;
+	case BufferTarget::ArrayBuffer:             target = BufferBinding::ArrayBufferBinding; break;
 #if !PLATFORM_EMSCRIPTEN
-	case BufferType::AtomicCounterBuffer:     target = BufferBinding::AtomicCounterBufferBinding; break;
+	case BufferTarget::AtomicCounterBuffer:     target = BufferBinding::AtomicCounterBufferBinding; break;
 #endif
-	case BufferType::CopyReadBuffer:          target = BufferBinding::CopyReadBuffer; break;
-	case BufferType::CopyWriteBuffer:         target = BufferBinding::CopyWriteBuffer; break;
+	case BufferTarget::CopyReadBuffer:          target = BufferBinding::CopyReadBuffer; break;
+	case BufferTarget::CopyWriteBuffer:         target = BufferBinding::CopyWriteBuffer; break;
 #if !PLATFORM_EMSCRIPTEN
-	case BufferType::DispatchIndirectBuffer:  target = BufferBinding::DispatchIndirectBufferBinding; break;
-	case BufferType::DrawIndirectBuffer:      target = BufferBinding::DrawIndirectBufferBinding; break;
+	case BufferTarget::DispatchIndirectBuffer:  target = BufferBinding::DispatchIndirectBufferBinding; break;
+	case BufferTarget::DrawIndirectBuffer:      target = BufferBinding::DrawIndirectBufferBinding; break;
 #endif
-	case BufferType::ElementArrayBuffer:      target = BufferBinding::ElementArrayBufferBinding; break;
-	case BufferType::PixelPackBuffer:         target = BufferBinding::PixelPackBufferBinding; break;
-	case BufferType::PixelUnpackBuffer:       target = BufferBinding::PixelUnpackBufferBinding; break;
+	case BufferTarget::ElementArrayBuffer:      target = BufferBinding::ElementArrayBufferBinding; break;
+	case BufferTarget::PixelPackBuffer:         target = BufferBinding::PixelPackBufferBinding; break;
+	case BufferTarget::PixelUnpackBuffer:       target = BufferBinding::PixelUnpackBufferBinding; break;
 #if !PLATFORM_EMSCRIPTEN
-	case BufferType::ShaderStorageBuffer:     target = BufferBinding::ShaderStorageBufferBinding; break;
-	case BufferType::TextureBuffer:           target = BufferBinding::TextureBindingBuffer; break;
+	case BufferTarget::ShaderStorageBuffer:     target = BufferBinding::ShaderStorageBufferBinding; break;
+	case BufferTarget::TextureBuffer:           target = BufferBinding::TextureBindingBuffer; break;
 #endif
-	case BufferType::TransformFeedbackBuffer: target = BufferBinding::TransformFeedbackBufferBinding; break;
-	case BufferType::UniformBuffer:           target = BufferBinding::UniformBufferBinding; break;
+	case BufferTarget::TransformFeedbackBuffer: target = BufferBinding::TransformFeedbackBufferBinding; break;
+	case BufferTarget::UniformBuffer:           target = BufferBinding::UniformBufferBinding; break;
 	default: break;
 	}
 	assert(false && "Unknown BufferType");
@@ -325,7 +326,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLenum TranslateToGL(BufferMapAccessFlags accessFlags)
 {
-	switch( accessFlags )
+	switch (accessFlags)
 	{
 	case BufferMapAccessFlags::MapReadBit:             return GL_MAP_READ_BIT;
 	case BufferMapAccessFlags::MapWriteBit:            return GL_MAP_WRITE_BIT;
@@ -345,7 +346,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline constexpr unsigned SizeIndexType(IndexFormat format)
 {
-	switch( format )
+	switch (format)
 	{
 	case IndexFormat::UInt8:  return sizeof(uint8_t);
 	case IndexFormat::UInt16: return sizeof(uint16_t);
@@ -358,7 +359,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline constexpr unsigned SizeIndexType(unsigned size)
 {
-	switch( size )
+	switch (size)
 	{
 	case 1: return GL_UNSIGNED_BYTE;
 	case 2: return GL_UNSIGNED_SHORT;
@@ -369,9 +370,9 @@
 	return 0;
 }
 //-----------------------------------------------------------------------------
-[[nodiscard]] inline GLenum TranslateToGL(IndexFormat type) // TODO: РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ
+[[nodiscard]] inline GLenum TranslateToGL(IndexFormat type) // TODO: использовать
 {
-	switch( type )
+	switch (type)
 	{
 	case IndexFormat::UInt8:  return GL_UNSIGNED_BYTE;
 	case IndexFormat::UInt16: return GL_UNSIGNED_SHORT;
@@ -384,7 +385,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLenum TranslateToGL(PrimitiveTopology topology)
 {
-	switch( topology )
+	switch (topology)
 	{
 	case PrimitiveTopology::Points:                 return GL_POINTS;
 	case PrimitiveTopology::Lines:                  return GL_LINES;
@@ -408,7 +409,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline constexpr GLint TranslateToGL(TextureType type)
 {
-	switch( type )
+	switch (type)
 	{
 #if !PLATFORM_EMSCRIPTEN
 	case TextureType::Texture1D:        return GL_TEXTURE_1D;
@@ -429,7 +430,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLint TranslateToGL(TextureMinFilter filter)
 {
-	switch( filter )
+	switch (filter)
 	{
 	case TextureMinFilter::Nearest:              return GL_NEAREST;
 	case TextureMinFilter::Linear:               return GL_LINEAR;
@@ -445,7 +446,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline constexpr GLint TranslateToGL(TextureMagFilter filter)
 {
-	switch( filter )
+	switch (filter)
 	{
 	case TextureMagFilter::Nearest: return GL_NEAREST;
 	case TextureMagFilter::Linear:  return GL_LINEAR;
@@ -457,7 +458,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLint TranslateToGL(TextureAddressMode wrapMode)
 {
-	switch( wrapMode )
+	switch (wrapMode)
 	{
 	case TextureAddressMode::Repeat:         return GL_REPEAT;
 	case TextureAddressMode::MirroredRepeat: return GL_MIRRORED_REPEAT;
@@ -473,7 +474,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLenum TranslateToGL(TextureCubeTarget target)
 {
-	switch( target )
+	switch (target)
 	{
 	case TextureCubeTarget::TextureCubeMapPositiveX: return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 	case TextureCubeTarget::TextureCubeMapNegativeX: return GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
@@ -489,63 +490,63 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline bool GetTextureFormatType(TexelsFormat inFormat, GLenum textureType, GLenum& format, GLint& internalFormat, GLenum& oglType)
 {
-	if( inFormat == TexelsFormat::R_U8 )
+	if (inFormat == TexelsFormat::R_U8)
 	{
 		format = GL_RED;
 		internalFormat = GL_R8;
 		oglType = GL_UNSIGNED_BYTE;
 	}
-	else if( inFormat == TexelsFormat::RG_U8 )
+	else if (inFormat == TexelsFormat::RG_U8)
 	{
 #if defined(_WIN32)
 		format = GL_RG;
 		internalFormat = GL_RG8;
 		oglType = GL_UNSIGNED_BYTE;
 		const GLint swizzleMask[] = { GL_RED, GL_RED, GL_RED, GL_GREEN };
-		glTexParameteriv(textureType, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask); // TODO: РјРѕРіСѓС‚ Р±С‹С‚СЊ РїСЂРѕР±Р»РµРјС‹ СЃ Р±СЂР°СѓР·РµСЂР°РјРё, С‚РѕРіРґР° С‚РѕР»СЊРєРѕ РіСЂСѓР·РёС‚СЊ stb СЃ СѓРєР°Р·Р°РЅРёРµРј РЅСѓР¶РЅРѕРіРѕ С„РѕСЂРјР°С‚Р°
+		glTexParameteriv(textureType, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask); // TODO: могут быть проблемы с браузерами, тогда только грузить stb с указанием нужного формата
 #endif // _WIN32
 #if PLATFORM_EMSCRIPTEN
 		LogFatal("TexelsFormat::RG_U8 not support in web platform");
 		return false;
 #endif
 	}
-	else if( inFormat == TexelsFormat::RGB_U8 )
+	else if (inFormat == TexelsFormat::RGB_U8)
 	{
 		format = GL_RGB;
 		internalFormat = GL_RGB;
 		oglType = GL_UNSIGNED_BYTE;
 	}
-	else if( inFormat == TexelsFormat::RGBA_U8 )
+	else if (inFormat == TexelsFormat::RGBA_U8)
 	{
 		format = GL_RGBA;
 		internalFormat = GL_RGBA8;
 		oglType = GL_UNSIGNED_BYTE;
 	}
-	else if( inFormat == TexelsFormat::RG_F32 )
+	else if (inFormat == TexelsFormat::RG_F32)
 	{
 		format = GL_RG;
 		internalFormat = GL_RG32F;
 		oglType = GL_FLOAT;
 	}
-	else if( inFormat == TexelsFormat::Depth_U16 )
+	else if (inFormat == TexelsFormat::Depth_U16)
 	{
 		format = GL_DEPTH_COMPONENT;
 		internalFormat = GL_DEPTH_COMPONENT16;
 		oglType = GL_UNSIGNED_SHORT;
 	}
-	else if( inFormat == TexelsFormat::DepthStencil_U16 )
+	else if (inFormat == TexelsFormat::DepthStencil_U16)
 	{
 		format = GL_DEPTH_STENCIL;
 		internalFormat = GL_DEPTH24_STENCIL8;
 		oglType = GL_UNSIGNED_SHORT;
 	}
-	else if( inFormat == TexelsFormat::Depth_U24 )
+	else if (inFormat == TexelsFormat::Depth_U24)
 	{
 		format = GL_DEPTH_COMPONENT;
 		internalFormat = GL_DEPTH_COMPONENT24;
 		oglType = GL_UNSIGNED_INT;
 	}
-	else if( inFormat == TexelsFormat::DepthStencil_U24 )
+	else if (inFormat == TexelsFormat::DepthStencil_U24)
 	{
 		format = GL_DEPTH_STENCIL;
 		internalFormat = GL_DEPTH24_STENCIL8;
@@ -561,7 +562,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLenum TranslateToGL(FramebufferAttachment attachment)
 {
-	switch( attachment )
+	switch (attachment)
 	{
 	case FramebufferAttachment::ColorAttachment0:       return GL_COLOR_ATTACHMENT0;
 	case FramebufferAttachment::ColorAttachment1:       return GL_COLOR_ATTACHMENT1;
@@ -590,7 +591,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLint TranslateToGL(FramebufferType type)
 {
-	switch( type )
+	switch (type)
 	{
 	case FramebufferType::ReadFramebuffer: return GL_READ_FRAMEBUFFER;
 	case FramebufferType::DrawFramebuffer: return GL_DRAW_FRAMEBUFFER;
@@ -603,7 +604,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLint TranslateToGL(FramebufferStatus status)
 {
-	switch( status )
+	switch (status)
 	{
 	case FramebufferStatus::FramebufferComplete:                    return GL_FRAMEBUFFER_COMPLETE;
 	case FramebufferStatus::FramebufferUndefined:                   return GL_FRAMEBUFFER_UNDEFINED;
@@ -626,7 +627,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLint TranslateToGL(FramebufferBinding binding)
 {
-	switch( binding )
+	switch (binding)
 	{
 	case FramebufferBinding::ReadFramebufferBinding: return GL_READ_FRAMEBUFFER_BINDING;
 	case FramebufferBinding::DrawFramebufferBinding: return GL_DRAW_FRAMEBUFFER_BINDING;
@@ -639,7 +640,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline FramebufferBinding GetBindingTarget(FramebufferType type)
 {
-	switch( type )
+	switch (type)
 	{
 	case FramebufferType::ReadFramebuffer: return FramebufferBinding::ReadFramebufferBinding;
 	case FramebufferType::DrawFramebuffer: return FramebufferBinding::DrawFramebufferBinding;
@@ -652,7 +653,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLenum GetAttributeType(GLenum type)
 {
-	switch( type )
+	switch (type)
 	{
 	case GL_FLOAT:
 	case GL_FLOAT_VEC2:
@@ -671,7 +672,7 @@
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLint GetAttributeSize(GLenum type)
 {
-	switch( type )
+	switch (type)
 	{
 	case GL_FLOAT:
 	case GL_INT:

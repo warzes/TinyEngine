@@ -117,10 +117,13 @@
     <ClCompile Include="Platform\Monitor.cpp" />
     <ClCompile Include="Platform\WindowSystem.cpp" />
     <ClCompile Include="RenderAPI\Capabilities.cpp" />
-    <ClCompile Include="RenderAPI\OpenGLUtil.cpp" />
+    <ClCompile Include="RenderAPI\OpenGLExtensions.cpp" />
+    <ClCompile Include="RenderAPI\OpenGLCore.cpp" />
     <ClCompile Include="RenderAPI\RenderResource.cpp" />
     <ClCompile Include="RenderAPI\RenderSystem.cpp" />
+    <ClCompile Include="RenderAPI\RenderSystem_Buffer.cpp" />
     <ClCompile Include="RenderAPI\RenderSystem_Create.cpp" />
+    <ClCompile Include="RenderAPI\RenderSystem_Shader.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -163,11 +166,12 @@
     <ClInclude Include="Platform\Monitor.h" />
     <ClInclude Include="Platform\WindowSystem.h" />
     <ClInclude Include="RenderAPI\Capabilities.h" />
-    <ClInclude Include="RenderAPI\OpenGLUtil.h" />
+    <ClInclude Include="RenderAPI\OpenGLExtensions.h" />
+    <ClInclude Include="RenderAPI\OpenGLCore.h" />
+    <ClInclude Include="RenderAPI\OpenGLTranslateToGL.h" />
     <ClInclude Include="RenderAPI\RenderEnums.h" />
     <ClInclude Include="RenderAPI\RenderResource.h" />
     <ClInclude Include="RenderAPI\RenderSystem.h" />
-    <ClInclude Include="RenderAPI\TranslateToGL.h" />
     <ClInclude Include="TinyEngine.h" />
     <ClInclude Include="EngineConfiguration.h" />
     <ClInclude Include="stdafx.h" />

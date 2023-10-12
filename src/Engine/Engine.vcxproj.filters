@@ -29,7 +29,7 @@
     <ClCompile Include="RenderAPI\Capabilities.cpp">
       <Filter>RenderAPI</Filter>
     </ClCompile>
-    <ClCompile Include="RenderAPI\OpenGLUtil.cpp">
+    <ClCompile Include="RenderAPI\OpenGLCore.cpp">
       <Filter>RenderAPI</Filter>
     </ClCompile>
     <ClCompile Include="RenderAPI\RenderResource.cpp">
@@ -83,6 +83,15 @@
     <ClCompile Include="RenderAPI\RenderSystem_Create.cpp">
       <Filter>RenderAPI</Filter>
     </ClCompile>
+    <ClCompile Include="RenderAPI\OpenGLExtensions.cpp">
+      <Filter>RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\RenderSystem_Shader.cpp">
+      <Filter>RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\RenderSystem_Buffer.cpp">
+      <Filter>RenderAPI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -133,13 +142,10 @@
     <ClInclude Include="Platform\Monitor.h">
       <Filter>Platform</Filter>
     </ClInclude>
-    <ClInclude Include="RenderAPI\TranslateToGL.h">
-      <Filter>RenderAPI</Filter>
-    </ClInclude>
     <ClInclude Include="RenderAPI\Capabilities.h">
       <Filter>RenderAPI</Filter>
     </ClInclude>
-    <ClInclude Include="RenderAPI\OpenGLUtil.h">
+    <ClInclude Include="RenderAPI\OpenGLCore.h">
       <Filter>RenderAPI</Filter>
     </ClInclude>
     <ClInclude Include="RenderAPI\RenderEnums.h">
@@ -210,6 +216,12 @@
     </ClInclude>
     <ClInclude Include="Core\Geometry\Triangle.h">
       <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\OpenGLExtensions.h">
+      <Filter>RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\OpenGLTranslateToGL.h">
+      <Filter>RenderAPI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

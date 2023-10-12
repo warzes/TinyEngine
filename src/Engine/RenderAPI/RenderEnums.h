@@ -169,28 +169,28 @@ enum class ShaderPipelineStage : uint8_t
 // GPUBuffer enum
 //=============================================================================
 
-// TODO: использовать
-enum class BufferType : uint8_t
+enum class BufferTarget : uint8_t
 {
-	ArrayBuffer, // aka VertexBuffer
+	ArrayBuffer,             // GL_ARRAY_BUFFER aka VertexBuffer
 #if !PLATFORM_EMSCRIPTEN
-	AtomicCounterBuffer,
+	AtomicCounterBuffer,     // GL_ATOMIC_COUNTER_BUFFER
 #endif
-	CopyReadBuffer,
-	CopyWriteBuffer,
+	CopyReadBuffer,          // GL_COPY_READ_BUFFER
+	CopyWriteBuffer,         // GL_COPY_WRITE_BUFFER
 #if !PLATFORM_EMSCRIPTEN
-	DispatchIndirectBuffer,
-	DrawIndirectBuffer,
+	DispatchIndirectBuffer,  // GL_DISPATCH_INDIRECT_BUFFER
+	DrawIndirectBuffer,      // GL_DRAW_INDIRECT_BUFFER
 #endif
-	ElementArrayBuffer, // aka Index Buffer
-	PixelPackBuffer,
-	PixelUnpackBuffer,
+	ElementArrayBuffer,      // GL_ELEMENT_ARRAY_BUFFER aka Index Buffer
+	PixelPackBuffer,         // GL_PIXEL_PACK_BUFFER
+	PixelUnpackBuffer,       // GL_PIXEL_UNPACK_BUFFER
+	QueryBuffer,             // GL_QUERY_BUFFER
 #if !PLATFORM_EMSCRIPTEN
-	ShaderStorageBuffer,
-	TextureBuffer,
+	ShaderStorageBuffer,     // GL_SHADER_STORAGE_BUFFER
+	TextureBuffer,           // GL_TEXTURE_BUFFER
 #endif
-	TransformFeedbackBuffer,
-	UniformBuffer
+	TransformFeedbackBuffer, // GL_TRANSFORM_FEEDBACK_BUFFER
+	UniformBuffer            // GL_UNIFORM_BUFFER
 };
 
 enum class BufferUsage : uint8_t

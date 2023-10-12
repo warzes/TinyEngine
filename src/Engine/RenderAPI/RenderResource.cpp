@@ -1,26 +1,25 @@
 ﻿#include "stdafx.h"
 #include "RenderResource.h"
 #include "RenderSystem.h"
-#include "TranslateToGL.h"
+#include "OpenGLTranslateToGL.h"
+#include "OpenGLExtensions.h"
 #include "Core/IO/ImageLoader.h"
 //-----------------------------------------------------------------------------
 #if !PLATFORM_EMSCRIPTEN
 static_assert(sizeof(Uniform) == 8, "Uniform size changed!!!");
-static_assert(sizeof(glObject) == 8, "glObject size changed!!!");
-static_assert(sizeof(Shader) == 12, "Shader size changed!!!");
-static_assert(sizeof(ShaderProgram) == 8, "ShaderProgram size changed!!!");
-static_assert(sizeof(GPUBuffer) == 40, "GPUBuffer size changed!!!");
+static_assert(sizeof(glObject) == 4, "glObject size changed!!!");
+static_assert(sizeof(Shader) == 8, "Shader size changed!!!");
+static_assert(sizeof(ShaderProgram) == 4, "ShaderProgram size changed!!!");
+static_assert(sizeof(GPUBuffer) == 32, "GPUBuffer size changed!!!");
 static_assert(sizeof(VertexArray) == 48, "VertexArray size changed!!!");
 static_assert(sizeof(GeometryBuffer) == 16, "GeometryBuffer size changed!!!");
-static_assert(sizeof(Texture2D) == 20, "Texture2D size changed!!!");
-static_assert(sizeof(Renderbuffer) == 24, "Renderbuffer size changed!!!");
+static_assert(sizeof(Texture2D) == 16, "Texture2D size changed!!!");
+static_assert(sizeof(Renderbuffer) == 20, "Renderbuffer size changed!!!");
 static_assert(sizeof(Framebuffer) == 96, "Framebuffer size changed!!!");
-#	if USE_OPENGL_VERSION == OPENGL40
-static_assert(sizeof(TransformFeedback) == 8, "TransformFeedback size changed!!!");
+#	if USE_OPENGL_VERSION >= OPENGL40
+static_assert(sizeof(TransformFeedback) == 4, "TransformFeedback size changed!!!");
 #	endif // OPENGL40
 #endif // PLATFORM_EMSCRIPTEN
-
-
 //-----------------------------------------------------------------------------
 ShaderBytecode::ShaderBytecode(ShaderSourceType shaderSource, const std::string& text)
 {
@@ -92,9 +91,33 @@ precision mediump float;
 Shader::Shader(ShaderPipelineStage stage)
 {
 	m_handle = glCreateShader(TranslateToGL(stage));
-	m_ownership = true;
 	shaderStage = stage;
 }
+//-----------------------------------------------------------------------------
+GPUBuffer::GPUBuffer(BufferTarget Type, BufferUsage Usage, unsigned Count, unsigned Size) 
+	: type(Type)
+	, usage(Usage)
+	, count(Count)
+	, size(Size)
+{ 
+#if PLATFORM_DESKTOP
+	if (OpenGLExtensions::coreDirectStateAccess)
+		glCreateBuffers(1, &m_handle);
+	else
+#endif
+		glGenBuffers(1, &m_handle);
+}
+//-----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
 //-----------------------------------------------------------------------------
 GeometryBufferRef RenderSystem::CreateGeometryBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* vertexData, unsigned indexCount, IndexFormat indexFormat, const void* indexData, ShaderProgramRef shaders)
 {
@@ -102,7 +125,7 @@ GeometryBufferRef RenderSystem::CreateGeometryBuffer(BufferUsage usage, unsigned
 
 	GeometryBufferRef geom(new GeometryBuffer());
 
-	GPUBufferRef vb = CreateVertexBuffer(usage, vertexCount, vertexSize, vertexData);
+	VertexBufferRef vb = CreateVertexBuffer(usage, vertexCount, vertexSize, vertexData);
 	if (!IsValid(vb))
 	{
 		LogError("GeometryBuffer::VertexBuffer create failed!!");
@@ -110,7 +133,7 @@ GeometryBufferRef RenderSystem::CreateGeometryBuffer(BufferUsage usage, unsigned
 	}
 
 	const bool isIndexBuffer = indexCount > 0;
-	GPUBufferRef ib = nullptr;
+	IndexBufferRef ib = nullptr;
 	if (isIndexBuffer)
 	{
 		ib = CreateIndexBuffer(usage, indexCount, indexFormat, indexData);
@@ -134,7 +157,7 @@ GeometryBufferRef RenderSystem::CreateGeometryBuffer(BufferUsage usage, unsigned
 {
 	GeometryBufferRef geom(new GeometryBuffer());
 
-	GPUBufferRef vb = CreateVertexBuffer(usage, vertexCount, vertexSize, vertexData);
+	VertexBufferRef vb = CreateVertexBuffer(usage, vertexCount, vertexSize, vertexData);
 	if (!IsValid(vb))
 	{
 		LogError("GeometryBuffer::VertexBuffer create failed!!");
@@ -142,7 +165,7 @@ GeometryBufferRef RenderSystem::CreateGeometryBuffer(BufferUsage usage, unsigned
 	}
 
 	const bool isIndexBuffer = indexCount > 0;
-	GPUBufferRef ib = nullptr;
+	IndexBufferRef ib = nullptr;
 	if (isIndexBuffer)
 	{
 		ib = CreateIndexBuffer(usage, indexCount, indexFormat, indexData);

@@ -1,6 +1,8 @@
 ﻿#include "stdafx.h"
 #include "RenderSystem.h"
-#include "TranslateToGL.h"
+#include "OpenGLTranslateToGL.h"
+#include "OpenGLExtensions.h"
+#include "OpenGLCore.h"
 //-----------------------------------------------------------------------------
 // Use discrete GPU by default.
 #if PLATFORM_DESKTOP
@@ -61,17 +63,13 @@ RenderSystem gRenderSystem;
 //-----------------------------------------------------------------------------
 bool RenderSystem::Create(const RenderCreateInfo& createInfo)
 {
-#if defined(_DEBUG)
-	glDebugMessageCallback(glDebugCallback, nullptr);
-	glEnable(GL_DEBUG_OUTPUT);
-#endif
-
 	LogPrint("OpenGL: OpenGL device information:");
 	LogPrint("    > Vendor:   " + std::string((const char*)glGetString(GL_VENDOR)));
 	LogPrint("    > Renderer: " + std::string((const char*)glGetString(GL_RENDERER)));
 	LogPrint("    > Version:  " + std::string((const char*)glGetString(GL_VERSION)));
 	LogPrint("    > GLSL:     " + std::string((const char*)glGetString(GL_SHADING_LANGUAGE_VERSION)));
 
+	initializeExtensions(true);
 	initializeCapabilities(true);
 
 	// не использовать Bind(state) так как дефолтные значения из кеша могут не соответствовать установкам.
@@ -325,59 +323,6 @@ void RenderSystem::SetUniform(const std::string& uniformName, const glm::mat4& v
 	glUniformMatrix4fv(glGetUniformLocation(m_cache.CurrentShaderProgram, uniformName.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
 //-----------------------------------------------------------------------------
-void RenderSystem::UpdateBuffer(GPUBufferRef buffer, unsigned offset, unsigned count, unsigned size, const void* data)
-{
-	assert(IsValid(buffer));
-
-	// TODO: оптимизировать
-
-	// это вершинный буффер?
-	if (buffer->type == BufferType::ArrayBuffer)
-		Bind(buffer->parentArray);
-
-	const GLenum target = TranslateToGL(buffer->type);
-	const unsigned id = *buffer;
-	const unsigned cacheId = getCurrentCacheBufferFromType(buffer->type);
-
-	if ( cacheId != id ) glBindBuffer(target, id);
-
-	if( offset == 0 && (buffer->count != count || buffer->size != size) )
-		glBufferData(target, count * size, data, TranslateToGL(buffer->usage));
-	else
-		glBufferSubData(target, offset, count * size, data);
-
-	buffer->count = count;
-	buffer->size = size;
-
-	// restore current buffer
-	//if( cacheId != id ) glBindBuffer(target, cacheId);
-}
-//-----------------------------------------------------------------------------
-#if !PLATFORM_EMSCRIPTEN
-void* RenderSystem::MapBuffer(GPUBufferRef buffer)
-{
-	assert(IsValid(buffer));
-	Bind(buffer);
-	return glMapBuffer(TranslateToGL(buffer->type), GL_WRITE_ONLY);
-}
-#endif
-//-----------------------------------------------------------------------------
-void* RenderSystem::MapBuffer(GPUBufferRef buffer, unsigned offset, unsigned size)
-{
-	// TODO: нужно подключать вао
-	assert(IsValid(buffer));
-	Bind(buffer);
-	return glMapBufferRange(TranslateToGL(buffer->type), offset, size, GL_MAP_WRITE_BIT);
-}
-//-----------------------------------------------------------------------------
-bool RenderSystem::UnmapBuffer(GPUBufferRef buffer)
-{
-	// TODO: нужно подключать вао
-	assert(IsValid(buffer));
-	assert(*buffer == getCurrentCacheBufferFromType(buffer->type));
-	return GL_TRUE == glUnmapBuffer(TranslateToGL(buffer->type));
-}
-//-----------------------------------------------------------------------------
 void RenderSystem::ResetAllStates()
 {
 	m_cache.Reset();
@@ -609,6 +554,50 @@ void RenderSystem::Draw(VertexArrayRef vao, PrimitiveTopology primitive)
 	else
 	{
 		glDrawArrays(TranslateToGL(primitive), 0, (GLsizei)vao->vbo->count);
+	}
+}
+//-----------------------------------------------------------------------------
+void RenderSystem::initializeExtensions(bool print)
+{
+	// reset extensions state
+	OpenGLExtensions::version = OPENGL33;
+	OpenGLExtensions::coreDebug = false;
+	OpenGLExtensions::coreDirectStateAccess = false;
+
+#if PLATFORM_DESKTOP
+	if (!GLAD_GL_VERSION_3_3)
+	{
+		LogFatal("OpenGL 3.3+ not support");
+		return;
+	}
+	if (GLAD_GL_VERSION_4_0) OpenGLExtensions::version = OPENGL40;
+	if (GLAD_GL_VERSION_4_1) OpenGLExtensions::version = OPENGL41;
+	if (GLAD_GL_VERSION_4_2) OpenGLExtensions::version = OPENGL42;
+	if (GLAD_GL_VERSION_4_3) OpenGLExtensions::version = OPENGL43;
+	if (GLAD_GL_VERSION_4_4) OpenGLExtensions::version = OPENGL44;
+	if (GLAD_GL_VERSION_4_5) OpenGLExtensions::version = OPENGL45;
+	if (GLAD_GL_VERSION_4_6) OpenGLExtensions::version = OPENGL46;
+#else
+	// TODO:
+#endif // PLATFORM_DESKTOP
+
+#if defined(_DEBUG)
+	if (OpenGLExtensions::version >= OPENGL43 && glDebugMessageCallback)
+	{
+		glDebugMessageCallback(glDebugCallback, nullptr);
+		glEnable(GL_DEBUG_OUTPUT);
+		OpenGLExtensions::coreDebug = true;
+	}
+#endif
+
+	if (OpenGLExtensions::version >= OPENGL45)
+		OpenGLExtensions::coreDirectStateAccess = true;
+
+	if (print)
+	{
+		LogPrint("OpenGL: Extensions information:");
+		LogPrint("    > OpenGL Debug: " + OpenGLExtensions::coreDebug ? "enable" : "disable");
+		LogPrint("    > OpenGL Direct State Access: " + OpenGLExtensions::coreDirectStateAccess ? "enable" : "disable");
 	}
 }
 //-----------------------------------------------------------------------------

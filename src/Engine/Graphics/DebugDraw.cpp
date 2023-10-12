@@ -6,7 +6,7 @@ namespace {
 	ShaderProgramRef shaderProgram;
 	Uniform uniformProjectionMatrix;
 	Uniform uniformColor;
-	GPUBufferRef vb;
+	VertexBufferRef vb;
 	VertexArrayRef vao;
 	std::map<unsigned, std::vector<glm::vec3>> Points;
 	std::map<unsigned, std::vector<glm::vec3>> Lines;

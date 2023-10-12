@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "OpenGLUtil.h"
+#include "OpenGLCore.h"
 #include "RenderResource.h"
 #include "Capabilities.h"
 
@@ -37,10 +37,10 @@ public:
 	// Create Render Resource
 	//-------------------------------------------------------------------------
 	ShaderProgramRef CreateShaderProgram(const ShaderBytecode& vertexShaderSource, const ShaderBytecode& fragmentShaderSource);
-	GPUBufferRef CreateVertexBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* data);
-	GPUBufferRef CreateIndexBuffer(BufferUsage usage, unsigned indexCount, IndexFormat indexFormat, const void* data);
-	VertexArrayRef CreateVertexArray(GPUBufferRef vbo, GPUBufferRef ibo, const std::vector<VertexAttribute>& attribs);
-	VertexArrayRef CreateVertexArray(GPUBufferRef vbo, GPUBufferRef ibo, ShaderProgramRef shaders);
+	VertexBufferRef CreateVertexBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* data);
+	IndexBufferRef CreateIndexBuffer(BufferUsage usage, unsigned indexCount, IndexFormat indexFormat, const void* data);
+	VertexArrayRef CreateVertexArray(VertexBufferRef vbo, IndexBufferRef ibo, const std::vector<VertexAttribute>& attribs);
+	VertexArrayRef CreateVertexArray(VertexBufferRef vbo, IndexBufferRef ibo, ShaderProgramRef shaders);
 
 	GeometryBufferRef CreateGeometryBuffer(BufferUsage usage,
 		/*vertex*/unsigned vertexCount, unsigned vertexSize, const void* vertexData,
@@ -160,6 +160,7 @@ private:
 	RenderSystem& operator=(RenderSystem&&) = delete;
 	RenderSystem& operator=(const RenderSystem&) = delete;
 
+	void initializeExtensions(bool print);
 	void initializeCapabilities(bool print);
 
 	ShaderRef compileShader(ShaderPipelineStage type, const std::string& source);
@@ -197,10 +198,10 @@ private:
 		}
 	} m_cache;
 
-	unsigned& getCurrentCacheBufferFromType(BufferType type)
+	unsigned& getCurrentCacheBufferFromType(BufferTarget type)
 	{
-		if (type == BufferType::ArrayBuffer) return m_cache.CurrentVBO;
-		else if(type == BufferType::ElementArrayBuffer) return m_cache.CurrentIBO;
+		if (type == BufferTarget::ArrayBuffer) return m_cache.CurrentVBO;
+		else if(type == BufferTarget::ElementArrayBuffer) return m_cache.CurrentIBO;
 		else
 		{
 			assert(1 && "not impl!");
