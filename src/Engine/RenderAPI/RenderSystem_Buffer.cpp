@@ -167,24 +167,12 @@ void RenderSystem::UpdateBuffer(VertexBufferRef buffer, unsigned offset, unsigne
 	else
 #endif
 	{
-		bool restorePrevState = false;
-		if (m_cache.CurrentVAO != *buffer->parentArray || m_cache.CurrentVBO != id)
-		{
-			glBindVertexArray(*buffer->parentArray);
-			glBindBuffer(GL_ARRAY_BUFFER, id);
-			restorePrevState = true;
-		}
+		if (m_cache.CurrentVBO != id) glBindBuffer(GL_ARRAY_BUFFER, id);
 
 		if (isNewBufferData) glBufferData(GL_ARRAY_BUFFER, numberOfBytes, data, glBufferUsage);
 		else glBufferSubData(GL_ARRAY_BUFFER, offset, numberOfBytes, data);
 
-		// restore current buffer
-		if (restorePrevState)
-		{
-			glBindVertexArray(m_cache.CurrentVAO);
-			glBindBuffer(GL_ARRAY_BUFFER, m_cache.CurrentVBO);
-			glBindBuffer(GL_ARRAY_BUFFER, m_cache.CurrentIBO);
-		}
+		if (m_cache.CurrentVBO != id) glBindBuffer(GL_ARRAY_BUFFER, m_cache.CurrentVBO);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -208,15 +196,12 @@ void RenderSystem::UpdateBuffer(IndexBufferRef buffer, unsigned offset, unsigned
 	else
 #endif
 	{
-		if (m_cache.CurrentIBO != id)
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
+		if (m_cache.CurrentIBO != id) glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
 
 		if (isNewBufferData) glBufferData(GL_ELEMENT_ARRAY_BUFFER, numberOfBytes, data, glBufferUsage);
 		else glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, numberOfBytes, data);
 
-		// restore current buffer
-		if (m_cache.CurrentIBO != id)
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_cache.CurrentIBO);
+		if (m_cache.CurrentIBO != id) glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_cache.CurrentIBO);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -229,12 +214,10 @@ inline void* mapBuffer(unsigned buffer, unsigned currentState, GLenum target, GL
 	else
 #endif
 	{
-		if (currentState != buffer)
-		{
-			LogError("Buffer not binding");
-			return nullptr;
-		}
-		return glMapBuffer(target, access);
+		if (buffer != currentState) glBindBuffer(target, buffer);
+		void* data = glMapBuffer(target, access);
+		if (buffer != currentState) glBindBuffer(target, currentState);
+		return data;
 	}
 }
 #endif
@@ -263,12 +246,10 @@ inline void* mapBuffer(unsigned buffer, unsigned currentState, GLenum target, un
 	else
 #endif
 	{
-		if (currentState != buffer)
-		{
-			LogError("Buffer not binding");
-			return nullptr;
-		}
-		return glMapBufferRange(target, offset, size, access);
+		if (buffer != currentState) glBindBuffer(target, buffer);
+		void* data = glMapBufferRange(target, offset, size, access);
+		if (buffer != currentState) glBindBuffer(target, currentState);
+		return data;
 	}
 }
 //-----------------------------------------------------------------------------
@@ -286,17 +267,17 @@ void* RenderSystem::MapBuffer(IndexBufferRef buffer, unsigned offset, unsigned s
 //-----------------------------------------------------------------------------
 inline bool unmapBuffer(unsigned buffer, unsigned currentState, GLenum target)
 {
-	if (currentState != buffer)
-	{
-		LogError("Buffer not binding");
-		return false;
-	}
 #if PLATFORM_DESKTOP
 	if (OpenGLExtensions::coreDirectStateAccess)
 		return GL_TRUE == glUnmapNamedBuffer(buffer);
 	else
 #endif
-		return GL_TRUE == glUnmapBuffer(target);
+	{
+		if (buffer != currentState) glBindBuffer(target, buffer);
+		bool ret = GL_TRUE == glUnmapBuffer(target);
+		if (buffer != currentState) glBindBuffer(target, currentState);
+		return ret;
+	}
 }
 //-----------------------------------------------------------------------------
 bool RenderSystem::UnmapBuffer(VertexBufferRef buffer)

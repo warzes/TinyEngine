@@ -32,5 +32,5 @@ public:
 	[[nodiscard]] static Plane CreateFromPointNormal(const glm::vec3& point, const glm::vec3& normal);
 
 	glm::vec3 normal = glm::vec3(0.0f); // Normal vector of the plane.
-	float distance = 0.0f; // Signed distance to the origin of the coordinate system.
+	float distance = 0.0f;              // Signed distance to the origin of the coordinate system.
 };
