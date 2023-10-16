@@ -56,26 +56,27 @@ public:
 	float shininess = 1.0f;
 };
 
-class VertexMesh final
+class StaticMeshVertex final
 {
 public:
-	bool operator==(const VertexMesh& v) const { return position == v.position && normal == v.normal && color == v.color && texCoord == v.texCoord; }
+	bool operator==(const StaticMeshVertex& v) const { return positions == v.positions && normals == v.normals && /*tangents == v.tangents &&*/ colors == v.colors && texCoords == v.texCoords; }
 
-	glm::vec3 position;
-	glm::vec3 normal;
-	glm::vec3 color;
-	glm::vec2 texCoord;
+	glm::vec3 positions;
+	glm::vec3 normals;
+	//glm::vec4 tangents;
+	glm::vec3 colors;
+	glm::vec2 texCoords;
 };
 
-class Mesh final
+class StaticMesh final
 {
 public:
-	Mesh() = default;
-	Mesh(Mesh&&) = default;
-	Mesh(const Mesh&) = delete;
-	~Mesh() = default;
-	Mesh& operator=(Mesh&&) = default;
-	Mesh& operator=(const Mesh&) = delete;
+	StaticMesh() = default;
+	StaticMesh(StaticMesh&&) = default;
+	StaticMesh(const StaticMesh&) = delete;
+	~StaticMesh() = default;
+	StaticMesh& operator=(StaticMesh&&) = default;
+	StaticMesh& operator=(const StaticMesh&) = delete;
 
 	glm::vec3 GetMeshPos() const { return globalAABB.GetCenter(); }
 	BoundingAABB GetLocalAABB() const
@@ -86,7 +87,7 @@ public:
 		return temp;
 	}
 
-	std::vector<VertexMesh> vertices;
+	std::vector<StaticMeshVertex> vertices;
 	std::vector<uint32_t> indices;
 	Material material;
 	std::string meshName;
@@ -97,18 +98,18 @@ public:
 	BoundingAABB globalAABB;
 };
 
-class Model final
+class StaticModel final
 {
 public:
-	Model() = default;
-	Model(Model&&) = default;
-	Model(const Model&) = delete;
-	~Model() = default;
-	Model& operator=(Model&&) = default;
-	Model& operator=(const Model&) = delete;
+	StaticModel() = default;
+	StaticModel(StaticModel&&) = default;
+	StaticModel(const StaticModel&) = delete;
+	~StaticModel() = default;
+	StaticModel& operator=(StaticModel&&) = default;
+	StaticModel& operator=(const StaticModel&) = delete;
 
-	std::vector<Mesh> subMeshes;
+	std::vector<StaticMesh> subMeshes;
 	// bouncing box
 	BoundingAABB aabb;
 };
-using ModelRef = std::shared_ptr<Model>;
+using StaticModelRef = std::shared_ptr<StaticModel>;

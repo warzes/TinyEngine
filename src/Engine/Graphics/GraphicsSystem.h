@@ -19,21 +19,21 @@ public:
 
 	RenderTargetRef CreateRenderTarget(uint16_t width, uint16_t height);
 
-	ModelRef CreateModel(const char* fileName, const char* pathMaterialFiles = "./");
-	ModelRef CreateModel(std::vector<Mesh>&& meshes);
+	StaticModelRef CreateModel(const char* fileName, const char* pathMaterialFiles = "./");
+	StaticModelRef CreateModel(std::vector<StaticMesh>&& meshes);
 
 	void ResizeRenderTarget(RenderTargetRef rt, uint16_t width, uint16_t height);
 
 	void BindRenderTarget(RenderTargetRef rt);
 	void BindRenderTargetAsTexture(RenderTargetRef rt, unsigned textureSlot);
 
-	void Draw(Mesh& subMesh);
-	void Draw(ModelRef model);
-	std::vector<glm::vec3> GetVertexInMesh(const Mesh& mesh) const;
-	std::vector<glm::vec3> GetVertexInModel(ModelRef model) const;
+	void Draw(StaticMesh& subMesh);
+	void Draw(StaticModelRef model);
+	std::vector<glm::vec3> GetVertexInMesh(const StaticMesh& mesh) const;
+	std::vector<glm::vec3> GetVertexInModel(StaticModelRef model) const;
 
-	TrianglesInfo GetTrianglesInMesh(const Mesh& mesh) const;
-	TrianglesInfo GetTrianglesInModel(ModelRef model) const;
+	TrianglesInfo GetTrianglesInMesh(const StaticMesh& mesh) const;
+	TrianglesInfo GetTrianglesInModel(StaticModelRef model) const;
 
 private:
 	GraphicsSystem(GraphicsSystem&&) = delete;
@@ -41,9 +41,9 @@ private:
 	GraphicsSystem& operator=(GraphicsSystem&&) = delete;
 	GraphicsSystem& operator=(const GraphicsSystem&) = delete;
 
-	ModelRef createMeshBuffer(std::vector<Mesh>&& meshes);
-	ModelRef loadObjFile(const char* fileName, const char* pathMaterialFiles = "./");
-	void computeSubMeshesAABB(std::vector<Mesh>& meshes);
+	StaticModelRef createMeshBuffer(std::vector<StaticMesh>&& meshes);
+	StaticModelRef loadObjFile(const char* fileName, const char* pathMaterialFiles = "./");
+	void computeSubMeshesAABB(std::vector<StaticMesh>& meshes);
 };
 
 GraphicsSystem& GetGraphicsSystem();

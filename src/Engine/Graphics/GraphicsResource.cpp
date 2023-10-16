@@ -6,11 +6,11 @@
 namespace std
 {
 	template <>
-	struct hash<VertexMesh>
+	struct hash<StaticMeshVertex>
 	{
-		size_t operator()(const VertexMesh& vertex) const
+		size_t operator()(const StaticMeshVertex& vertex) const
 		{
-			return ((hash<glm::vec3>()(vertex.position) ^ (hash<glm::vec2>()(vertex.texCoord) << 1)) >> 1);
+			return ((hash<glm::vec3>()(vertex.positions) ^ (hash<glm::vec2>()(vertex.texCoords) << 1)) >> 1);
 		}
 	};
 } // namespace std
@@ -40,7 +40,7 @@ RenderTargetRef GraphicsSystem::CreateRenderTarget(uint16_t width, uint16_t heig
 	return std::move(rt);
 }
 //-----------------------------------------------------------------------------
-ModelRef GraphicsSystem::CreateModel(const char* fileName, const char* pathMaterialFiles)
+StaticModelRef GraphicsSystem::CreateModel(const char* fileName, const char* pathMaterialFiles)
 {
 	// TODO: переделать сделав нормальное получение расшиерия
 	if (std::string(fileName).find(".obj") != std::string::npos)
@@ -49,12 +49,12 @@ ModelRef GraphicsSystem::CreateModel(const char* fileName, const char* pathMater
 	return {};
 }
 //-----------------------------------------------------------------------------
-ModelRef GraphicsSystem::CreateModel(std::vector<Mesh>&& meshes)
+StaticModelRef GraphicsSystem::CreateModel(std::vector<StaticMesh>&& meshes)
 {
 	return createMeshBuffer(std::move(meshes));
 }
 //-----------------------------------------------------------------------------
-void GraphicsSystem::Draw(Mesh& subMesh)
+void GraphicsSystem::Draw(StaticMesh& subMesh)
 {
 	auto& renderSystem = GetRenderSystem();
 	if(renderSystem.IsValid(subMesh.geometry) )
@@ -64,7 +64,7 @@ void GraphicsSystem::Draw(Mesh& subMesh)
 	}
 }
 //-----------------------------------------------------------------------------
-void GraphicsSystem::Draw(ModelRef model)
+void GraphicsSystem::Draw(StaticModelRef model)
 {
 	for (size_t i = 0; i < model->subMeshes.size(); i++)
 	{
@@ -72,17 +72,17 @@ void GraphicsSystem::Draw(ModelRef model)
 	}
 }
 //-----------------------------------------------------------------------------
-std::vector<glm::vec3> GraphicsSystem::GetVertexInMesh(const Mesh& mesh) const
+std::vector<glm::vec3> GraphicsSystem::GetVertexInMesh(const StaticMesh& mesh) const
 {
 	std::vector<glm::vec3> v;
 	v.reserve(mesh.indices.size());
 	// востановление треугольников по индексному буферу
 	for (size_t i = 0; i < mesh.indices.size(); i++)
-		v.push_back(mesh.vertices[mesh.indices[i]].position);
+		v.push_back(mesh.vertices[mesh.indices[i]].positions);
 	return v;
 }
 //-----------------------------------------------------------------------------
-std::vector<glm::vec3> GraphicsSystem::GetVertexInModel(ModelRef model) const
+std::vector<glm::vec3> GraphicsSystem::GetVertexInModel(StaticModelRef model) const
 {
 	std::vector<glm::vec3> v;
 	for (size_t i = 0; i < model->subMeshes.size(); i++)
@@ -94,17 +94,17 @@ std::vector<glm::vec3> GraphicsSystem::GetVertexInModel(ModelRef model) const
 	return v;
 }
 //-----------------------------------------------------------------------------
-TrianglesInfo GraphicsSystem::GetTrianglesInMesh(const Mesh& mesh) const
+TrianglesInfo GraphicsSystem::GetTrianglesInMesh(const StaticMesh& mesh) const
 {
 	TrianglesInfo info;
 	info.vertices.resize(mesh.vertices.size());
 	for (size_t i = 0; i < mesh.vertices.size(); i++)
-		info.vertices[i] = mesh.vertices[i].position;
+		info.vertices[i] = mesh.vertices[i].positions;
 	info.indexes = mesh.indices;
 	return info;
 }
 //-----------------------------------------------------------------------------
-TrianglesInfo GraphicsSystem::GetTrianglesInModel(ModelRef model) const
+TrianglesInfo GraphicsSystem::GetTrianglesInModel(StaticModelRef model) const
 {
 	TrianglesInfo info;
 	unsigned prevIndex = 0;
@@ -123,17 +123,17 @@ TrianglesInfo GraphicsSystem::GetTrianglesInModel(ModelRef model) const
 	return info;
 }
 //-----------------------------------------------------------------------------
-ModelRef GraphicsSystem::createMeshBuffer(std::vector<Mesh>&& meshes)
+StaticModelRef GraphicsSystem::createMeshBuffer(std::vector<StaticMesh>&& meshes)
 {
 	const std::vector<VertexAttribute> formatVertex =
 	{
-		{.location = 0, .size = 3, .normalized = false, .stride = sizeof(VertexMesh), .offset = (void*)offsetof(VertexMesh, position)},
-		{.location = 1, .size = 3, .normalized = false, .stride = sizeof(VertexMesh), .offset = (void*)offsetof(VertexMesh, normal)},
-		{.location = 2, .size = 3, .normalized = false, .stride = sizeof(VertexMesh), .offset = (void*)offsetof(VertexMesh, color)},
-		{.location = 3, .size = 2, .normalized = false, .stride = sizeof(VertexMesh), .offset = (void*)offsetof(VertexMesh, texCoord)}
+		{.location = 0, .size = 3, .normalized = false, .stride = sizeof(StaticMeshVertex), .offset = (void*)offsetof(StaticMeshVertex, positions)},
+		{.location = 1, .size = 3, .normalized = false, .stride = sizeof(StaticMeshVertex), .offset = (void*)offsetof(StaticMeshVertex, normals)},
+		{.location = 2, .size = 3, .normalized = false, .stride = sizeof(StaticMeshVertex), .offset = (void*)offsetof(StaticMeshVertex, colors)},
+		{.location = 3, .size = 2, .normalized = false, .stride = sizeof(StaticMeshVertex), .offset = (void*)offsetof(StaticMeshVertex, texCoords)}
 	};
 
-	ModelRef model(new Model());
+	StaticModelRef model(new StaticModel());
 	model->subMeshes = std::move(meshes);
 	model->aabb.min = model->subMeshes[0].globalAABB.min;
 	model->aabb.max = model->subMeshes[0].globalAABB.max;
@@ -154,7 +154,7 @@ ModelRef GraphicsSystem::createMeshBuffer(std::vector<Mesh>&& meshes)
 	return model;
 }
 //-----------------------------------------------------------------------------
-ModelRef GraphicsSystem::loadObjFile(const char* fileName, const char* pathMaterialFiles)
+StaticModelRef GraphicsSystem::loadObjFile(const char* fileName, const char* pathMaterialFiles)
 {
 	tinyobj::ObjReaderConfig readerConfig;
 	readerConfig.mtl_search_path = pathMaterialFiles; // Path to material files
@@ -174,7 +174,7 @@ ModelRef GraphicsSystem::loadObjFile(const char* fileName, const char* pathMater
 	auto& materials = reader.GetMaterials();
 	const bool isFindMaterials = !materials.empty();
 
-	std::vector<Mesh> meshes(shapes.size());
+	std::vector<StaticMesh> meshes(shapes.size());
 	std::vector<int> materialIds(shapes.size());
 
 	// Loop over shapes
@@ -182,7 +182,7 @@ ModelRef GraphicsSystem::loadObjFile(const char* fileName, const char* pathMater
 	{
 		meshes[shapeId].meshName = shapes[shapeId].name;
 
-		std::unordered_map<VertexMesh, uint32_t> uniqueVertices;
+		std::unordered_map<StaticMeshVertex, uint32_t> uniqueVertices;
 
 		// Loop over faces(polygon)
 		size_t index_offset = 0;
@@ -230,11 +230,11 @@ ModelRef GraphicsSystem::loadObjFile(const char* fileName, const char* pathMater
 				const tinyobj::real_t g = attributes.colors[3 * size_t(idx.vertex_index) + 1];
 				const tinyobj::real_t b = attributes.colors[3 * size_t(idx.vertex_index) + 2];
 
-				VertexMesh vertex = {
-					.position = { vx, vy, vz },
-					.normal = { nx, ny, nz },
-					.color = { r, g, b },
-					.texCoord = { tx,ty }
+				StaticMeshVertex vertex = {
+					.positions = { vx, vy, vz },
+					.normals = { nx, ny, nz },
+					.colors = { r, g, b },
+					.texCoords = { tx,ty }
 				};
 
 				if (uniqueVertices.count(vertex) == 0)
@@ -270,13 +270,13 @@ ModelRef GraphicsSystem::loadObjFile(const char* fileName, const char* pathMater
 	return createMeshBuffer(std::move(meshes));
 }
 //-----------------------------------------------------------------------------
-void GraphicsSystem::computeSubMeshesAABB(std::vector<Mesh>& meshes)
+void GraphicsSystem::computeSubMeshesAABB(std::vector<StaticMesh>& meshes)
 {
 	for( size_t i = 0; i < meshes.size(); i++ )
 	{
 		for( size_t j = 0; j < meshes[i].vertices.size(); j++ )
 		{
-			meshes[i].globalAABB.Insert(meshes[i].vertices[j].position);
+			meshes[i].globalAABB.Insert(meshes[i].vertices[j].positions);
 		}
 	}
 }
