@@ -2,6 +2,7 @@
 
 #include "GeometryCore.h"
 
+// Infinite straight line in three-dimensional space.
 class Ray final
 {
 public:
@@ -13,6 +14,9 @@ public:
 
 	bool operator==(const Ray& rhs) const noexcept { return position == rhs.position && direction == rhs.direction; }
 	bool operator!=(const Ray& rhs) const noexcept { return position != rhs.position || direction != rhs.direction; }
+
+	// Return closest point to another ray.
+	[[nodiscard]] glm::vec3 ClosestPoint(const Ray& ray) const;
 
 	[[nodiscard]] std::optional<float> Intersects(const BoundingAABB& box) const noexcept;
 	[[nodiscard]] std::optional<float> Intersects(const BoundingFrustum& frustum) const noexcept;

@@ -6,20 +6,41 @@
 #include "Plane.h"
 #include "Core/Math/MathCoreFunc.h"
 //-----------------------------------------------------------------------------
+glm::vec3 Ray::ClosestPoint(const Ray& ray) const
+{
+	// Algorithm based on http://paulbourke.net/geometry/lineline3d/
+	const glm::vec3 p13 = position - ray.position;
+	const glm::vec3 p43 = ray.direction;
+	const glm::vec3 p21 = direction;
+
+	const float d1343 = glm::dot(p13, p43);
+	const float d4321 = glm::dot(p43, p21);
+	const float d1321 = glm::dot(p13, p21);
+	const float d4343 = glm::dot(p43, p43);
+	const float d2121 = glm::dot(p21, p21);
+
+	const float d = d2121 * d4343 - d4321 * d4321;
+	if (glm::abs(d) < EPSILON)
+		return position;
+	const float n = d1343 * d4321 - d1321 * d4343;
+	const float a = n / d;
+
+	return position + a * direction;
+}
+//-----------------------------------------------------------------------------
 std::optional<float> Ray::Intersects(const BoundingAABB& box) const noexcept
 {
 	using T = float;
 
 	constexpr auto PositiveInfinity = std::numeric_limits<T>::max();
 	constexpr auto NegativeInfinity = std::numeric_limits<T>::lowest();
-	constexpr auto Epsilon = std::numeric_limits<T>::epsilon();
 
 	auto& ray = *this;
 
 	auto tNear = NegativeInfinity;
 	auto tFar = PositiveInfinity;
 
-	if( std::abs(ray.direction.x) < Epsilon )
+	if( std::abs(ray.direction.x) < EPSILON)
 	{
 		if( (ray.position.x < box.min.x) || (ray.position.x > box.max.x) )
 		{
@@ -48,7 +69,7 @@ std::optional<float> Ray::Intersects(const BoundingAABB& box) const noexcept
 		}
 	}
 
-	if( std::abs(ray.direction.y) < Epsilon )
+	if( std::abs(ray.direction.y) < EPSILON)
 	{
 		if( (ray.position.y < box.min.y) || (ray.position.y > box.max.y) )
 		{
@@ -79,7 +100,7 @@ std::optional<float> Ray::Intersects(const BoundingAABB& box) const noexcept
 		}
 	}
 
-	if( std::abs(ray.direction.z) < Epsilon )
+	if( std::abs(ray.direction.z) < EPSILON)
 	{
 		if( (ray.position.z < box.min.z) || (ray.position.z > box.max.z) )
 		{
@@ -146,20 +167,15 @@ std::optional<float> Ray::Intersects(const BoundingSphere& sphere) const noexcep
 //-----------------------------------------------------------------------------
 std::optional<float> Ray::Intersects(const Plane& plane) const noexcept
 {
-	constexpr auto Epsilon = 1e-6f;
-
 	const auto denom = glm::dot(plane.normal, direction);
-	if( std::abs(denom) < Epsilon )
-	{
+	if( std::abs(denom) < EPSILON)
 		return std::nullopt;
-	}
 
 	const auto dot = glm::dot(plane.normal, position) + plane.distance;
 	const auto distance = -dot / denom;
 	if( distance < 0.0f )
-	{
 		return std::nullopt;
-	}
+
 	return distance;
 }
 //-----------------------------------------------------------------------------

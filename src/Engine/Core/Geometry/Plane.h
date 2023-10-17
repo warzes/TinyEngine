@@ -2,16 +2,24 @@
 
 #include "GeometryCore.h"
 
+// Surface in three-dimensional space.
 class Plane final
 {
 public:
+	// Plane at origin with normal pointing up.
+	static const Plane Up;
+
 	Plane() = default;
 	Plane(const Plane&) noexcept = default;
 	Plane(const glm::vec3& normal, float distance) noexcept : normal(normal), distance(distance) {}
+	Plane(const glm::vec3& normal, const glm::vec3& point) noexcept;
 	Plane(const glm::vec3& point0, const glm::vec3& point1, const glm::vec3& point2) noexcept;
 	Plane(const Triangle& tri) noexcept;
+	Plane(const glm::vec4& plane) noexcept;
 
 	Plane& operator=(const Plane&) noexcept = default;
+
+	[[nodiscard]] glm::vec4 ToVector4() const noexcept { return glm::vec4(normal, distance); }
 
 	void Normalize() noexcept;
 	[[nodiscard]] static Plane Normalize(const Plane& plane) noexcept;
@@ -20,7 +28,14 @@ public:
 	[[nodiscard]] float DotCoordinate(const glm::vec3& vec) const noexcept;
 	[[nodiscard]] float DotNormal(const glm::vec3& vec) const noexcept;
 
+	// Project a point on the plane.
+	[[nodiscard]] glm::vec3 Project(const glm::vec3& point) const noexcept;
+
+	// Return signed distance to a point.
 	[[nodiscard]] float GetDistanceToPoint(const glm::vec3& point) const noexcept;
+
+	// Reflect a normalized direction vector.
+	[[nodiscard]] glm::vec3 Reflect(const glm::vec3& direction) const noexcept;
 
 	[[nodiscard]] PlaneIntersectionType Intersects(const glm::vec3& point) const noexcept;
 	[[nodiscard]] PlaneIntersectionType Intersects(const BoundingAABB& aabb) const noexcept;
