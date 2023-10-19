@@ -101,10 +101,13 @@
     <ClCompile Include="Core\Geometry\Collisions.cpp" />
     <ClCompile Include="Core\Geometry\Intersect.cpp" />
     <ClCompile Include="Core\Geometry\Plane.cpp" />
+    <ClCompile Include="Core\Geometry\Polyhedron.cpp" />
     <ClCompile Include="Core\Geometry\Ray.cpp" />
+    <ClCompile Include="Core\Geometry\Rect.cpp" />
     <ClCompile Include="Core\Geometry\Triangle.cpp" />
     <ClCompile Include="Core\IO\FileSystem.cpp" />
     <ClCompile Include="Core\IO\ImageLoader.cpp" />
+    <ClCompile Include="Core\IO\Serializable.cpp" />
     <ClCompile Include="Core\Logging\Log.cpp" />
     <ClCompile Include="Core\Logging\LogSystem.cpp" />
     <ClCompile Include="EngineApp\EngineDevice.cpp" />
@@ -124,6 +127,7 @@
     <ClCompile Include="RenderAPI\RenderSystem_Buffer.cpp" />
     <ClCompile Include="RenderAPI\RenderSystem_Shader.cpp" />
     <ClCompile Include="RenderAPI\RenderSystem_State.cpp" />
+    <ClCompile Include="Scene\Node.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -144,11 +148,14 @@
     <ClInclude Include="Core\Geometry\GJK.h" />
     <ClInclude Include="Core\Geometry\Intersect.h" />
     <ClInclude Include="Core\Geometry\Plane.h" />
+    <ClInclude Include="Core\Geometry\Polyhedron.h" />
     <ClInclude Include="Core\Geometry\Ray.h" />
+    <ClInclude Include="Core\Geometry\Rect.h" />
     <ClInclude Include="Core\Geometry\Temp.h" />
     <ClInclude Include="Core\Geometry\Triangle.h" />
     <ClInclude Include="Core\IO\FileSystem.h" />
     <ClInclude Include="Core\IO\ImageLoader.h" />
+    <ClInclude Include="Core\IO\Serializable.h" />
     <ClInclude Include="Core\Logging\Log.h" />
     <ClInclude Include="Core\Logging\LogSystem.h" />
     <ClInclude Include="Core\Math\Color.h" />
@@ -172,6 +179,7 @@
     <ClInclude Include="RenderAPI\RenderEnums.h" />
     <ClInclude Include="RenderAPI\RenderResource.h" />
     <ClInclude Include="RenderAPI\RenderSystem.h" />
+    <ClInclude Include="Scene\Node.h" />
     <ClInclude Include="TinyEngine.h" />
     <ClInclude Include="EngineConfiguration.h" />
     <ClInclude Include="stdafx.h" />

@@ -8,7 +8,7 @@ public:
 	BoundingSphere() = default;
 	BoundingSphere(const BoundingSphere&) noexcept = default;
 	BoundingSphere(float x, float y, float z, float radiusSphere) : center({x, y, z}), radius(radiusSphere) {}
-	BoundingSphere(const glm::vec3& positionCenter, float radiusSphere) : center(positionCenter), radius(radiusSphere) {}
+	BoundingSphere(const glm::vec3& positionSphere, float radiusSphere) : center(positionSphere), radius(radiusSphere) {}
 
 	BoundingSphere& operator=(const BoundingSphere&) noexcept = default;
 

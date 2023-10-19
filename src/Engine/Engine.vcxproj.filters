@@ -92,6 +92,18 @@
     <ClCompile Include="RenderAPI\RenderSystem_State.cpp">
       <Filter>RenderAPI</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Geometry\Rect.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\Polyhedron.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Node.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\IO\Serializable.cpp">
+      <Filter>Core\IO</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -223,6 +235,18 @@
     <ClInclude Include="RenderAPI\OpenGLTranslateToGL.h">
       <Filter>RenderAPI</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Geometry\Rect.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Polyhedron.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Node.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IO\Serializable.h">
+      <Filter>Core\IO</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -278,6 +302,9 @@
     </Filter>
     <Filter Include="Core\Pattern">
       <UniqueIdentifier>{4752e7b3-adeb-471e-b109-21a7f25ae89e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{fb90c67e-42ef-4cfe-92fa-7b0f4fedb094}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
