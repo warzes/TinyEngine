@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/IO/Serializable.h"
+#include "Core/Object/Serializable.h"
 
 class Node;
 class Octree;

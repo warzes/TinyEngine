@@ -36,6 +36,7 @@
 #include <vector>
 #include <unordered_map>
 #include <span>
+#include <set>
 
 #if PLATFORM_DESKTOP
 #	include <glad/gl.h>

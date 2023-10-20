@@ -52,3 +52,12 @@ inline constexpr glm::vec3 RGBToVec(unsigned rgb)
 {
 	return { (float)((rgb >> 16) & 255) / 255.f, (float)((rgb >> 8) & 255) / 255.f, (float)((rgb >> 0) & 255) / 255.f };
 }
+
+class ColorF
+{
+public:
+	float r;
+	float g;
+	float b;
+	float a;
+};

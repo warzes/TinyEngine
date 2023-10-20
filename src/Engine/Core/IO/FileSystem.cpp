@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "FileSystem.h"
 #include "Core/Logging/Log.h"
+#include "Core/Utilities/StringUtilities.h"
 //-----------------------------------------------------------------------------
 bool FileSystem::Exists(const std::string& path) noexcept
 {
@@ -85,5 +86,14 @@ std::string FileSystem::GetFileName(std::string_view filePath)
 	if (fileNamePos == std::string::npos)
 		return std::string(filePath);
 	return std::string(filePath.substr(fileNamePos + 1));
+}
+//-----------------------------------------------------------------------------
+std::string FileSystem::NativePath(const std::string& pathName)
+{
+	std::string ret(pathName);
+#if defined(_WIN32)
+	StringUtils::ReplaceInPlace(ret, '/', '\\');
+#endif
+	return ret;
 }
 //-----------------------------------------------------------------------------

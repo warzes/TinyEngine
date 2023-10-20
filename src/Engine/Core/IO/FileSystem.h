@@ -16,4 +16,7 @@ namespace FileSystem
 	[[nodiscard]] const char* GetFileExtension(const char* fileName);
 	// Get pointer to filename for a path string
 	[[nodiscard]] std::string GetFileName(std::string_view filePath);
+
+	// Convert a path to the format required by the operating system.
+	[[nodiscard]] std::string NativePath(const std::string& pathName);
 }

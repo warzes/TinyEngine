@@ -101,8 +101,44 @@
     <ClCompile Include="Scene\Node.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Core\IO\Serializable.cpp">
+    <ClCompile Include="Core\Utilities\StringUtilities.cpp">
+      <Filter>Core\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\IO\StringHash.cpp">
       <Filter>Core\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\IO\Stream.cpp">
+      <Filter>Core\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\IO\JSONValue.cpp">
+      <Filter>Core\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\IO\ResourceRef.cpp">
+      <Filter>Core\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Object\Object.cpp">
+      <Filter>Core\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\IO\File.cpp">
+      <Filter>Core\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Object\Serializable.cpp">
+      <Filter>Core\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Object\Allocator.cpp">
+      <Filter>Core\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Object\Ptr.cpp">
+      <Filter>Core\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Object\Event.cpp">
+      <Filter>Core\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Object\Attribute.cpp">
+      <Filter>Core\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\IntBox.cpp">
+      <Filter>Core\Geometry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -244,8 +280,50 @@
     <ClInclude Include="Scene\Node.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Core\IO\Serializable.h">
+    <ClInclude Include="Core\Utilities\StringUtilities.h">
+      <Filter>Core\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IO\StringHash.h">
       <Filter>Core\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IO\Stream.h">
+      <Filter>Core\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IO\JSONValue.h">
+      <Filter>Core\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IO\ResourceRef.h">
+      <Filter>Core\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IO\ObjectRef.h">
+      <Filter>Core\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Object\Object.h">
+      <Filter>Core\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Object\AutoPtr.h">
+      <Filter>Core\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IO\File.h">
+      <Filter>Core\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Object\Serializable.h">
+      <Filter>Core\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Object\Allocator.h">
+      <Filter>Core\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Object\Ptr.h">
+      <Filter>Core\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Object\Event.h">
+      <Filter>Core\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Object\Attribute.h">
+      <Filter>Core\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\IntBox.h">
+      <Filter>Core\Geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -305,6 +383,9 @@
     </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{fb90c67e-42ef-4cfe-92fa-7b0f4fedb094}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Object">
+      <UniqueIdentifier>{354e2f57-fd10-4543-804e-14af23b84841}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
