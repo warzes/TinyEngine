@@ -154,19 +154,19 @@ void Attribute::FromJSON(AttributeType type, void* dest, const JSONValue& source
 		break;
 
 	case ATTR_INTVECTOR2:
-		reinterpret_cast<IntVector2*>(dest)->FromString(source.GetString());
+		StringUtils::FromString(*(reinterpret_cast<glm::ivec2*>(dest)), source.GetString().c_str());
 		break;
 
 	case ATTR_INTVECTOR3:
-		reinterpret_cast<IntVector3*>(dest)->FromString(source.GetString());
+		StringUtils::FromString(*(reinterpret_cast<glm::ivec3*>(dest)), source.GetString().c_str());
 		break;
 
 	case ATTR_INTRECT:
-		reinterpret_cast<IntRect*>(dest)->FromString(source.GetString());
+		StringUtils::FromString(*(reinterpret_cast<IntRect*>(dest)), source.GetString().c_str());
 		break;
 
 	case ATTR_INTBOX:
-		reinterpret_cast<IntBox*>(dest)->FromString(source.GetString());
+		StringUtils::FromString(*(reinterpret_cast<IntBox*>(dest)), source.GetString().c_str());
 		break;
 
 	case ATTR_FLOAT:
@@ -174,43 +174,43 @@ void Attribute::FromJSON(AttributeType type, void* dest, const JSONValue& source
 		break;
 
 	case ATTR_VECTOR2:
-		reinterpret_cast<Vector2*>(dest)->FromString(source.GetString());
+		StringUtils::FromString(*(reinterpret_cast<glm::vec2*>(dest)), source.GetString().c_str());
 		break;
 
 	case ATTR_VECTOR3:
-		reinterpret_cast<Vector3*>(dest)->FromString(source.GetString());
+		StringUtils::FromString(*(reinterpret_cast<glm::vec3*>(dest)), source.GetString().c_str());
 		break;
 
 	case ATTR_VECTOR4:
-		reinterpret_cast<Vector4*>(dest)->FromString(source.GetString());
+		StringUtils::FromString(*(reinterpret_cast<glm::vec4*>(dest)), source.GetString().c_str());
 		break;
 
 	case ATTR_QUATERNION:
-		reinterpret_cast<Quaternion*>(dest)->FromString(source.GetString());
+		StringUtils::FromString(*(reinterpret_cast<glm::quat*>(dest)), source.GetString().c_str());
 		break;
 
 	case ATTR_COLOR:
-		reinterpret_cast<Color*>(dest)->FromString(source.GetString());
+		StringUtils::FromString(*(reinterpret_cast<ColorF*>(dest)), source.GetString().c_str());
 		break;
 
 	case ATTR_RECT:
-		reinterpret_cast<Rect*>(dest)->FromString(source.GetString());
+		StringUtils::FromString(*(reinterpret_cast<Rect*>(dest)), source.GetString().c_str());
 		break;
 
 	case ATTR_BOUNDINGBOX:
-		reinterpret_cast<BoundingBox*>(dest)->FromString(source.GetString());
+		StringUtils::FromString(*(reinterpret_cast<BoundingAABB*>(dest)), source.GetString().c_str());
 		break;
 
 	case ATTR_MATRIX3:
-		reinterpret_cast<Matrix3*>(dest)->FromString(source.GetString());
+		StringUtils::FromString(*(reinterpret_cast<glm::mat3*>(dest)), source.GetString().c_str());
 		break;
 
 	case ATTR_MATRIX3X4:
-		reinterpret_cast<Matrix3x4*>(dest)->FromString(source.GetString());
+		StringUtils::FromString(*(reinterpret_cast<glm::mat3x4*>(dest)), source.GetString().c_str());
 		break;
 
 	case ATTR_MATRIX4:
-		reinterpret_cast<Matrix4*>(dest)->FromString(source.GetString());
+		StringUtils::FromString(*(reinterpret_cast<glm::mat4*>(dest)), source.GetString().c_str());
 		break;
 
 	case ATTR_STRING:
@@ -259,19 +259,19 @@ void Attribute::ToJSON(AttributeType type, JSONValue& dest, const void* source)
 		break;
 
 	case ATTR_INTVECTOR2:
-		dest = reinterpret_cast<const IntVector2*>(source)->ToString();
+		dest = StringUtils::ToString(*(reinterpret_cast<const glm::ivec2*>(source)));
 		break;
 
 	case ATTR_INTVECTOR3:
-		dest = reinterpret_cast<const IntVector3*>(source)->ToString();
+		dest = StringUtils::ToString(*(reinterpret_cast<const glm::ivec3*>(source)));
 		break;
 
 	case ATTR_INTRECT:
-		dest = reinterpret_cast<const IntRect*>(source)->ToString();
+		dest = StringUtils::ToString(*(reinterpret_cast<const IntRect*>(source)));
 		break;
 
 	case ATTR_INTBOX:
-		dest = reinterpret_cast<const IntBox*>(source)->ToString();
+		dest = StringUtils::ToString(*(reinterpret_cast<const IntBox*>(source)));
 		break;
 
 	case ATTR_FLOAT:
@@ -279,43 +279,43 @@ void Attribute::ToJSON(AttributeType type, JSONValue& dest, const void* source)
 		break;
 
 	case ATTR_VECTOR2:
-		dest = reinterpret_cast<const Vector2*>(source)->ToString();
+		dest = StringUtils::ToString(*(reinterpret_cast<const glm::vec2*>(source)));
 		break;
 
 	case ATTR_VECTOR3:
-		dest = reinterpret_cast<const Vector3*>(source)->ToString();
+		dest = StringUtils::ToString(*(reinterpret_cast<const glm::vec3*>(source)));
 		break;
 
 	case ATTR_VECTOR4:
-		dest = reinterpret_cast<const Vector4*>(source)->ToString();
+		dest = StringUtils::ToString(*(reinterpret_cast<const glm::vec4*>(source)));
 		break;
 
 	case ATTR_QUATERNION:
-		dest = reinterpret_cast<const Quaternion*>(source)->ToString();
+		dest = StringUtils::ToString(*(reinterpret_cast<const glm::quat*>(source)));
 		break;
 
 	case ATTR_COLOR:
-		dest = reinterpret_cast<const Color*>(source)->ToString();
+		dest = StringUtils::ToString(*(reinterpret_cast<const ColorF*>(source)));
 		break;
 
 	case ATTR_RECT:
-		dest = reinterpret_cast<const Rect*>(source)->ToString();
+		dest = StringUtils::ToString(*(reinterpret_cast<const Rect*>(source)));
 		break;
 
 	case ATTR_BOUNDINGBOX:
-		dest = reinterpret_cast<const BoundingBox*>(source)->ToString();
+		dest = StringUtils::ToString(*(reinterpret_cast<const BoundingAABB*>(source)));
 		break;
 
 	case ATTR_MATRIX3:
-		dest = reinterpret_cast<const glm::mat3*>(source)->ToString();
+		dest = StringUtils::ToString(*(reinterpret_cast<const glm::mat3*>(source)));
 		break;
 
 	case ATTR_MATRIX3X4:
-		dest = reinterpret_cast<const Matrix3x4*>(source)->ToString();
+		dest = StringUtils::ToString(*(reinterpret_cast<const glm::mat3x4*>(source)));
 		break;
 
 	case ATTR_MATRIX4:
-		dest = reinterpret_cast<const glm::mat4*>(source)->ToString();
+		dest = StringUtils::ToString(*(reinterpret_cast<const glm::mat4*>(source)));
 		break;
 
 	case ATTR_STRING:
@@ -423,7 +423,7 @@ template<> AttributeType AttributeImpl<glm::quat>::Type() const
 	return ATTR_QUATERNION;
 }
 
-template<> AttributeType AttributeImpl<Color>::Type() const
+template<> AttributeType AttributeImpl<ColorF>::Type() const
 {
 	return ATTR_COLOR;
 }

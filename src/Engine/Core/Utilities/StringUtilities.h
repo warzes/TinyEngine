@@ -49,6 +49,7 @@ namespace StringUtils
 	bool FromString(glm::vec4& out, const char* string);
 	bool FromString(glm::ivec2& out, const char* string);
 	bool FromString(glm::ivec3& out, const char* string);
+	bool FromString(glm::quat& out, const char* string);
 	bool FromString(glm::mat3& out, const char* string);
 	bool FromString(glm::mat3x4& out, const char* string);
 	bool FromString(glm::mat4& out, const char* string);
@@ -58,6 +59,7 @@ namespace StringUtils
 	std::string ToString(const glm::vec4& in);
 	std::string ToString(const glm::ivec2& in);
 	std::string ToString(const glm::ivec3& in);
+	std::string ToString(const glm::quat& in);
 	std::string ToString(const glm::mat3& in);
 	std::string ToString(const glm::mat3x4& in);
 	std::string ToString(const glm::mat4& in);

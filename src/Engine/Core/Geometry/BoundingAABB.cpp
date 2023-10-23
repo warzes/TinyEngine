@@ -4,6 +4,7 @@
 #include "BoundingSphere.h"
 #include "Ray.h"
 #include "Core/Math/MathCoreFunc.h"
+#include "Core/Utilities/StringUtilities.h"
 //-----------------------------------------------------------------------------
 void BoundingAABB::Insert(const glm::vec3& point) noexcept
 {
@@ -105,5 +106,27 @@ std::array<glm::vec3, BoundingAABB::CornerCount> BoundingAABB::GetCorners() cons
 			{ max.x, min.y, min.z },
 			{ min.x, min.y, min.z },
 		}};
+}
+//-----------------------------------------------------------------------------
+bool StringUtils::FromString(BoundingAABB& out, const char* string)
+{
+	size_t elements = CountElements(string);
+	if (elements < 6)
+		return false;
+
+	char* ptr = const_cast<char*>(string);
+	out.min.x = (float)strtod(ptr, &ptr);
+	out.min.y = (float)strtod(ptr, &ptr);
+	out.min.z = (float)strtod(ptr, &ptr);
+	out.max.x = (float)strtod(ptr, &ptr);
+	out.max.y = (float)strtod(ptr, &ptr);
+	out.max.z = (float)strtod(ptr, &ptr);
+
+	return true;
+}
+//-----------------------------------------------------------------------------
+std::string StringUtils::ToString(const BoundingAABB& in)
+{
+	return ToString(in.min) + " " + ToString(in.max);
 }
 //-----------------------------------------------------------------------------

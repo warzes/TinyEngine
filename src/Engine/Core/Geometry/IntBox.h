@@ -4,16 +4,25 @@
 class IntBox
 {
 public:
-	/// Left coordinate.
+	bool operator==(const IntBox& rhs) const { return left == rhs.left && top == rhs.top && right == rhs.right && bottom == rhs.bottom && near == rhs.near && far == rhs.far; }
+	bool operator!=(const IntBox& rhs) const { return !(*this == rhs); }
+
+	// Left coordinate.
 	int left;
-	/// Top coordinate.
+	// Top coordinate.
 	int top;
-	/// Near coordinate.
+	// Near coordinate.
 	int near;
-	/// Right coordinate.
+	// Right coordinate.
 	int right;
-	/// Bottom coordinate.
+	// Bottom coordinate.
 	int bottom;
-	/// Far coordinate.
+	// Far coordinate.
 	int far;
 };
+
+namespace StringUtils
+{
+	bool FromString(IntBox& out, const char* string);
+	std::string ToString(const IntBox& in);
+}

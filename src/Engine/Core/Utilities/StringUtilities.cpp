@@ -252,68 +252,224 @@ size_t StringUtils::ListIndex(const char* string, const char** strings, size_t d
 
 	return defaultIndex;
 }
+//-----------------------------------------------------------------------------
 bool StringUtils::FromString(glm::vec2& out, const char* string)
 {
-	return false;
+	size_t elements = CountElements(string);
+	if (elements < 2)
+		return false;
+
+	char* ptr = const_cast<char*>(string);
+	out.x = (float)strtod(ptr, &ptr);
+	out.y = (float)strtod(ptr, &ptr);
+
+	return true;
 }
+//-----------------------------------------------------------------------------
 bool StringUtils::FromString(glm::vec3& out, const char* string)
 {
-	return false;
+	size_t elements = CountElements(string);
+	if (elements < 3)
+		return false;
+
+	char* ptr = const_cast<char*>(string);
+	out.x = (float)strtod(ptr, &ptr);
+	out.y = (float)strtod(ptr, &ptr);
+	out.z = (float)strtod(ptr, &ptr);
+
+	return true;
 }
+//-----------------------------------------------------------------------------
 bool StringUtils::FromString(glm::vec4& out, const char* string)
 {
-	return false;
+	size_t elements = CountElements(string);
+	if (elements < 4)
+		return false;
+
+	char* ptr = const_cast<char*>(string);
+	out.x = (float)strtod(ptr, &ptr);
+	out.y = (float)strtod(ptr, &ptr);
+	out.z = (float)strtod(ptr, &ptr);
+	out.w = (float)strtod(ptr, &ptr);
+
+	return true;
 }
+//-----------------------------------------------------------------------------
 bool StringUtils::FromString(glm::ivec2& out, const char* string)
 {
-	return false;
+	const size_t elements = CountElements(string);
+	if (elements < 2)
+		return false;
+
+	char* ptr = const_cast<char*>(string);
+	out.x = strtol(ptr, &ptr, 10);
+	out.y = strtol(ptr, &ptr, 10);
+
+	return true;
 }
+//-----------------------------------------------------------------------------
 bool StringUtils::FromString(glm::ivec3& out, const char* string)
 {
-	return false;
+	size_t elements = CountElements(string, ' ');
+	if (elements < 3)
+		return false;
+
+	char* ptr = const_cast<char*>(string);
+	out.x = strtol(ptr, &ptr, 10);
+	out.y = strtol(ptr, &ptr, 10);
+	out.z = strtol(ptr, &ptr, 10);
+
+	return true;
 }
+//-----------------------------------------------------------------------------
+bool StringUtils::FromString(glm::quat& out, const char* string)
+{
+	size_t elements = CountElements(string);
+	if (elements < 3)
+		return false;
+
+	char* ptr = const_cast<char*>(string);
+	if (elements >= 4)
+	{
+		out.w = (float)strtod(ptr, &ptr);
+		out.x = (float)strtod(ptr, &ptr);
+		out.y = (float)strtod(ptr, &ptr);
+		out.z = (float)strtod(ptr, &ptr);
+	}
+	else
+	{
+		float x, y, z;
+		x = (float)strtod(ptr, &ptr);
+		y = (float)strtod(ptr, &ptr);
+		z = (float)strtod(ptr, &ptr);
+		out = glm::quat(glm::vec3(x, y, z));
+	}
+
+	return true;
+}
+//-----------------------------------------------------------------------------
 bool StringUtils::FromString(glm::mat3& out, const char* string)
 {
-	return false;
+	size_t elements = CountElements(string);
+	if (elements < 9)
+		return false;
+
+	char* ptr = const_cast<char*>(string);
+	out[0][0] = (float)strtod(ptr, &ptr);
+	out[0][1] = (float)strtod(ptr, &ptr);
+	out[0][2] = (float)strtod(ptr, &ptr);
+	out[1][0] = (float)strtod(ptr, &ptr);
+	out[1][1] = (float)strtod(ptr, &ptr);
+	out[1][2] = (float)strtod(ptr, &ptr);
+	out[2][0] = (float)strtod(ptr, &ptr);
+	out[2][1] = (float)strtod(ptr, &ptr);
+	out[2][2] = (float)strtod(ptr, &ptr);
+
+	return true;
 }
+//-----------------------------------------------------------------------------
 bool StringUtils::FromString(glm::mat3x4& out, const char* string)
 {
-	return false;
+	size_t elements = CountElements(string);
+	if (elements < 12)
+		return false;
+
+	char* ptr = const_cast<char*>(string);
+	out[0][0] = (float)strtod(ptr, &ptr);
+	out[0][1] = (float)strtod(ptr, &ptr);
+	out[0][2] = (float)strtod(ptr, &ptr);
+	out[0][3] = (float)strtod(ptr, &ptr);
+	out[1][0] = (float)strtod(ptr, &ptr);
+	out[1][1] = (float)strtod(ptr, &ptr);
+	out[1][2] = (float)strtod(ptr, &ptr);
+	out[1][3] = (float)strtod(ptr, &ptr);
+	out[2][0] = (float)strtod(ptr, &ptr);
+	out[2][1] = (float)strtod(ptr, &ptr);
+	out[2][2] = (float)strtod(ptr, &ptr);
+	out[2][3] = (float)strtod(ptr, &ptr);
+
+	return true;
 }
+//-----------------------------------------------------------------------------
 bool StringUtils::FromString(glm::mat4& out, const char* string)
 {
-	return false;
+	size_t elements = CountElements(string);
+	if (elements < 16)
+		return false;
+
+	char* ptr = const_cast<char*>(string);
+	out[0][0] = (float)strtod(ptr, &ptr);
+	out[0][1] = (float)strtod(ptr, &ptr);
+	out[0][2] = (float)strtod(ptr, &ptr);
+	out[0][3] = (float)strtod(ptr, &ptr);
+	out[1][0] = (float)strtod(ptr, &ptr);
+	out[1][1] = (float)strtod(ptr, &ptr);
+	out[1][2] = (float)strtod(ptr, &ptr);
+	out[1][3] = (float)strtod(ptr, &ptr);
+	out[2][0] = (float)strtod(ptr, &ptr);
+	out[2][1] = (float)strtod(ptr, &ptr);
+	out[2][2] = (float)strtod(ptr, &ptr);
+	out[2][3] = (float)strtod(ptr, &ptr);
+	out[3][0] = (float)strtod(ptr, &ptr);
+	out[3][1] = (float)strtod(ptr, &ptr);
+	out[3][2] = (float)strtod(ptr, &ptr);
+	out[3][3] = (float)strtod(ptr, &ptr);
+
+	return true;
 }
+//-----------------------------------------------------------------------------
 std::string StringUtils::ToString(const glm::vec2& in)
 {
-	return std::string();
+	return std::string(std::to_string(in.x) + " " + std::to_string(in.y));
 }
+//-----------------------------------------------------------------------------
 std::string StringUtils::ToString(const glm::vec3& in)
 {
-	return std::string();
+	return std::string(std::to_string(in.x) + " " + std::to_string(in.y) + " " + std::to_string(in.z));
 }
+//-----------------------------------------------------------------------------
 std::string StringUtils::ToString(const glm::vec4& in)
 {
-	return std::string();
+	return std::string(std::to_string(in.x) + " " + std::to_string(in.y) + " " + std::to_string(in.z) + " " + std::to_string(in.w));
 }
+//-----------------------------------------------------------------------------
 std::string StringUtils::ToString(const glm::ivec2& in)
 {
-	return std::string();
+	return std::string(std::to_string(in.x) + " " + std::to_string(in.y));
 }
+//-----------------------------------------------------------------------------
 std::string StringUtils::ToString(const glm::ivec3& in)
 {
-	return std::string();
+	return std::string(std::to_string(in.x) + " " + std::to_string(in.y) + " " + std::to_string(in.z));
 }
+//-----------------------------------------------------------------------------
+std::string StringUtils::ToString(const glm::quat& in)
+{
+	return std::string(std::to_string(in.w) + " " + std::to_string(in.x) + " " + std::to_string(in.y) + " " + std::to_string(in.z));
+}
+//-----------------------------------------------------------------------------
 std::string StringUtils::ToString(const glm::mat3& in)
 {
-	return std::string();
+	return std::string(
+		std::to_string(in[0][0]) + " " + std::to_string(in[0][1]) + " " + std::to_string(in[0][2]) + " " +
+		std::to_string(in[1][0]) + " " + std::to_string(in[1][1]) + " " + std::to_string(in[1][2]) + " " +
+		std::to_string(in[2][0]) + " " + std::to_string(in[2][1]) + " " + std::to_string(in[2][2]));
 }
+//-----------------------------------------------------------------------------
 std::string StringUtils::ToString(const glm::mat3x4& in)
 {
-	return std::string();
+	return std::string(
+		std::to_string(in[0][0]) + " " + std::to_string(in[0][1]) + " " + std::to_string(in[0][2]) + " " + std::to_string(in[0][3]) + " " +
+		std::to_string(in[1][0]) + " " + std::to_string(in[1][1]) + " " + std::to_string(in[1][2]) + " " + std::to_string(in[1][3]) + " " +
+		std::to_string(in[2][0]) + " " + std::to_string(in[2][1]) + " " + std::to_string(in[2][2]) + " " + std::to_string(in[2][3]));
 }
+//-----------------------------------------------------------------------------
 std::string StringUtils::ToString(const glm::mat4& in)
 {
-	return std::string();
+	return std::string(
+		std::to_string(in[0][0]) + " " + std::to_string(in[0][1]) + " " + std::to_string(in[0][2]) + " " + std::to_string(in[0][3]) + " " +
+		std::to_string(in[1][0]) + " " + std::to_string(in[1][1]) + " " + std::to_string(in[1][2]) + " " + std::to_string(in[1][3]) + " " +
+		std::to_string(in[2][0]) + " " + std::to_string(in[2][1]) + " " + std::to_string(in[2][2]) + " " + std::to_string(in[2][3]) + " " + 
+		std::to_string(in[3][0]) + " " + std::to_string(in[3][1]) + " " + std::to_string(in[3][2]) + " " + std::to_string(in[3][3]));
 }
 //-----------------------------------------------------------------------------

@@ -140,6 +140,33 @@
     <ClCompile Include="Core\Geometry\IntBox.cpp">
       <Filter>Core\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Math\Color.cpp">
+      <Filter>Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Object\ObjectResolver.cpp">
+      <Filter>Core\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\IO\MemoryBuffer.cpp">
+      <Filter>Core\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\IO\VectorBuffer.cpp">
+      <Filter>Core\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Resource\Resource.cpp">
+      <Filter>Core\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Resource\JSONFile.cpp">
+      <Filter>Core\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Resource\Image.cpp">
+      <Filter>Core\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Resource\Decompress.cpp">
+      <Filter>Core\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Resource\ResourceCache.cpp">
+      <Filter>Core\Resource</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -325,6 +352,30 @@
     <ClInclude Include="Core\Geometry\IntBox.h">
       <Filter>Core\Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Object\ObjectResolver.h">
+      <Filter>Core\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IO\MemoryBuffer.h">
+      <Filter>Core\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IO\VectorBuffer.h">
+      <Filter>Core\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Resource\Resource.h">
+      <Filter>Core\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Resource\JSONFile.h">
+      <Filter>Core\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Resource\Image.h">
+      <Filter>Core\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Resource\Decompress.h">
+      <Filter>Core\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Resource\ResourceCache.h">
+      <Filter>Core\Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -335,9 +386,6 @@
     </Filter>
     <Filter Include="Graphics">
       <UniqueIdentifier>{1cb1f8bf-8e20-406d-b837-b752439bf257}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource">
-      <UniqueIdentifier>{2a8c4f6e-d82c-4dd6-bfd2-2449dd48662f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\Base">
       <UniqueIdentifier>{790d1004-3233-4c0f-90c0-0d920a5553c4}</UniqueIdentifier>
@@ -386,6 +434,9 @@
     </Filter>
     <Filter Include="Core\Object">
       <UniqueIdentifier>{354e2f57-fd10-4543-804e-14af23b84841}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Resource">
+      <UniqueIdentifier>{2a8c4f6e-d82c-4dd6-bfd2-2449dd48662f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

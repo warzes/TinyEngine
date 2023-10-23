@@ -56,8 +56,17 @@ inline constexpr glm::vec3 RGBToVec(unsigned rgb)
 class ColorF
 {
 public:
+	bool operator==(const ColorF& rhs) const { return r == rhs.r && g == rhs.g && b == rhs.b && a == rhs.a; }
+	bool operator!=(const ColorF& rhs) const { return !(*this == rhs); }
+
 	float r;
 	float g;
 	float b;
 	float a;
 };
+
+namespace StringUtils
+{
+	bool FromString(ColorF& out, const char* string);
+	std::string ToString(const ColorF& in);
+}

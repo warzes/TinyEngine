@@ -3,6 +3,17 @@
 #include "Core/Logging/Log.h"
 #include "Core/Utilities/StringUtilities.h"
 //-----------------------------------------------------------------------------
+bool FileSystem::IsDirectory(const std::string& pathName)
+{
+	return std::filesystem::is_directory(pathName);
+}
+//-----------------------------------------------------------------------------
+unsigned FileSystem::LastModifiedTime(const std::string& fileName)
+{
+	std::filesystem::file_time_type info = std::filesystem::last_write_time(fileName);
+	return info.time_since_epoch().count();
+}
+//-----------------------------------------------------------------------------
 bool FileSystem::Exists(const std::string& path) noexcept
 {
 	assert(!path.empty());
@@ -88,6 +99,96 @@ std::string FileSystem::GetFileName(std::string_view filePath)
 	return std::string(filePath.substr(fileNamePos + 1));
 }
 //-----------------------------------------------------------------------------
+void FileSystem::SplitPath(const std::string& fullPath, std::string& pathName, std::string& fileName, std::string& extension, bool lowercaseExtension)
+{
+	std::string fullPathCopy = NormalizePath(fullPath);
+
+	size_t extPos = fullPathCopy.find_last_of('.');
+	size_t pathPos = fullPathCopy.find_last_of('/');
+
+	if (extPos != std::string::npos && (pathPos == std::string::npos || extPos > pathPos))
+	{
+		extension = fullPathCopy.substr(extPos);
+		if (lowercaseExtension)
+			extension = StringUtils::ToLower(extension);
+		fullPathCopy = fullPathCopy.substr(0, extPos);
+	}
+	else
+		extension.clear();
+
+	pathPos = fullPathCopy.find_last_of('/');
+	if (pathPos != std::string::npos)
+	{
+		fileName = fullPathCopy.substr(pathPos + 1);
+		pathName = fullPathCopy.substr(0, pathPos + 1);
+	}
+	else
+	{
+		fileName = fullPathCopy;
+		pathName.clear();
+	}
+}
+//-----------------------------------------------------------------------------
+std::string FileSystem::Path(const std::string& fullPath)
+{
+	std::string path, file, extension;
+	SplitPath(fullPath, path, file, extension);
+	return path;
+}
+//-----------------------------------------------------------------------------
+std::string FileSystem::FileName(const std::string& fullPath)
+{
+	std::string path, file, extension;
+	SplitPath(fullPath, path, file, extension);
+	return file;
+}
+//-----------------------------------------------------------------------------
+std::string FileSystem::PathAndFileName(const std::string& fullPath)
+{
+	std::string path, file, extension;
+	SplitPath(fullPath, path, file, extension);
+	return path + file;
+}
+//-----------------------------------------------------------------------------
+std::string FileSystem::Extension(const std::string& fullPath, bool lowercaseExtension)
+{
+	std::string path, file, extension;
+	SplitPath(fullPath, path, file, extension, lowercaseExtension);
+	return extension;
+}
+//-----------------------------------------------------------------------------
+std::string FileSystem::FileNameAndExtension(const std::string& fullPath, bool lowercaseExtension)
+{
+	std::string path, file, extension;
+	SplitPath(fullPath, path, file, extension, lowercaseExtension);
+	return file + extension;
+}
+//-----------------------------------------------------------------------------
+std::string FileSystem::AddTrailingSlash(const std::string& pathName)
+{
+	std::string ret = StringUtils::Trim(pathName);
+	StringUtils::ReplaceInPlace(ret, '\\', '/');
+	if (!ret.empty() && ret.back() != '/')
+		ret += '/';
+	return ret;
+}
+//-----------------------------------------------------------------------------
+std::string FileSystem::RemoveTrailingSlash(const std::string& pathName)
+{
+	std::string ret = StringUtils::Trim(pathName);
+	StringUtils::ReplaceInPlace(ret, '\\', '/');
+	if (!ret.empty() && ret.back() == '/')
+		ret.resize(ret.length() - 1);
+	return ret;
+}
+//-----------------------------------------------------------------------------
+std::string FileSystem::NormalizePath(const std::string& pathName)
+{
+	std::string ret(pathName);
+	StringUtils::ReplaceInPlace(ret, '\\', '/');
+	return ret;
+}
+//-----------------------------------------------------------------------------
 std::string FileSystem::NativePath(const std::string& pathName)
 {
 	std::string ret(pathName);
@@ -95,5 +196,23 @@ std::string FileSystem::NativePath(const std::string& pathName)
 	StringUtils::ReplaceInPlace(ret, '/', '\\');
 #endif
 	return ret;
+}
+//-----------------------------------------------------------------------------
+bool FileSystem::IsAbsolutePath(const std::string& pathName)
+{
+	if (pathName.empty())
+		return false;
+
+	std::string path = NormalizePath(pathName);
+
+	if (path[0] == '/')
+		return true;
+
+#ifdef _WIN32
+	if (path.length() > 1 && isalpha(path[0]) && path[1] == ':')
+		return true;
+#endif
+
+	return false;
 }
 //-----------------------------------------------------------------------------

@@ -41,3 +41,9 @@ public:
 	glm::vec3 min = glm::vec3{ std::numeric_limits<float>::max() };
 	glm::vec3 max = glm::vec3{ std::numeric_limits<float>::lowest() };
 };
+
+namespace StringUtils
+{
+	bool FromString(BoundingAABB& out, const char* string);
+	std::string ToString(const BoundingAABB& in);
+}
