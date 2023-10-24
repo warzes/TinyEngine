@@ -4,6 +4,8 @@
 #include "RenderEnums.h"
 #include "Core/Logging/Log.h"
 
+// TODO: в деструкторах рендерресурсов при удалении ресурса снимать бинд если он забинден
+
 //=============================================================================
 // Pipeline State Core
 //=============================================================================
@@ -284,6 +286,7 @@ public:
 };
 using VertexBufferRef = std::shared_ptr<VertexBuffer>;
 
+// GPU buffer for index data.
 class IndexBuffer final : public GPUBuffer
 {
 public:
@@ -291,7 +294,7 @@ public:
 	IndexBuffer(BufferUsage Usage, unsigned Count = 0, unsigned Size = 0) : GPUBuffer(BufferTarget::ElementArrayBuffer, Usage, Count, Size) {}
 	IndexBuffer(IndexBuffer&&) noexcept = default;
 	IndexBuffer(const IndexBuffer&) = delete;
-	~IndexBuffer() { glDeleteBuffers(1, &m_handle); }
+	~IndexBuffer();
 	IndexBuffer& operator=(IndexBuffer&&) noexcept = default;
 	IndexBuffer& operator=(const IndexBuffer&) = delete;
 
@@ -368,6 +371,7 @@ public:
 
 using Texture2DRef = std::shared_ptr<Texture2D>;
 
+// GPU renderbuffer object for rendering and blitting, that cannot be sampled as a texture.
 class Renderbuffer final : public glObject
 {
 public:
@@ -378,17 +382,18 @@ public:
 	Renderbuffer& operator=(Renderbuffer&&) noexcept = default;
 	Renderbuffer& operator=(const Renderbuffer&) = delete;
 
-	bool operator==(const Renderbuffer& ref) noexcept { return m_handle == ref.m_handle && format == ref.format && size == ref.size && multisample == ref.multisample; }
+	bool operator==(const Renderbuffer& ref) noexcept { return m_handle == ref.m_handle && format == ref.format && size == ref.size && multisampling == ref.multisampling; }
 
 	unsigned Width() const { return size.x; }
 	unsigned Height() const { return size.y; }
 
-	ImageFormat format;
+	ImageFormat format = ImageFormat::None;
 	glm::uvec2 size = glm::uvec2{ 0 };
-	int multisample = 1;
+	int multisampling = 1;
 };
 using RenderbufferRef = std::shared_ptr<Renderbuffer>;
 
+// GPU framebuffer object for rendering. Combines color and depth-stencil textures or buffers.
 class Framebuffer final : public glObject
 {
 public:

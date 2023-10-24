@@ -108,8 +108,13 @@ GPUBuffer::GPUBuffer(BufferTarget Type, BufferUsage Usage, unsigned Count, unsig
 		glGenBuffers(1, &m_handle);
 }
 //-----------------------------------------------------------------------------
-
-
+IndexBuffer::~IndexBuffer()
+{
+	glDeleteBuffers(1, &m_handle); 
+	if (GetRenderSystem().GetCurrentIBO() == m_handle)
+		GetRenderSystem().ResetState(ResourceType::IndexBuffer);
+}
+//-----------------------------------------------------------------------------
 
 
 
@@ -284,12 +289,28 @@ Texture2DRef RenderSystem::CreateTexture2D(const Texture2DCreateInfo& createInfo
 //-----------------------------------------------------------------------------
 RenderbufferRef RenderSystem::CreateRenderbuffer(const glm::uvec2& size, ImageFormat format, int multisample)
 {
-	assert(size.x > 0 && size.y > 0);
 	if( multisample < 1 ) multisample = 1;
 
+	if (format > ImageFormat::DXT1)
+	{
+		LogError("Compressed formats are unsupported for renderbuffers");
+		return {};
+	}
+	if (size.x < 1 || size.y < 1)
+	{
+		LogError("Renderbuffer must not have zero or negative size");
+		return {};
+	}
+
 	RenderbufferRef resource(new Renderbuffer());
+	if (!(resource->IsValid()))
+	{
+		LogError("Failed to create renderbuffer");
+		return {};
+	}
+
 	resource->size = size;
-	resource->multisample = multisample;
+	resource->multisampling = multisample;
 	resource->format = format;
 
 	glBindRenderbuffer(GL_RENDERBUFFER, *resource);

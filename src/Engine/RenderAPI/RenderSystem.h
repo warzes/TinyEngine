@@ -120,8 +120,8 @@ public:
 	// Buffer Operations
 	//-------------------------------------------------------------------------
 	// TODO: отрефакторить убрав копипаст выделив его в приватную функцию
-	void UpdateBuffer(VertexBufferRef buffer, unsigned offset, unsigned count, unsigned size, const void* data);
-	void UpdateBuffer(IndexBufferRef buffer, unsigned offset, unsigned count, unsigned size, const void* data);
+	bool UpdateBuffer(VertexBufferRef buffer, unsigned offset, unsigned count, unsigned size, const void* data);
+	bool UpdateBuffer(IndexBufferRef buffer, unsigned offset, unsigned count, IndexFormat indexFormat, const void* data);
 
 	// TODO: нужно проверить как работает бинд перед мапингом с учетом текущего ВАО
 #if !PLATFORM_EMSCRIPTEN
@@ -164,6 +164,11 @@ public:
 	//-------------------------------------------------------------------------
 	void Draw(VertexArrayRef vao, PrimitiveTopology primitive = PrimitiveTopology::Triangles);
 
+
+	//-------------------------------------------------------------------------
+	// Binding state
+	//-------------------------------------------------------------------------
+	unsigned GetCurrentIBO() const { return m_cache.CurrentIBO; }
 private:
 	RenderSystem(RenderSystem&&) = delete;
 	RenderSystem(const RenderSystem&) = delete;

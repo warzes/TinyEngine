@@ -41,11 +41,17 @@ IndexBufferRef RenderSystem::CreateIndexBuffer(BufferUsage usage)
 //-----------------------------------------------------------------------------
 IndexBufferRef RenderSystem::CreateIndexBuffer(BufferUsage usage, unsigned indexCount, IndexFormat indexFormat, const void* data)
 {
+	if (!indexCount)
+	{
+		LogError("Can not define index buffer with no indices");
+		return {};
+	}
+
 	const unsigned indexSize = SizeIndexType(indexFormat);
 	IndexBufferRef resource(new IndexBuffer(usage, indexCount, indexSize));
 	if (!IsValid(resource))
 	{
-		LogError("IndexBuffer create failed!");
+		LogError("Failed to create index buffer");
 		return {};
 	}
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *resource);
@@ -147,7 +153,7 @@ VertexArrayRef RenderSystem::CreateVertexArray(VertexBufferRef vbo, IndexBufferR
 	return CreateVertexArray(vbo, ibo, attribs);
 }
 //-----------------------------------------------------------------------------
-void RenderSystem::UpdateBuffer(VertexBufferRef buffer, unsigned offset, unsigned count, unsigned size, const void* data)
+bool RenderSystem::UpdateBuffer(VertexBufferRef buffer, unsigned offset, unsigned count, unsigned size, const void* data)
 {
 	assert(IsValid(buffer));
 
@@ -174,34 +180,48 @@ void RenderSystem::UpdateBuffer(VertexBufferRef buffer, unsigned offset, unsigne
 
 		if (m_cache.CurrentVBO != id) glBindBuffer(GL_ARRAY_BUFFER, m_cache.CurrentVBO);
 	}
+
+	return true;
 }
 //-----------------------------------------------------------------------------
-void RenderSystem::UpdateBuffer(IndexBufferRef buffer, unsigned offset, unsigned count, unsigned size, const void* data)
+bool RenderSystem::UpdateBuffer(IndexBufferRef buffer, unsigned offset, unsigned count, IndexFormat indexFormat, const void* data)
 {
 	assert(IsValid(buffer));
+	if (!data)
+	{
+		LogError("Null source data for updating index buffer");
+		return false;
+	}
 
+	const unsigned indexSize = SizeIndexType(indexFormat);
 	const unsigned id = *buffer;
-	const bool isNewBufferData = (offset == 0 && (buffer->count != count || buffer->size != size));
-	const GLsizeiptr numberOfBytes = count * size;
+	const bool isNewBufferData = (offset == 0 && (buffer->count != count || buffer->size != indexSize));
+	const GLsizeiptr numberOfBytes = count * indexSize;
 	const GLenum glBufferUsage = TranslateToGL(buffer->usage);
 	buffer->count = count;
-	buffer->size = size;
+	buffer->size = indexSize;
 
 #if PLATFORM_DESKTOP
 	if (OpenGLExtensions::coreDirectStateAccess)
 	{
-		if (isNewBufferData) glNamedBufferData(id, numberOfBytes, data, glBufferUsage);
-		else glNamedBufferSubData(id, offset, numberOfBytes, data);
+		if (isNewBufferData) 
+			glNamedBufferData(id, numberOfBytes, data, glBufferUsage);
+		else 
+			glNamedBufferSubData(id, offset * indexSize, numberOfBytes, data);
 	}
 	else
 #endif
 	{
-		if (m_cache.CurrentIBO != id) glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
+		if (m_cache.CurrentIBO != id) 
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
 
-		if (isNewBufferData) glBufferData(GL_ELEMENT_ARRAY_BUFFER, numberOfBytes, data, glBufferUsage);
-		else glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, numberOfBytes, data);
+		if (isNewBufferData) 
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, numberOfBytes, data, glBufferUsage);
+		else 
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset * indexSize, numberOfBytes, data);
 
-		if (m_cache.CurrentIBO != id) glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_cache.CurrentIBO);
+		if (m_cache.CurrentIBO != id) 
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_cache.CurrentIBO);
 	}
 }
 //-----------------------------------------------------------------------------
