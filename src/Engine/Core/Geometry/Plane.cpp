@@ -4,7 +4,7 @@
 #include "BoundingSphere.h"
 #include "BoundingFrustum.h"
 #include "Triangle.h"
-#include "Core/Math/MathCoreFunc.h"
+#include "Core/Math/MathLib.h"
 //-----------------------------------------------------------------------------
 const Plane Plane::Up(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 //-----------------------------------------------------------------------------

@@ -4,7 +4,7 @@
 #include "BoundingFrustum.h"
 #include "BoundingSphere.h"
 #include "Plane.h"
-#include "Core/Math/MathCoreFunc.h"
+#include "Core/Math/MathLib.h"
 #include "Triangle.h"
 //-----------------------------------------------------------------------------
 glm::vec3 Ray::Project(const glm::vec3& point) const

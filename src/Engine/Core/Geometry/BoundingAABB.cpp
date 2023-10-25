@@ -3,7 +3,7 @@
 #include "Plane.h"
 #include "BoundingSphere.h"
 #include "Ray.h"
-#include "Core/Math/MathCoreFunc.h"
+#include "Core/Math/MathLib.h"
 #include "Core/Utilities/StringUtilities.h"
 //-----------------------------------------------------------------------------
 void BoundingAABB::Insert(const glm::vec3& point) noexcept
