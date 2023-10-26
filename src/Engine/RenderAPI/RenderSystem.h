@@ -47,13 +47,18 @@ public:
 	GeometryBufferRef CreateGeometryBuffer(BufferUsage usage,
 		/*vertex*/unsigned vertexCount, unsigned vertexSize, const void* vertexData,
 		/*index*/unsigned indexCount, IndexFormat indexFormat, const void* indexData,
-		ShaderProgramRef shaders);
+		ShaderProgramRef shader);
 	GeometryBufferRef CreateGeometryBuffer(BufferUsage usage,
 		/*vertex*/unsigned vertexCount, unsigned vertexSize, const void* vertexData,
 		/*index*/unsigned indexCount, IndexFormat indexFormat, const void* indexData,
 		const std::vector<VertexAttribute>& attribs);
-	GeometryBufferRef CreateGeometryBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* vertexData, ShaderProgramRef shaders);
+	GeometryBufferRef CreateGeometryBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* vertexData, ShaderProgramRef shader);
 	GeometryBufferRef CreateGeometryBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* vertexData, const std::vector<VertexAttribute>& attribs);
+
+	GeometryBufferRef CreateGeometryBuffer(VertexBufferRef vertexBuffer, ShaderProgramRef shader);
+	GeometryBufferRef CreateGeometryBuffer(VertexBufferRef vertexBuffer, const std::vector<VertexAttribute>& attribs);
+	GeometryBufferRef CreateGeometryBuffer(VertexBufferRef vertexBuffer, IndexBufferRef indexBuffer, ShaderProgramRef shader);
+	GeometryBufferRef CreateGeometryBuffer(VertexBufferRef vertexBuffer, IndexBufferRef indexBuffer, const std::vector<VertexAttribute>& attribs);
 
 	Texture2DRef CreateTexture2D(const char* fileName, bool useCache = true, const Texture2DInfo& textureInfo = {});
 	Texture2DRef CreateTexture2D(const Texture2DCreateInfo& createInfo, const Texture2DInfo& textureInfo = {});
@@ -80,7 +85,7 @@ public:
 	inline bool IsValid(GPUBufferRef resource) const { return resource && resource->IsValid(); }
 	inline bool IsValid(VertexArrayRef resource) const { return resource && resource->IsValid(); }
 	inline bool IsValid(Texture2DRef resource) const { return resource && resource->IsValid(); }
-	inline bool IsValid(GeometryBufferRef resource) const { return IsValid(resource->vao); }
+	inline bool IsValid(GeometryBufferRef resource) const { return resource && IsValid(resource->vao); }
 	inline bool IsValid(FramebufferRef resource) const { return resource && resource->IsValid(); }
 	bool IsReadyUniform(const Uniform& uniform) const;
 
@@ -163,6 +168,7 @@ public:
 	// Draw
 	//-------------------------------------------------------------------------
 	void Draw(VertexArrayRef vao, PrimitiveTopology primitive = PrimitiveTopology::Triangles);
+	void Draw(GeometryBufferRef geom, PrimitiveTopology primitive = PrimitiveTopology::Triangles);
 
 
 	//-------------------------------------------------------------------------

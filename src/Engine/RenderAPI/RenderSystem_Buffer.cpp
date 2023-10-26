@@ -62,7 +62,7 @@ IndexBufferRef RenderSystem::CreateIndexBuffer(BufferUsage usage, unsigned index
 //-----------------------------------------------------------------------------
 VertexArrayRef RenderSystem::CreateVertexArray(VertexBufferRef vbo, IndexBufferRef ibo, const std::vector<VertexAttribute>& attribs)
 {
-	if (vbo == nullptr || attribs.size() == 0)
+	if (vbo == nullptr || !IsValid(vbo) || attribs.size() == 0)
 	{
 		LogError("VertexBuffer is null");
 		return {};

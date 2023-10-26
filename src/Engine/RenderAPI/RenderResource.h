@@ -332,8 +332,8 @@ public:
 	GeometryBuffer& operator=(GeometryBuffer&&) = default;
 	GeometryBuffer& operator=(const GeometryBuffer&) = delete;
 
-	GPUBufferRef GetVBO() { return vao->vbo; }
-	GPUBufferRef GetIBO() { return vao->ibo; }
+	VertexBufferRef GetVBO() { return vao->vbo; }
+	IndexBufferRef GetIBO() { return vao->ibo; }
 
 	VertexArrayRef vao = nullptr;
 };

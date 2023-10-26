@@ -115,20 +115,9 @@ IndexBuffer::~IndexBuffer()
 		GetRenderSystem().ResetState(ResourceType::IndexBuffer);
 }
 //-----------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-//-----------------------------------------------------------------------------
-GeometryBufferRef RenderSystem::CreateGeometryBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* vertexData, unsigned indexCount, IndexFormat indexFormat, const void* indexData, ShaderProgramRef shaders)
+GeometryBufferRef RenderSystem::CreateGeometryBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* vertexData, unsigned indexCount, IndexFormat indexFormat, const void* indexData, ShaderProgramRef shader)
 {
-	assert(IsValid(shaders));
-
-	GeometryBufferRef geom(new GeometryBuffer());
+	assert(IsValid(shader));
 
 	VertexBufferRef vb = CreateVertexBuffer(usage, vertexCount, vertexSize, vertexData);
 	if (!IsValid(vb))
@@ -137,31 +126,23 @@ GeometryBufferRef RenderSystem::CreateGeometryBuffer(BufferUsage usage, unsigned
 		return {};
 	}
 
-	const bool isIndexBuffer = indexCount > 0;
-	IndexBufferRef ib = nullptr;
-	if (isIndexBuffer)
+	if (indexCount > 0)
 	{
-		ib = CreateIndexBuffer(usage, indexCount, indexFormat, indexData);
+		IndexBufferRef ib = CreateIndexBuffer(usage, indexCount, indexFormat, indexData);
 		if (!IsValid(ib))
 		{
 			LogError("GeometryBuffer::IndexBuffer create failed!!");
 			return {};
 		}
+
+		return CreateGeometryBuffer(vb, ib, shader);
 	}
 
-	geom->vao = CreateVertexArray(vb, ib, shaders);
-	if (!IsValid(geom->vao))
-	{
-		LogError("GeometryBuffer::VertexArray create failed!!");
-		return {};
-	}
-	return geom;
+	return CreateGeometryBuffer(vb, shader);
 }
 //-----------------------------------------------------------------------------
 GeometryBufferRef RenderSystem::CreateGeometryBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* vertexData, unsigned indexCount, IndexFormat indexFormat, const void* indexData, const std::vector<VertexAttribute>& attribs)
 {
-	GeometryBufferRef geom(new GeometryBuffer());
-
 	VertexBufferRef vb = CreateVertexBuffer(usage, vertexCount, vertexSize, vertexData);
 	if (!IsValid(vb))
 	{
@@ -169,25 +150,19 @@ GeometryBufferRef RenderSystem::CreateGeometryBuffer(BufferUsage usage, unsigned
 		return {};
 	}
 
-	const bool isIndexBuffer = indexCount > 0;
-	IndexBufferRef ib = nullptr;
-	if (isIndexBuffer)
+	if (indexCount > 0)
 	{
-		ib = CreateIndexBuffer(usage, indexCount, indexFormat, indexData);
+		IndexBufferRef ib = CreateIndexBuffer(usage, indexCount, indexFormat, indexData);
 		if (!IsValid(ib))
 		{
 			LogError("GeometryBuffer::IndexBuffer create failed!!");
 			return {};
 		}
-	}
 
-	geom->vao = CreateVertexArray(vb, ib, attribs);
-	if (!IsValid(geom->vao))
-	{
-		LogError("GeometryBuffer::VertexArray create failed!!");
-		return {};
+		return CreateGeometryBuffer(vb, ib, attribs);
 	}
-	return geom;
+	
+	return CreateGeometryBuffer(vb, attribs);
 }
 //-----------------------------------------------------------------------------
 GeometryBufferRef RenderSystem::CreateGeometryBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* vertexData, ShaderProgramRef shaders)
@@ -198,6 +173,54 @@ GeometryBufferRef RenderSystem::CreateGeometryBuffer(BufferUsage usage, unsigned
 GeometryBufferRef RenderSystem::CreateGeometryBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* vertexData, const std::vector<VertexAttribute>& attribs)
 {
 	return CreateGeometryBuffer(usage, vertexCount, vertexSize, vertexData, 0, {}, nullptr, attribs);
+}
+//-----------------------------------------------------------------------------
+GeometryBufferRef RenderSystem::CreateGeometryBuffer(VertexBufferRef vb, ShaderProgramRef shader)
+{
+	GeometryBufferRef geom(new GeometryBuffer());
+	geom->vao = CreateVertexArray(vb, nullptr, shader);
+	if (!IsValid(geom->vao))
+	{
+		LogError("GeometryBuffer::VertexArray create failed!!");
+		return {};
+	}
+	return geom;
+}
+//-----------------------------------------------------------------------------
+GeometryBufferRef RenderSystem::CreateGeometryBuffer(VertexBufferRef vb, const std::vector<VertexAttribute>& attribs)
+{
+	GeometryBufferRef geom(new GeometryBuffer());
+	geom->vao = CreateVertexArray(vb, nullptr, attribs);
+	if (!IsValid(geom->vao))
+	{
+		LogError("GeometryBuffer::VertexArray create failed!!");
+		return {};
+	}
+	return geom;
+}
+//-----------------------------------------------------------------------------
+GeometryBufferRef RenderSystem::CreateGeometryBuffer(VertexBufferRef vb, IndexBufferRef ib, ShaderProgramRef shader)
+{
+	GeometryBufferRef geom(new GeometryBuffer());
+	geom->vao = CreateVertexArray(vb, ib, shader);
+	if (!IsValid(geom->vao))
+	{
+		LogError("GeometryBuffer::VertexArray create failed!!");
+		return {};
+	}
+	return geom;
+}
+//-----------------------------------------------------------------------------
+GeometryBufferRef RenderSystem::CreateGeometryBuffer(VertexBufferRef vb, IndexBufferRef ib, const std::vector<VertexAttribute>& attribs)
+{
+	GeometryBufferRef geom(new GeometryBuffer());
+	geom->vao = CreateVertexArray(vb, ib, attribs);
+	if (!IsValid(geom->vao))
+	{
+		LogError("GeometryBuffer::VertexArray create failed!!");
+		return {};
+	}
+	return geom;
 }
 //-----------------------------------------------------------------------------
 TexelsFormat Convert(ImageLoader::ImageFormat format)

@@ -556,7 +556,7 @@ void RenderSystem::Draw(VertexArrayRef vao, PrimitiveTopology primitive)
 	assert(IsValid(vao));
 
 	Bind(vao);
-	if( vao->ibo )
+	if( vao->ibo)
 	{
 		glDrawElements(TranslateToGL(primitive), (GLsizei)vao->ibo->count, SizeIndexType(vao->ibo->size), nullptr);
 	}
@@ -564,6 +564,12 @@ void RenderSystem::Draw(VertexArrayRef vao, PrimitiveTopology primitive)
 	{
 		glDrawArrays(TranslateToGL(primitive), 0, (GLsizei)vao->vbo->count);
 	}
+}
+//-----------------------------------------------------------------------------
+void RenderSystem::Draw(GeometryBufferRef geom, PrimitiveTopology primitive)
+{
+	if (!IsValid(geom)) return;
+	Draw(geom->vao, primitive);
 }
 //-----------------------------------------------------------------------------
 void RenderSystem::initializeExtensions(bool print)
