@@ -1,7 +1,6 @@
 ﻿#include "stdafx.h"
 #include "RenderSystem.h"
 #include "OpenGLTranslateToGL.h"
-#include "OpenGLExtensions.h"
 #include "OpenGLCore.h"
 //-----------------------------------------------------------------------------
 // Use discrete GPU by default.
@@ -558,7 +557,7 @@ void RenderSystem::Draw(VertexArrayRef vao, PrimitiveTopology primitive)
 	Bind(vao);
 	if( vao->ibo)
 	{
-		glDrawElements(TranslateToGL(primitive), (GLsizei)vao->ibo->count, SizeIndexType(vao->ibo->size), nullptr);
+		glDrawElements(TranslateToGL(primitive), (GLsizei)vao->ibo->count, SizeIndexType(vao->ibo->sizeInBytes), nullptr);
 	}
 	else
 	{

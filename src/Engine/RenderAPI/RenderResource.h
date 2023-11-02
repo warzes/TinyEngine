@@ -1,195 +1,10 @@
 ﻿#pragma once
 
 #include "OpenGLCore.h"
-#include "RenderEnums.h"
+#include "RenderCore.h"
 #include "Core/Logging/Log.h"
 
 // TODO: в деструкторах рендерресурсов при удалении ресурса снимать бинд если он забинден
-
-//=============================================================================
-// Pipeline State Core
-//=============================================================================
-
-// Depth bias descriptor structure to control fragment depth values.
-struct DepthBiasDescriptor
-{
-	// Specifies a scalar factor controlling the constant depth value added to each fragment. By default 0.0.
-	float constantFactor = 0.0f;
-	// Specifies a scalar factor applied to a fragment's slope in depth bias calculations. By default 0.0.
-	float slopeFactor = 0.0f;
-	// Specifies the maximum (or minimum) depth bias of a fragment. By default 0.0.	
-	float clamp = 0.0f;
-};
-
-inline bool IsPolygonOffsetEnabled(const DepthBiasDescriptor& desc)
-{
-	// Ignore clamp factor for this check, since it's useless without the other two parameters
-	return (desc.slopeFactor != 0.0f || desc.constantFactor != 0.0f);
-}
-
-
-struct DepthState final
-{
-	ComparisonFunction depthFunc = ComparisonFunction::Less;
-	bool depthWrite = true;
-	bool enable = true;
-};
-
-struct StencilState final
-{
-	bool enable = false;
-	uint8_t readMask = 0xFF;
-	uint8_t writeMask = 0xFF;
-	
-	ComparisonFunction stencilFuncFront = ComparisonFunction::Always;
-	StencilOp stencilPassOpFront = StencilOp::Keep;  // stencil and depth pass
-	StencilOp stencilFailOpFront = StencilOp::Keep;  // stencil fail (depth irrelevant)
-	StencilOp stencilZFailOpFront = StencilOp::Keep; // stencil pass, depth fail
-	
-	ComparisonFunction stencilFuncBack = ComparisonFunction::Always;
-	StencilOp stencilPassOpBack = StencilOp::Keep;
-	StencilOp stencilFailOpBack = StencilOp::Keep;
-	StencilOp stencilZFailOpBack = StencilOp::Keep;
-
-	int stencilRef = 0;
-};
-
-struct RasterizerState final
-{
-	RasterizerFillMode polygonMode = RasterizerFillMode::Solid;
-	RasterizerCullMode cullMode = RasterizerCullMode::FrontAndBack;
-	// Specifies the parameters to bias fragment depth values.
-	DepthBiasDescriptor depthBias;
-	FaceOrientation face = FaceOrientation::CounterClockwiseFace;
-	// If enabled, primitives are discarded after optional stream-outputs but before the rasterization stage.
-	bool discardEnabled = false;
-	// If enabled, there is effectively no near and far clipping plane.
-	bool depthClampEnabled = false;
-	// Specifies whether scissor test is enabled or disabled.
-	bool scissorTestEnabled = false;
-	// Specifies whether multi-sampling is enabled or disabled.
-	bool multiSampleEnabled = false;
-	// Specifies whether lines are rendered with or without anti-aliasing.
-	bool antiAliasedLineEnabled = false;
-	// Specifies the width of all generated line primitives. 
-	float lineWidth = 1.0f;
-};
-
-struct BlendState final
-{
-
-};
-
-//=============================================================================
-// Shader Core
-//=============================================================================
-
-// A class that can load shader sources in from files, and do some preprocessing on them.
-class ShaderBytecode final
-{
-public:
-	ShaderBytecode() = default;
-	// Loads in the shader from a memory data.
-	ShaderBytecode(const std::string& src) : m_src(src), m_shaderSource(ShaderSourceType::CodeString) {};
-	ShaderBytecode(ShaderBytecode&&) = default;
-	ShaderBytecode(const ShaderBytecode&) = default;
-	ShaderBytecode(ShaderSourceType shaderSource, const std::string& text);
-
-	ShaderBytecode& operator=(ShaderBytecode&&) = default;
-	ShaderBytecode& operator=(const ShaderBytecode&) = default;
-	ShaderBytecode& operator=(const std::string& src) { m_src = src; m_shaderSource = ShaderSourceType::CodeString; return *this; }
-
-	bool LoadFromFile(const std::string& file);
-
-	std::string& GetSource() { return m_src; }
-	const std::string& GetSource() const { return m_src; }
-	const std::string& GetPath() const { return m_path; }
-	const std::string& GetFilename() const { return m_filename; }
-	ShaderSourceType GetShaderSourceType() const { return m_shaderSource; }
-
-	bool IsValid() const { return m_src.length() > 0; }
-
-	template<typename T>
-	void InsertMacroValue(const std::string& macroName, const T& value)
-	{
-		size_t macroPos = m_src.find("#define " + macroName);
-#if defined(_DEBUG)
-		if( macroPos == std::string::npos )
-		{
-			LogFatal("ShaderBytecode::insert_macro_value is called for '" + m_filename + "', but the shader doesn't have any macro named " + macroName);
-			return;
-		}
-#endif
-		size_t macroEnd = m_src.find('\n', macroPos);
-
-		std::stringstream sstream;
-		sstream << m_src.substr(0, macroPos + strlen("#define ") + macroName.length());
-		sstream << ' ' << value << m_src.substr(macroEnd);
-		m_src = sstream.str();
-	}
-
-	static std::string GetHeaderVertexShader();
-	static std::string GetHeaderFragmentShader();
-
-private:
-	std::string m_filename = "Unnamed shader";
-	std::string m_path;
-	std::string m_src;
-	ShaderSourceType m_shaderSource = ShaderSourceType::CodeString;
-};
-
-struct ShaderAttributeInfo final
-{
-	unsigned typeId;
-	unsigned type;
-	int numType;
-	std::string name;
-	int location;
-};
-
-struct Uniform final
-{ 
-	int location = -1; 
-	unsigned programId = 0; 
-};
-
-//=============================================================================
-// Buffer Core
-//=============================================================================
-
-struct VertexAttribute final
-{
-	unsigned location/* = -1*/;  // если -1, то берется индекс массива атрибутов
-	int size;
-	//unsigned type;
-	bool normalized;
-	int stride;         // sizeof Vertex
-	const void* offset; // (void*)offsetof(Vertex, TexCoord)}
-};
-
-//=============================================================================
-// Texture Core
-//=============================================================================
-
-struct Texture2DInfo final
-{
-	TextureMinFilter minFilter = TextureMinFilter::NearestMipmapNearest;
-	TextureMagFilter magFilter = TextureMagFilter::Nearest;
-	TextureAddressMode wrapS = TextureAddressMode::Repeat;
-	TextureAddressMode wrapT = TextureAddressMode::Repeat;
-
-	bool mipmap = true;
-};
-
-struct Texture2DCreateInfo final
-{
-	TexelsFormat format = TexelsFormat::RGBA_U8;
-	uint16_t width = 1;
-	uint16_t height = 1;
-	uint8_t* pixelData = nullptr;
-	unsigned mipMapCount = 1; // TODO: only compressed
-	bool hasTransparency = false;
-};
 
 //=============================================================================
 // Render Resource OpenGL Object
@@ -201,8 +16,7 @@ public:
 	glObject(const glObject&) = delete;
 	glObject& operator=(const glObject&) = delete;
 
-	glObject(glObject&& other) noexcept
-		: m_handle{ other.m_handle }
+	glObject(glObject&& other) noexcept : m_handle{ other.m_handle }
 	{
 		other.m_handle = 0;
 	}
@@ -261,12 +75,12 @@ public:
 	GPUBuffer& operator=(GPUBuffer&&) noexcept = default;
 	GPUBuffer& operator=(const GPUBuffer&) = delete;
 
-	bool operator==(const GPUBuffer& ref) noexcept { return m_handle == ref.m_handle && type == ref.type && usage == ref.usage && count == ref.count && size == ref.size; }
+	bool operator==(const GPUBuffer& ref) noexcept { return m_handle == ref.m_handle && type == ref.type && usage == ref.usage && count == ref.count && sizeInBytes == ref.sizeInBytes; }
 
 	BufferTarget type = BufferTarget::ArrayBuffer;
 	BufferUsage usage = BufferUsage::StaticDraw;
 	unsigned count = 0;
-	unsigned size = 0; 
+	unsigned sizeInBytes = 0; 
 	std::shared_ptr<VertexArray> parentArray = nullptr;
 };
 using GPUBufferRef = std::shared_ptr<GPUBuffer>;
@@ -282,7 +96,7 @@ public:
 	VertexBuffer& operator=(VertexBuffer&&) noexcept = default;
 	VertexBuffer& operator=(const VertexBuffer&) = delete;
 
-	bool operator==(const VertexBuffer& ref) noexcept { return m_handle == ref.m_handle && type == ref.type && usage == ref.usage && count == ref.count && size == ref.size; }
+	bool operator==(const VertexBuffer& ref) noexcept { return m_handle == ref.m_handle && type == ref.type && usage == ref.usage && count == ref.count && sizeInBytes == ref.sizeInBytes; }
 };
 using VertexBufferRef = std::shared_ptr<VertexBuffer>;
 
@@ -298,7 +112,7 @@ public:
 	IndexBuffer& operator=(IndexBuffer&&) noexcept = default;
 	IndexBuffer& operator=(const IndexBuffer&) = delete;
 
-	bool operator==(const IndexBuffer& ref) noexcept { return m_handle == ref.m_handle && usage == ref.usage && count == ref.count && size == ref.size && type == ref.type; }
+	bool operator==(const IndexBuffer& ref) noexcept { return m_handle == ref.m_handle && usage == ref.usage && count == ref.count && sizeInBytes == ref.sizeInBytes && type == ref.type; }
 };
 using IndexBufferRef = std::shared_ptr<IndexBuffer>;
 

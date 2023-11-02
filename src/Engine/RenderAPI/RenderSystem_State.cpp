@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "RenderSystem.h"
 #include "OpenGLTranslateToGL.h"
-#include "OpenGLExtensions.h"
 //-----------------------------------------------------------------------------
 void RenderSystem::Bind(RasterizerState state)
 {

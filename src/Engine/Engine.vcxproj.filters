@@ -80,9 +80,6 @@
     <ClCompile Include="Core\Geometry\Triangle.cpp">
       <Filter>Core\Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="RenderAPI\OpenGLExtensions.cpp">
-      <Filter>RenderAPI</Filter>
-    </ClCompile>
     <ClCompile Include="RenderAPI\RenderSystem_Shader.cpp">
       <Filter>RenderAPI</Filter>
     </ClCompile>
@@ -167,10 +164,19 @@
     <ClCompile Include="Core\Resource\ResourceCache.cpp">
       <Filter>Core\Resource</Filter>
     </ClCompile>
+    <ClCompile Include="RenderAPI\RenderCore.cpp">
+      <Filter>RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\TempGraphics.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\LoadGLTF.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="EngineConfiguration.h" />
+    <ClInclude Include="EngineBuildSettings.h" />
     <ClInclude Include="TinyEngine.h" />
     <ClInclude Include="Core\Base\PlatformMacros.h">
       <Filter>Core\Base</Filter>
@@ -221,9 +227,6 @@
       <Filter>RenderAPI</Filter>
     </ClInclude>
     <ClInclude Include="RenderAPI\OpenGLCore.h">
-      <Filter>RenderAPI</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderAPI\RenderEnums.h">
       <Filter>RenderAPI</Filter>
     </ClInclude>
     <ClInclude Include="RenderAPI\RenderResource.h">
@@ -291,9 +294,6 @@
     </ClInclude>
     <ClInclude Include="Core\Geometry\Triangle.h">
       <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderAPI\OpenGLExtensions.h">
-      <Filter>RenderAPI</Filter>
     </ClInclude>
     <ClInclude Include="RenderAPI\OpenGLTranslateToGL.h">
       <Filter>RenderAPI</Filter>
@@ -375,6 +375,9 @@
     </ClInclude>
     <ClInclude Include="Core\Resource\ResourceCache.h">
       <Filter>Core\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\RenderCore.h">
+      <Filter>RenderAPI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

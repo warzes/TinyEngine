@@ -1,4 +1,6 @@
-п»ї#pragma once
+#pragma once
+
+extern void LogFatal(const std::string& msg) noexcept; // ==> Core/Logging/Log.h
 
 //=============================================================================
 // Core enum
@@ -147,7 +149,7 @@ enum class RasterizerFillMode : uint8_t
 
 enum class ShaderSourceType : uint8_t
 {
-	CodeString,   // Refers to <code>sourceSize+1</code> bytes, describing shader high-level code (including null terminator).
+	CodeMemory,   // Refers to <code>sourceSize+1</code> bytes, describing shader high-level code (including null terminator).
 	CodeFile,     // Refers to <code>sourceSize+1</code> bytes, describing the filename of the shader high-level code (including null terminator).
 	BinaryBuffer, // Refers to <code>sourceSize</code> bytes, describing shader binary code.
 	BinaryFile,   // Refers to <code>sourceSize+1</code> bytes, describing the filename of the shader binary code (including null terminator).
@@ -290,7 +292,7 @@ enum class PrimitiveTopology : uint8_t
 // Texture enum
 //=============================================================================
 
-enum class TextureType : uint8_t // TODO: РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ
+enum class TextureType : uint8_t // TODO: использовать
 {
 #if !PLATFORM_EMSCRIPTEN
 	Texture1D,
@@ -413,4 +415,189 @@ enum class FramebufferBinding : uint8_t
 	ReadFramebufferBinding,
 	DrawFramebufferBinding,
 	FramebufferBinding
+};
+
+//=============================================================================
+// Pipeline State Core
+//=============================================================================
+
+// Depth bias descriptor structure to control fragment depth values.
+struct DepthBiasDescriptor
+{
+	// Specifies a scalar factor controlling the constant depth value added to each fragment. By default 0.0.
+	float constantFactor = 0.0f;
+	// Specifies a scalar factor applied to a fragment's slope in depth bias calculations. By default 0.0.
+	float slopeFactor = 0.0f;
+	// Specifies the maximum (or minimum) depth bias of a fragment. By default 0.0.	
+	float clamp = 0.0f;
+};
+
+inline bool IsPolygonOffsetEnabled(const DepthBiasDescriptor& desc)
+{
+	// Ignore clamp factor for this check, since it's useless without the other two parameters
+	return (desc.slopeFactor != 0.0f || desc.constantFactor != 0.0f);
+}
+
+
+struct DepthState final
+{
+	ComparisonFunction depthFunc = ComparisonFunction::Less;
+	bool depthWrite = true;
+	bool enable = true;
+};
+
+struct StencilState final
+{
+	bool enable = false;
+	uint8_t readMask = 0xFF;
+	uint8_t writeMask = 0xFF;
+
+	ComparisonFunction stencilFuncFront = ComparisonFunction::Always;
+	StencilOp stencilPassOpFront = StencilOp::Keep;  // stencil and depth pass
+	StencilOp stencilFailOpFront = StencilOp::Keep;  // stencil fail (depth irrelevant)
+	StencilOp stencilZFailOpFront = StencilOp::Keep; // stencil pass, depth fail
+
+	ComparisonFunction stencilFuncBack = ComparisonFunction::Always;
+	StencilOp stencilPassOpBack = StencilOp::Keep;
+	StencilOp stencilFailOpBack = StencilOp::Keep;
+	StencilOp stencilZFailOpBack = StencilOp::Keep;
+
+	int stencilRef = 0;
+};
+
+struct RasterizerState final
+{
+	RasterizerFillMode polygonMode = RasterizerFillMode::Solid;
+	RasterizerCullMode cullMode = RasterizerCullMode::FrontAndBack;
+	// Specifies the parameters to bias fragment depth values.
+	DepthBiasDescriptor depthBias;
+	FaceOrientation face = FaceOrientation::CounterClockwiseFace;
+	// If enabled, primitives are discarded after optional stream-outputs but before the rasterization stage.
+	bool discardEnabled = false;
+	// If enabled, there is effectively no near and far clipping plane.
+	bool depthClampEnabled = false;
+	// Specifies whether scissor test is enabled or disabled.
+	bool scissorTestEnabled = false;
+	// Specifies whether multi-sampling is enabled or disabled.
+	bool multiSampleEnabled = false;
+	// Specifies whether lines are rendered with or without anti-aliasing.
+	bool antiAliasedLineEnabled = false;
+	// Specifies the width of all generated line primitives. 
+	float lineWidth = 1.0f;
+};
+
+struct BlendState final
+{
+
+};
+
+//=============================================================================
+// Shader Core
+//=============================================================================
+
+// A class that can load shader sources in from files, and do some preprocessing on them.
+class ShaderBytecode final
+{
+public:
+	ShaderBytecode() = default;
+	// Loads in the shader from a memory data.
+	ShaderBytecode(const std::string& src) : m_sourceCode(src), m_shaderSource(ShaderSourceType::CodeMemory) {};
+	ShaderBytecode(ShaderBytecode&&) = default;
+	ShaderBytecode(const ShaderBytecode&) = default;
+	ShaderBytecode(ShaderSourceType shaderSource, const std::string& text);
+
+	ShaderBytecode& operator=(ShaderBytecode&&) = default;
+	ShaderBytecode& operator=(const ShaderBytecode&) = default;
+	ShaderBytecode& operator=(const std::string& src) { m_sourceCode = src; m_shaderSource = ShaderSourceType::CodeMemory; return *this; }
+
+	bool LoadFromFile(const std::string& file);
+
+	std::string& GetSource() { return m_sourceCode; }
+	const std::string& GetSource() const { return m_sourceCode; }
+	const std::string& GetPath() const { return m_path; }
+	const std::string& GetFilename() const { return m_filename; }
+	ShaderSourceType GetShaderSourceType() const { return m_shaderSource; }
+
+	bool IsValid() const { return m_sourceCode.length() > 0; }
+
+	template<typename T>
+	void InsertMacroValue(const std::string& macroName, const T& value)
+	{
+		size_t macroPos = m_sourceCode.find("#define " + macroName);
+#if defined(_DEBUG)
+		if (macroPos == std::string::npos)
+		{
+			LogFatal("ShaderBytecode::InsertMacroValue is called for '" + m_filename + "', but the shader doesn't have any macro named " + macroName);
+			return;
+		}
+#endif
+		size_t macroEnd = m_sourceCode.find('\n', macroPos);
+
+		std::stringstream sstream;
+		sstream << m_sourceCode.substr(0, macroPos + strlen("#define ") + macroName.length());
+		sstream << ' ' << value << m_sourceCode.substr(macroEnd);
+		m_sourceCode = sstream.str();
+	}
+
+	static std::string GetHeaderVertexShader();
+	static std::string GetHeaderFragmentShader();
+
+private:
+	std::string m_filename = "Unnamed shader";
+	std::string m_path;
+	std::string m_sourceCode;
+	ShaderSourceType m_shaderSource = ShaderSourceType::CodeMemory;
+};
+
+struct ShaderAttributeInfo final
+{
+	unsigned typeId;
+	unsigned type;
+	int numType;
+	std::string name;
+	int location;
+};
+
+struct Uniform final
+{
+	int location = -1;
+	unsigned programId = 0;
+};
+
+//=============================================================================
+// Buffer Core
+//=============================================================================
+
+struct VertexAttribute final
+{
+	unsigned location/* = -1*/;  // если -1, то берется индекс массива атрибутов
+	int size;
+	//unsigned type;
+	bool normalized;
+	int stride;         // sizeof Vertex
+	const void* offset; // (void*)offsetof(Vertex, TexCoord)}
+};
+
+//=============================================================================
+// Texture Core
+//=============================================================================
+
+struct Texture2DInfo final
+{
+	TextureMinFilter minFilter = TextureMinFilter::NearestMipmapNearest;
+	TextureMagFilter magFilter = TextureMagFilter::Nearest;
+	TextureAddressMode wrapS = TextureAddressMode::Repeat;
+	TextureAddressMode wrapT = TextureAddressMode::Repeat;
+
+	bool mipmap = true;
+};
+
+struct Texture2DCreateInfo final
+{
+	TexelsFormat format = TexelsFormat::RGBA_U8;
+	uint16_t width = 1;
+	uint16_t height = 1;
+	uint8_t* pixelData = nullptr;
+	unsigned mipMapCount = 1; // TODO: only compressed
+	bool hasTransparency = false;
 };

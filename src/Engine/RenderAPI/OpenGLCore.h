@@ -10,3 +10,10 @@
 #define OPENGL46 46
 
 #define USE_OPENGL_VERSION OPENGL46
+
+namespace OpenGLExtensions
+{
+	extern uint8_t version;
+	extern bool coreDebug;
+	extern bool coreDirectStateAccess;
+}

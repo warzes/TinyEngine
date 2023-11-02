@@ -1,6 +1,7 @@
 #pragma once
 
-#include "RenderResource.h"
+#include "RenderCore.h"
+
 //-----------------------------------------------------------------------------
 [[nodiscard]] inline GLenum TranslateToGL(ImageFormat format)
 {

@@ -5,7 +5,7 @@
 //=============================================================================
 
 #include "Core/Base/PlatformMacros.h"
-#include "EngineConfiguration.h"
+#include "EngineBuildSettings.h"
 
 //=============================================================================
 // STL and 3rdparty Header

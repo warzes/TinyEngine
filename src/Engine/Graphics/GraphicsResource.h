@@ -113,3 +113,110 @@ public:
 	BoundingAABB aabb;
 };
 using StaticModelRef = std::shared_ptr<StaticModel>;
+
+//=============================================================================
+// ANIMATION MESH
+//=============================================================================
+
+class NewMeshVertex final
+{
+public:
+	glm::vec3 positions;
+	glm::vec3 normals;
+	glm::vec4 tangents;
+	glm::vec4 colors;
+	glm::vec2 texCoords;
+	glm::vec2 texCoords2;
+};
+
+// TODO: возможно переименовать в baseMesh и убрать staticmesh
+class NewMesh final
+{
+public:
+	int triangleCount;      // Number of triangles stored (indexed or not)
+	std::vector<NewMeshVertex> vertices;
+	std::vector<uint32_t> indices;
+
+	GeometryBufferRef geometry;
+
+	// Animation vertex data
+	float* animVertices;    // Animated vertex positions (after bones transformations)
+	float* animNormals;     // Animated normals (after bones transformations)
+	unsigned char* boneIds; // Vertex bone ids, max 255 bone ids, up to 4 bones influence by vertex (skinning)
+	float* boneWeights;     // Vertex bone weight, up to 4 bones influence by vertex (skinning)
+};
+
+// TODO: убрать заменив старым классом
+struct TempTransform 
+{
+	glm::vec3 translation;
+	glm::quat rotation;
+	glm::vec3 scale;
+};
+
+// Bone, skeletal animation bone
+struct NewBoneInfo 
+{
+	char name[32];          // Bone name
+	int parent;             // Bone parent
+};
+
+struct MaterialMap 
+{
+	Texture2DRef texture;                // Material map texture
+	glm::vec3 color = glm::vec3{ 1.0f }; // Material map color
+	float value;                         // Material map value
+};
+
+// TODO: возможно этот вариант материала лучше - он позволяет добавлять новые виды
+struct NewMaterial 
+{
+	ShaderProgramRef shader; // Material shader
+	MaterialMap* maps;       // Material maps array (MAX_MATERIAL_MAPS)
+	float params[4];         // Material generic parameters (if required)
+};
+
+class NewModel final
+{
+public:
+	glm::mat4 transform;    // Local transform matrix
+
+	int meshCount;          // Number of meshes
+	int materialCount;      // Number of materials
+	NewMesh* meshes;           // Meshes array
+	NewMaterial* materials;    // Materials array
+	int* meshMaterial;      // Mesh material number
+
+	// Animation data
+	int boneCount;          // Number of bones
+	NewBoneInfo* bones;        // Bones information (skeleton)
+	TempTransform* bindPose;    // Bones base transformation (pose)
+};
+
+struct ModelAnimation {
+	int boneCount;          // Number of bones
+	int frameCount;         // Number of animation frames
+	NewBoneInfo* bones;        // Bones information (skeleton)
+	TempTransform** framePoses; // Poses array by frame
+	char name[32];          // Animation name
+};
+
+// Material map index
+enum MaterialMapIndex {
+	MATERIAL_MAP_ALBEDO = 0,        // Albedo material (same as: MATERIAL_MAP_DIFFUSE)
+	MATERIAL_MAP_METALNESS,         // Metalness material (same as: MATERIAL_MAP_SPECULAR)
+	MATERIAL_MAP_NORMAL,            // Normal material
+	MATERIAL_MAP_ROUGHNESS,         // Roughness material
+	MATERIAL_MAP_OCCLUSION,         // Ambient occlusion material
+	MATERIAL_MAP_EMISSION,          // Emission material
+	MATERIAL_MAP_HEIGHT,            // Heightmap material
+	MATERIAL_MAP_CUBEMAP,           // Cubemap material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
+	MATERIAL_MAP_IRRADIANCE,        // Irradiance material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
+	MATERIAL_MAP_PREFILTER,         // Prefilter material (NOTE: Uses GL_TEXTURE_CUBE_MAP)
+	MATERIAL_MAP_BRDF               // Brdf material
+};
+#define MATERIAL_MAP_DIFFUSE      MATERIAL_MAP_ALBEDO
+#define MATERIAL_MAP_SPECULAR     MATERIAL_MAP_METALNESS
+
+// TEMP Func
+NewModel LoadModel(const char* fileName);

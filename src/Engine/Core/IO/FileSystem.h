@@ -57,4 +57,6 @@ namespace FileSystem
 	// Return whether a path is absolute.
 	bool IsAbsolutePath(const std::string& pathName);
 
+	bool IsFileExtension(const std::string& pathName, const std::string& extension);
+
 }

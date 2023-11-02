@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "RenderSystem.h"
 #include "OpenGLTranslateToGL.h"
-#include "OpenGLExtensions.h"
 //-----------------------------------------------------------------------------
 VertexBufferRef RenderSystem::CreateVertexBuffer(BufferUsage usage)
 {
@@ -158,11 +157,11 @@ bool RenderSystem::UpdateBuffer(VertexBufferRef buffer, unsigned offset, unsigne
 	assert(IsValid(buffer));
 
 	const unsigned id = *buffer;
-	const bool isNewBufferData = (offset == 0 && (buffer->count != count || buffer->size != size));
+	const bool isNewBufferData = (offset == 0 && (buffer->count != count || buffer->sizeInBytes != size));
 	const GLsizeiptr numberOfBytes = count * size;
 	const GLenum glBufferUsage = TranslateToGL(buffer->usage);
 	buffer->count = count;
-	buffer->size = size;
+	buffer->sizeInBytes = size;
 
 #if PLATFORM_DESKTOP
 	if (OpenGLExtensions::coreDirectStateAccess)
@@ -195,11 +194,11 @@ bool RenderSystem::UpdateBuffer(IndexBufferRef buffer, unsigned offset, unsigned
 
 	const unsigned indexSize = SizeIndexType(indexFormat);
 	const unsigned id = *buffer;
-	const bool isNewBufferData = (offset == 0 && (buffer->count != count || buffer->size != indexSize));
+	const bool isNewBufferData = (offset == 0 && (buffer->count != count || buffer->sizeInBytes != indexSize));
 	const GLsizeiptr numberOfBytes = count * indexSize;
 	const GLenum glBufferUsage = TranslateToGL(buffer->usage);
 	buffer->count = count;
-	buffer->size = indexSize;
+	buffer->sizeInBytes = indexSize;
 
 #if PLATFORM_DESKTOP
 	if (OpenGLExtensions::coreDirectStateAccess)

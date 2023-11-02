@@ -136,13 +136,15 @@
     <ClCompile Include="Graphics\DebugDraw.cpp" />
     <ClCompile Include="Graphics\GraphicsResource.cpp" />
     <ClCompile Include="Graphics\GraphicsSystem.cpp" />
+    <ClCompile Include="Graphics\LoadGLTF.cpp" />
+    <ClCompile Include="Graphics\TempGraphics.cpp" />
     <ClCompile Include="Physics\PhysicsSystem.cpp" />
     <ClCompile Include="Platform\InputSystem.cpp" />
     <ClCompile Include="Platform\Monitor.cpp" />
     <ClCompile Include="Platform\WindowSystem.cpp" />
     <ClCompile Include="RenderAPI\Capabilities.cpp" />
-    <ClCompile Include="RenderAPI\OpenGLExtensions.cpp" />
     <ClCompile Include="RenderAPI\OpenGLCore.cpp" />
+    <ClCompile Include="RenderAPI\RenderCore.cpp" />
     <ClCompile Include="RenderAPI\RenderResource.cpp" />
     <ClCompile Include="RenderAPI\RenderSystem.cpp" />
     <ClCompile Include="RenderAPI\RenderSystem_Buffer.cpp" />
@@ -216,15 +218,14 @@
     <ClInclude Include="Platform\Monitor.h" />
     <ClInclude Include="Platform\WindowSystem.h" />
     <ClInclude Include="RenderAPI\Capabilities.h" />
-    <ClInclude Include="RenderAPI\OpenGLExtensions.h" />
     <ClInclude Include="RenderAPI\OpenGLCore.h" />
     <ClInclude Include="RenderAPI\OpenGLTranslateToGL.h" />
-    <ClInclude Include="RenderAPI\RenderEnums.h" />
+    <ClInclude Include="RenderAPI\RenderCore.h" />
     <ClInclude Include="RenderAPI\RenderResource.h" />
     <ClInclude Include="RenderAPI\RenderSystem.h" />
     <ClInclude Include="Scene\Node.h" />
     <ClInclude Include="TinyEngine.h" />
-    <ClInclude Include="EngineConfiguration.h" />
+    <ClInclude Include="EngineBuildSettings.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="World\Camera.h" />
   </ItemGroup>

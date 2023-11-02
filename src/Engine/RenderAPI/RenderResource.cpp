@@ -2,7 +2,6 @@
 #include "RenderResource.h"
 #include "RenderSystem.h"
 #include "OpenGLTranslateToGL.h"
-#include "OpenGLExtensions.h"
 #include "Core/IO/ImageLoader.h"
 //-----------------------------------------------------------------------------
 #if !PLATFORM_EMSCRIPTEN
@@ -21,73 +20,6 @@ static_assert(sizeof(TransformFeedback) == 4, "TransformFeedback size changed!!!
 #	endif // OPENGL40
 #endif // PLATFORM_EMSCRIPTEN
 //-----------------------------------------------------------------------------
-ShaderBytecode::ShaderBytecode(ShaderSourceType shaderSource, const std::string& text)
-{
-	m_shaderSource = shaderSource;
-	if (m_shaderSource == ShaderSourceType::CodeString)
-		m_src = text;
-	else if (m_shaderSource == ShaderSourceType::CodeFile)
-	{
-		m_src = text;
-		LoadFromFile(text);
-	}
-	else if (m_shaderSource == ShaderSourceType::BinaryBuffer)
-	{
-		LogFatal("Not impl!");
-	}
-	else if (m_shaderSource == ShaderSourceType::BinaryFile)
-	{
-		LogFatal("Not impl!");
-	}
-}
-//-----------------------------------------------------------------------------
-bool ShaderBytecode::LoadFromFile(const std::string & file)
-{
-	m_shaderSource = ShaderSourceType::CodeFile;
-
-	// TODO: возможно заменить fstream на file?
-	m_filename = file;
-	//m_path = ; не забыть
-	std::ifstream shaderFile(file); // TODO: заменить
-	if (!shaderFile.is_open())
-	{
-		LogError("Shader file '" + file + "' not found.");
-		return false;
-	}
-	std::stringstream shader_string;
-	shader_string << shaderFile.rdbuf();
-	m_src = shader_string.str();
-	// Remove the EOF from the end of the string.
-	if (m_src[m_src.length() - 1] == EOF)
-		m_src.pop_back();
-	return true;
-}
-//-----------------------------------------------------------------------------
-std::string ShaderBytecode::GetHeaderVertexShader()
-{
-#if PLATFORM_EMSCRIPTEN
-	return "#version 300 es";
-#else
-	return R"(
-#version 330 core
-)";
-#endif
-}
-//-----------------------------------------------------------------------------
-std::string ShaderBytecode::GetHeaderFragmentShader()
-{
-#if PLATFORM_EMSCRIPTEN
-	return R"(#version 300 es
-precision mediump float;
-
-)";
-#else
-	return R"(
-#version 330 core
-)";
-#endif
-}
-//-----------------------------------------------------------------------------
 Shader::Shader(ShaderPipelineStage stage)
 {
 	m_handle = glCreateShader(TranslateToGL(stage));
@@ -98,7 +30,7 @@ GPUBuffer::GPUBuffer(BufferTarget Type, BufferUsage Usage, unsigned Count, unsig
 	: type(Type)
 	, usage(Usage)
 	, count(Count)
-	, size(Size)
+	, sizeInBytes(Size)
 { 
 #if PLATFORM_DESKTOP
 	if (OpenGLExtensions::coreDirectStateAccess)
