@@ -133,9 +133,21 @@ public:
 class NewMesh final
 {
 public:
+	int vertexCount;        // Number of vertices stored in arrays
 	int triangleCount;      // Number of triangles stored (indexed or not)
-	std::vector<NewMeshVertex> vertices;
-	std::vector<uint32_t> indices;
+
+	// Vertex attributes data
+	float* vertices;        // Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
+	float* texcoords;       // Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
+	float* texcoords2;      // Vertex texture second coordinates (UV - 2 components per vertex) (shader-location = 5)
+	float* normals;         // Vertex normals (XYZ - 3 components per vertex) (shader-location = 2)
+	float* tangents;        // Vertex tangents (XYZW - 4 components per vertex) (shader-location = 4)
+	unsigned char* colors;      // Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
+	unsigned short* indices;    // Vertex indices (in case vertex data comes indexed)
+
+	//int triangleCount;      // Number of triangles stored (indexed or not)
+	//std::vector<NewMeshVertex> vertices;
+	//std::vector<uint32_t> indices;
 
 	GeometryBufferRef geometry;
 
@@ -164,7 +176,7 @@ struct NewBoneInfo
 struct MaterialMap 
 {
 	Texture2DRef texture;                // Material map texture
-	glm::vec3 color = glm::vec3{ 1.0f }; // Material map color
+	glm::vec4 color = glm::vec4{ 1.0f }; // Material map color
 	float value;                         // Material map value
 };
 
