@@ -5,6 +5,19 @@
 
 #include <cgltf.h>
 
+// Transform a vector by quaternion rotation
+// удалить?
+glm::vec3 Vector3RotateByQuaternion(const glm::vec3& v, const glm::quat& q)
+{
+	glm::vec3 result = glm::vec3{ 0 };
+
+	result.x = v.x * (q.x * q.x + q.w * q.w - q.y * q.y - q.z * q.z) + v.y * (2 * q.x * q.y - 2 * q.w * q.z) + v.z * (2 * q.x * q.z + 2 * q.w * q.y);
+	result.y = v.x * (2 * q.w * q.z + 2 * q.x * q.y) + v.y * (q.w * q.w - q.x * q.x + q.y * q.y - q.z * q.z) + v.z * (-2 * q.w * q.x + 2 * q.y * q.z);
+	result.z = v.x * (-2 * q.w * q.y + 2 * q.x * q.z) + v.y * (2 * q.w * q.x + 2 * q.y * q.z) + v.z * (q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z);
+
+	return result;
+}
+
 // Load data from file into a buffer
 unsigned char* LoadFileData(const char* fileName, int* dataSize)
 {
@@ -62,6 +75,131 @@ unsigned char* LoadFileData(const char* fileName, int* dataSize)
 	else LogWarning("FILEIO: File name provided is not valid");
 
 	return data;
+}
+
+NewMaterial LoadMaterialDefault()
+{
+	NewMaterial material = { 0 };
+	material.maps = (MaterialMap*)calloc(MAX_MATERIAL_MAPS, sizeof(MaterialMap));
+
+	// Using rlgl default shader
+
+	// Using rlgl default texture (1x1 pixel, UNCOMPRESSED_R8G8B8A8, 1 mipmap)
+	//material.maps[MATERIAL_MAP_DIFFUSE].texture = (Texture2D){ rlGetTextureIdDefault(), 1, 1, 1, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 };
+	//material.maps[MATERIAL_MAP_NORMAL].texture;         // NOTE: By default, not set
+	//material.maps[MATERIAL_MAP_SPECULAR].texture;       // NOTE: By default, not set
+
+	material.maps[MATERIAL_MAP_DIFFUSE].color = glm::vec4(1.0);    // Diffuse color
+	material.maps[MATERIAL_MAP_SPECULAR].color = glm::vec4(1.0);   // Specular color
+
+	return material;
+}
+
+// String pointer reverse break: returns right-most occurrence of charset in s
+static const char* strprbrk(const char* s, const char* charset)
+{
+	const char* latestMatch = NULL;
+	for (; s = strpbrk(s, charset), s != NULL; latestMatch = s++) {}
+	return latestMatch;
+}
+
+#define MAX_FILEPATH_LENGTH          4096       // Maximum length for filepaths (Linux PATH_MAX default value)
+// Get directory for a given filePath
+const char* GetDirectoryPath(const char* filePath)
+{
+	/*
+	// NOTE: Directory separator is different in Windows and other platforms,
+	// fortunately, Windows also support the '/' separator, that's the one should be used
+	#if defined(_WIN32)
+		char separator = '\\';
+	#else
+		char separator = '/';
+	#endif
+	*/
+	const char* lastSlash = NULL;
+	static char dirPath[MAX_FILEPATH_LENGTH] = { 0 };
+	memset(dirPath, 0, MAX_FILEPATH_LENGTH);
+
+	// In case provided path does not contain a root drive letter (C:\, D:\) nor leading path separator (\, /),
+	// we add the current directory path to dirPath
+	if (filePath[1] != ':' && filePath[0] != '\\' && filePath[0] != '/')
+	{
+		// For security, we set starting path to current directory,
+		// obtained path will be concatenated to this
+		dirPath[0] = '.';
+		dirPath[1] = '/';
+	}
+
+	lastSlash = strprbrk(filePath, "\\/");
+	if (lastSlash)
+	{
+		if (lastSlash == filePath)
+		{
+			// The last and only slash is the leading one: path is in a root directory
+			dirPath[0] = filePath[0];
+			dirPath[1] = '\0';
+		}
+		else
+		{
+			// NOTE: Be careful, strncpy() is not safe, it does not care about '\0'
+			char* dirPathPtr = dirPath;
+			if ((filePath[1] != ':') && (filePath[0] != '\\') && (filePath[0] != '/')) dirPathPtr += 2;     // Skip drive letter, "C:"
+			memcpy(dirPathPtr, filePath, strlen(filePath) - (strlen(lastSlash) - 1));
+			dirPath[strlen(filePath) - strlen(lastSlash) + (((filePath[1] != ':') && (filePath[0] != '\\') && (filePath[0] != '/')) ? 2 : 0)] = '\0';  // Add '\0' manually
+		}
+	}
+
+	return dirPath;
+}
+
+// Load bone info from GLTF skin data
+static NewBoneInfo* LoadBoneInfoGLTF(cgltf_skin skin, int* boneCount)
+{
+	*boneCount = (int)skin.joints_count;
+	NewBoneInfo* bones = (NewBoneInfo*)malloc(skin.joints_count * sizeof(NewBoneInfo));
+
+	for (unsigned int i = 0; i < skin.joints_count; i++)
+	{
+		cgltf_node node = *skin.joints[i];
+		strncpy_s(bones[i].name, node.name, sizeof(bones[i].name));
+
+		// Find parent bone index
+		unsigned int parentIndex = -1;
+
+		for (unsigned int j = 0; j < skin.joints_count; j++)
+		{
+			if (skin.joints[j] == node.parent)
+			{
+				parentIndex = j;
+				break;
+			}
+		}
+
+		bones[i].parent = parentIndex;
+	}
+
+	return bones;
+}
+
+// Build pose from parent joints
+// NOTE: Required for animations loading (required by IQM and GLTF)
+static void BuildPoseFromParentJoints(NewBoneInfo* bones, int boneCount, TempTransform* transforms)
+{
+	for (int i = 0; i < boneCount; i++)
+	{
+		if (bones[i].parent >= 0)
+		{
+			if (bones[i].parent > i)
+			{
+				LogWarning("Assumes bones are toplogically sorted, but bone " + std::to_string(i) + " has parent " + std::to_string(bones[i].parent) + ". Skipping.");
+				continue;
+			}
+			transforms[i].rotation = transforms[bones[i].parent].rotation * transforms[i].rotation;
+			transforms[i].translation = Vector3RotateByQuaternion(transforms[i].translation, transforms[bones[i].parent].rotation);
+			transforms[i].translation = transforms[i].translation + transforms[bones[i].parent].translation;
+			transforms[i].scale = transforms[i].scale * transforms[bones[i].parent].scale;
+		}
+	}
 }
 
 // Load glTF file into model struct, .gltf and .glb supported
@@ -164,28 +302,31 @@ NewModel LoadGLTF(const char* fileName)
 				// Load base color texture (albedo)
 				if (data->materials[i].pbr_metallic_roughness.base_color_texture.texture)
 				{
-					Image imAlbedo = LoadImageFromCgltfImage(data->materials[i].pbr_metallic_roughness.base_color_texture.texture->image, texPath);
-					if (imAlbedo.data != NULL)
-					{
-						model.materials[j].maps[MATERIAL_MAP_ALBEDO].texture = LoadTextureFromImage(imAlbedo);
-						UnloadImage(imAlbedo);
-					}
+					// TODO: доделать загрузку материала
+					//Image imAlbedo = LoadImageFromCgltfImage(data->materials[i].pbr_metallic_roughness.base_color_texture.texture->image, texPath);
+					//if (imAlbedo.data != NULL)
+					//{
+					//	model.materials[j].maps[MATERIAL_MAP_ALBEDO].texture = LoadTextureFromImage(imAlbedo);
+					//	UnloadImage(imAlbedo);
+					//}
 				}
 				// Load base color factor (tint)
-				model.materials[j].maps[MATERIAL_MAP_ALBEDO].color.r = (unsigned char)(data->materials[i].pbr_metallic_roughness.base_color_factor[0] * 255);
-				model.materials[j].maps[MATERIAL_MAP_ALBEDO].color.g = (unsigned char)(data->materials[i].pbr_metallic_roughness.base_color_factor[1] * 255);
-				model.materials[j].maps[MATERIAL_MAP_ALBEDO].color.b = (unsigned char)(data->materials[i].pbr_metallic_roughness.base_color_factor[2] * 255);
-				model.materials[j].maps[MATERIAL_MAP_ALBEDO].color.a = (unsigned char)(data->materials[i].pbr_metallic_roughness.base_color_factor[3] * 255);
+				model.materials[j].maps[MATERIAL_MAP_ALBEDO].color.x = (unsigned char)(data->materials[i].pbr_metallic_roughness.base_color_factor[0] * 255);
+				model.materials[j].maps[MATERIAL_MAP_ALBEDO].color.y = (unsigned char)(data->materials[i].pbr_metallic_roughness.base_color_factor[1] * 255);
+				model.materials[j].maps[MATERIAL_MAP_ALBEDO].color.z = (unsigned char)(data->materials[i].pbr_metallic_roughness.base_color_factor[2] * 255);
+				model.materials[j].maps[MATERIAL_MAP_ALBEDO].color.w
+					= (unsigned char)(data->materials[i].pbr_metallic_roughness.base_color_factor[3] * 255);
 
 				// Load metallic/roughness texture
 				if (data->materials[i].pbr_metallic_roughness.metallic_roughness_texture.texture)
 				{
-					Image imMetallicRoughness = LoadImageFromCgltfImage(data->materials[i].pbr_metallic_roughness.metallic_roughness_texture.texture->image, texPath);
+					// TODO: доделать загрузку материала
+					/*Image imMetallicRoughness = LoadImageFromCgltfImage(data->materials[i].pbr_metallic_roughness.metallic_roughness_texture.texture->image, texPath);
 					if (imMetallicRoughness.data != NULL)
 					{
 						model.materials[j].maps[MATERIAL_MAP_ROUGHNESS].texture = LoadTextureFromImage(imMetallicRoughness);
 						UnloadImage(imMetallicRoughness);
-					}
+					}*/
 
 					// Load metallic/roughness material properties
 					float roughness = data->materials[i].pbr_metallic_roughness.roughness_factor;
@@ -198,34 +339,37 @@ NewModel LoadGLTF(const char* fileName)
 				// Load normal texture
 				if (data->materials[i].normal_texture.texture)
 				{
-					Image imNormal = LoadImageFromCgltfImage(data->materials[i].normal_texture.texture->image, texPath);
+					// TODO: доделать загрузку материала
+					/*Image imNormal = LoadImageFromCgltfImage(data->materials[i].normal_texture.texture->image, texPath);
 					if (imNormal.data != NULL)
 					{
 						model.materials[j].maps[MATERIAL_MAP_NORMAL].texture = LoadTextureFromImage(imNormal);
 						UnloadImage(imNormal);
-					}
+					}*/
 				}
 
 				// Load ambient occlusion texture
 				if (data->materials[i].occlusion_texture.texture)
 				{
-					Image imOcclusion = LoadImageFromCgltfImage(data->materials[i].occlusion_texture.texture->image, texPath);
+					// TODO: доделать загрузку материала
+					/*Image imOcclusion = LoadImageFromCgltfImage(data->materials[i].occlusion_texture.texture->image, texPath);
 					if (imOcclusion.data != NULL)
 					{
 						model.materials[j].maps[MATERIAL_MAP_OCCLUSION].texture = LoadTextureFromImage(imOcclusion);
 						UnloadImage(imOcclusion);
-					}
+					}*/
 				}
 
 				// Load emissive texture
 				if (data->materials[i].emissive_texture.texture)
 				{
-					Image imEmissive = LoadImageFromCgltfImage(data->materials[i].emissive_texture.texture->image, texPath);
+					// TODO: доделать загрузку материала
+					/*Image imEmissive = LoadImageFromCgltfImage(data->materials[i].emissive_texture.texture->image, texPath);
 					if (imEmissive.data != NULL)
 					{
 						model.materials[j].maps[MATERIAL_MAP_EMISSION].texture = LoadTextureFromImage(imEmissive);
 						UnloadImage(imEmissive);
-					}
+					}*/
 
 					// Load emissive color factor
 					model.materials[j].maps[MATERIAL_MAP_EMISSION].color.x = (unsigned char)(data->materials[i].emissive_factor[0] * 255);
@@ -525,7 +669,322 @@ NewModel LoadGLTF(const char* fileName)
 	else LogWarning("MODEL: [" + std::string(fileName) + "] Failed to load glTF data");
 
 	// WARNING: cgltf requires the file pointer available while reading data
-	UnloadFileData(fileData);
+	free(fileData);
 
 	return model;
+}
+
+struct tempVec3
+{
+	float x, y, z;
+};
+struct tempVec4 // TODO: это кватернион здесь
+{
+	float x, y, z, w;
+};
+
+// Calculate linear interpolation between two vectors
+tempVec3 Vector3Lerp(glm::vec3 v1, glm::vec3 v2, float amount)
+{
+	tempVec3 result = { 0 };
+	result.x = v1.x + amount * (v2.x - v1.x);
+	result.y = v1.y + amount * (v2.y - v1.y);
+	result.z = v1.z + amount * (v2.z - v1.z);
+	return result;
+}
+
+// Calculate slerp-optimized interpolation between two quaternions
+tempVec4 QuaternionNlerp(glm::vec4 q1, glm::vec4 q2, float amount)
+{
+	tempVec4 result = { 0 };
+
+	// QuaternionLerp(q1, q2, amount)
+	result.x = q1.x + amount * (q2.x - q1.x);
+	result.y = q1.y + amount * (q2.y - q1.y);
+	result.z = q1.z + amount * (q2.z - q1.z);
+	result.w = q1.w + amount * (q2.w - q1.w);
+
+	// QuaternionNormalize(q);
+	tempVec4 q = result;
+	float length = sqrtf(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
+	if (length == 0.0f) length = 1.0f;
+	float ilength = 1.0f / length;
+
+	result.x = q.x * ilength;
+	result.y = q.y * ilength;
+	result.z = q.z * ilength;
+	result.w = q.w * ilength;
+
+	return result;
+}
+
+// Calculates spherical linear interpolation between two quaternions
+tempVec4 QuaternionSlerp(glm::vec4 q1, glm::vec4 q2, float amount)
+{
+	tempVec4 result = { 0 };
+
+#if !defined(EPSILON)
+#define EPSILON 0.000001f
+#endif
+
+	float cosHalfTheta = q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w;
+
+	if (cosHalfTheta < 0)
+	{
+		q2.x = -q2.x; q2.y = -q2.y; q2.z = -q2.z; q2.w = -q2.w;
+		cosHalfTheta = -cosHalfTheta;
+	}
+
+	if (fabsf(cosHalfTheta) >= 1.0f)
+	{
+		result.x = q1.x;
+		result.y = q1.y;
+		result.z = q1.z;
+		result.w = q1.w;
+	}
+	else if (cosHalfTheta > 0.95f) result = QuaternionNlerp(q1, q2, amount);
+	else
+	{
+		float halfTheta = acosf(cosHalfTheta);
+		float sinHalfTheta = sqrtf(1.0f - cosHalfTheta * cosHalfTheta);
+
+		if (fabsf(sinHalfTheta) < EPSILON)
+		{
+			result.x = (q1.x * 0.5f + q2.x * 0.5f);
+			result.y = (q1.y * 0.5f + q2.y * 0.5f);
+			result.z = (q1.z * 0.5f + q2.z * 0.5f);
+			result.w = (q1.w * 0.5f + q2.w * 0.5f);
+		}
+		else
+		{
+			float ratioA = sinf((1 - amount) * halfTheta) / sinHalfTheta;
+			float ratioB = sinf(amount * halfTheta) / sinHalfTheta;
+
+			result.x = (q1.x * ratioA + q2.x * ratioB);
+			result.y = (q1.y * ratioA + q2.y * ratioB);
+			result.z = (q1.z * ratioA + q2.z * ratioB);
+			result.w = (q1.w * ratioA + q2.w * ratioB);
+		}
+	}
+
+	return result;
+}
+
+// Get interpolated pose for bone sampler at a specific time. Returns true on success.
+static bool GetPoseAtTimeGLTF(cgltf_accessor* input, cgltf_accessor* output, float time, void* data)
+{
+	// Input and output should have the same count
+	float tstart = 0.0f;
+	float tend = 0.0f;
+	int keyframe = 0;       // Defaults to first pose
+
+	for (int i = 0; i < (int)input->count - 1; i++)
+	{
+		cgltf_bool r1 = cgltf_accessor_read_float(input, i, &tstart, 1);
+		if (!r1) return false;
+
+		cgltf_bool r2 = cgltf_accessor_read_float(input, i + 1, &tend, 1);
+		if (!r2) return false;
+
+		if ((tstart <= time) && (time < tend))
+		{
+			keyframe = i;
+			break;
+		}
+	}
+
+	float t = (time - tstart) / (tend - tstart);
+	t = (t < 0.0f) ? 0.0f : t;
+	t = (t > 1.0f) ? 1.0f : t;
+
+	if (output->component_type != cgltf_component_type_r_32f) return false;
+
+	if (output->type == cgltf_type_vec3)
+	{
+		float tmp[3] = { 0.0f };
+		cgltf_accessor_read_float(output, keyframe, tmp, 3);
+		glm::vec3 v1 = { tmp[0], tmp[1], tmp[2] };
+		cgltf_accessor_read_float(output, keyframe + 1, tmp, 3);
+		glm::vec3 v2 = { tmp[0], tmp[1], tmp[2] };
+
+		tempVec3* r = (tempVec3*)data;
+		*r = Vector3Lerp(v1, v2, t);
+	}
+	else if (output->type == cgltf_type_vec4)
+	{
+		float tmp[4] = { 0.0f };
+		cgltf_accessor_read_float(output, keyframe, tmp, 4);
+		glm::vec4 v1 = { tmp[0], tmp[1], tmp[2], tmp[3] };
+		cgltf_accessor_read_float(output, keyframe + 1, tmp, 4);
+		glm::vec4 v2 = { tmp[0], tmp[1], tmp[2], tmp[3] };
+		tempVec4* r = (tempVec4*)data;
+
+		// Only v4 is for rotations, so we know it's a quaternion
+		*r = QuaternionSlerp(v1, v2, t);
+	}
+
+	return true;
+}
+
+#define GLTF_ANIMDELAY 17    // Animation frames delay, (~1000 ms/60 FPS = 16.666666* ms)
+ModelAnimation* LoadModelAnimationsGLTF(const char* fileName, unsigned int* animCount)
+{
+	// glTF file loading
+	int dataSize = 0;
+	unsigned char* fileData = LoadFileData(fileName, &dataSize);
+
+	ModelAnimation* animations = NULL;
+
+	// glTF data loading
+	cgltf_options options = { };
+	cgltf_data* data = NULL;
+	cgltf_result result = cgltf_parse(&options, fileData, dataSize, &data);
+
+	if (result != cgltf_result_success)
+	{
+		LogWarning("MODEL: [" + std::string(fileName) + "] Failed to load glTF data");
+		*animCount = 0;
+		return NULL;
+	}
+
+	result = cgltf_load_buffers(&options, data, fileName);
+	if (result != cgltf_result_success) LogPrint("MODEL: [" + std::string(fileName) + "] Failed to load animation buffers");
+
+	if (result == cgltf_result_success)
+	{
+		if (data->skins_count == 1)
+		{
+			cgltf_skin skin = data->skins[0];
+			*animCount = (unsigned)data->animations_count;
+			animations = (ModelAnimation*)malloc(data->animations_count * sizeof(ModelAnimation));
+
+			for (unsigned int i = 0; i < data->animations_count; i++)
+			{
+				animations[i].bones = LoadBoneInfoGLTF(skin, &animations[i].boneCount);
+
+				cgltf_animation animData = data->animations[i];
+
+				struct Channels {
+					cgltf_animation_channel* translate;
+					cgltf_animation_channel* rotate;
+					cgltf_animation_channel* scale;
+				};
+
+				Channels* boneChannels = (Channels*)calloc(animations[i].boneCount, sizeof(Channels));
+				float animDuration = 0.0f;
+
+				for (unsigned int j = 0; j < animData.channels_count; j++)
+				{
+					cgltf_animation_channel channel = animData.channels[j];
+					int boneIndex = -1;
+
+					for (unsigned int k = 0; k < skin.joints_count; k++)
+					{
+						if (animData.channels[j].target_node == skin.joints[k])
+						{
+							boneIndex = k;
+							break;
+						}
+					}
+
+					if (boneIndex == -1)
+					{
+						// Animation channel for a node not in the armature
+						continue;
+					}
+
+					if (animData.channels[j].sampler->interpolation == cgltf_interpolation_type_linear)
+					{
+						if (channel.target_path == cgltf_animation_path_type_translation)
+						{
+							boneChannels[boneIndex].translate = &animData.channels[j];
+						}
+						else if (channel.target_path == cgltf_animation_path_type_rotation)
+						{
+							boneChannels[boneIndex].rotate = &animData.channels[j];
+						}
+						else if (channel.target_path == cgltf_animation_path_type_scale)
+						{
+							boneChannels[boneIndex].scale = &animData.channels[j];
+						}
+						else
+						{
+							LogWarning("MODEL: [" + std::string(fileName) + "] Unsupported target_path on channel " + std::to_string(j) + "'s sampler for animation " + std::to_string(i) + ". Skipping.");
+						}
+					}
+					else LogWarning("MODEL: [" + std::string(fileName) + "] Only linear interpolation curves are supported for GLTF animation.");
+
+					float t = 0.0f;
+					cgltf_bool r = cgltf_accessor_read_float(channel.sampler->input, channel.sampler->input->count - 1, &t, 1);
+
+					if (!r)
+					{
+						LogWarning("MODEL: [" + std::string(fileName) + "] Failed to load input time");
+						continue;
+					}
+
+					animDuration = (t > animDuration) ? t : animDuration;
+				}
+
+				strncpy_s(animations[i].name, animData.name, sizeof(animations[i].name));
+				animations[i].name[sizeof(animations[i].name) - 1] = '\0';
+
+				animations[i].frameCount = (int)(animDuration * 1000.0f / GLTF_ANIMDELAY);
+				animations[i].framePoses = (TempTransform**)malloc(animations[i].frameCount * sizeof(TempTransform*));
+
+				for (int j = 0; j < animations[i].frameCount; j++)
+				{
+					animations[i].framePoses[j] = (TempTransform*)malloc(animations[i].boneCount * sizeof(TempTransform));
+					float time = ((float)j * GLTF_ANIMDELAY) / 1000.0f;
+
+					for (int k = 0; k < animations[i].boneCount; k++)
+					{
+						glm::vec3 translation = { 0, 0, 0 };
+						glm::quat rotation = { 1, 0, 0, 0 };
+						glm::vec3 scale = { 1, 1, 1 };
+
+						if (boneChannels[k].translate)
+						{
+							if (!GetPoseAtTimeGLTF(boneChannels[k].translate->sampler->input, boneChannels[k].translate->sampler->output, time, &translation))
+							{
+								LogPrint("MODEL: [" + std::string(fileName) + "] Failed to load translate pose data for bone " + std::string(animations[i].bones[k].name));
+							}
+						}
+
+						if (boneChannels[k].rotate)
+						{
+							if (!GetPoseAtTimeGLTF(boneChannels[k].rotate->sampler->input, boneChannels[k].rotate->sampler->output, time, &rotation))
+							{
+								LogPrint("MODEL: [" + std::string(fileName) + "] Failed to load rotate pose data for bone " + std::string(animations[i].bones[k].name));
+							}
+						}
+
+						if (boneChannels[k].scale)
+						{
+							if (!GetPoseAtTimeGLTF(boneChannels[k].scale->sampler->input, boneChannels[k].scale->sampler->output, time, &scale))
+							{
+								LogPrint("MODEL: [" + std::string(fileName) + "] Failed to load scale pose data for bone " + std::string(animations[i].bones[k].name));
+							}
+						}
+
+						animations[i].framePoses[j][k] = TempTransform{
+							.translation = translation,
+							.rotation = rotation,
+							.scale = scale
+						};
+					}
+
+					BuildPoseFromParentJoints(animations[i].bones, animations[i].boneCount, animations[i].framePoses[j]);
+				}
+
+				LogPrint("MODEL: [" + std::string(fileName) + "] Loaded animation: " + std::string(animData.name) + " (" + std::to_string(animations[i].frameCount) + " frames, " + std::to_string(animDuration) + "s)");
+				free(boneChannels);
+			}
+		}
+		else LogError("MODEL: [" + std::string(fileName) + "] expected exactly one skin to load animation data from, but found " + std::to_string(data->skins_count));
+
+		cgltf_free(data);
+	}
+	free(fileData);
+	return animations;
 }

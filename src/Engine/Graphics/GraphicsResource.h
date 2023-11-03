@@ -146,8 +146,8 @@ public:
 	unsigned short* indices;    // Vertex indices (in case vertex data comes indexed)
 
 	//int triangleCount;      // Number of triangles stored (indexed or not)
-	//std::vector<NewMeshVertex> vertices;
-	//std::vector<uint32_t> indices;
+	std::vector<NewMeshVertex> vert;
+	std::vector<uint32_t> index;
 
 	GeometryBufferRef geometry;
 
@@ -230,5 +230,9 @@ enum MaterialMapIndex {
 #define MATERIAL_MAP_DIFFUSE      MATERIAL_MAP_ALBEDO
 #define MATERIAL_MAP_SPECULAR     MATERIAL_MAP_METALNESS
 
+#define MAX_MATERIAL_MAPS              12       // Maximum number of shader maps supported
+
 // TEMP Func
-NewModel LoadModel(const char* fileName);
+NewModel LoadModel(const char* fileName, ShaderProgramRef program);
+ModelAnimation* LoadModelAnimations(const char* fileName, unsigned int* animCount);// Load model animations from file
+void UpdateModelAnimation(NewModel model, ModelAnimation anim, int frame); // Update model animation pose
