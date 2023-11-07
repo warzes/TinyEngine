@@ -2,7 +2,7 @@
 #include "RenderResource.h"
 #include "RenderSystem.h"
 #include "OpenGLTranslateToGL.h"
-#include "Core/IO/ImageLoader.h"
+#include "Core/IO/Image.h"
 //-----------------------------------------------------------------------------
 #if !PLATFORM_EMSCRIPTEN
 static_assert(sizeof(Uniform) == 8, "Uniform size changed!!!");
@@ -155,21 +155,22 @@ GeometryBufferRef RenderSystem::CreateGeometryBuffer(VertexBufferRef vb, IndexBu
 	return geom;
 }
 //-----------------------------------------------------------------------------
-TexelsFormat Convert(ImageLoader::ImageFormat format)
+TexelsFormat Convert(Image::ImageFormat format)
 {
 	switch (format)
 	{
-	case ImageLoader::R_U8:    return TexelsFormat::R_U8;
-	case ImageLoader::RG_U8:   return TexelsFormat::RG_U8;
-	case ImageLoader::RGB_U8:  return TexelsFormat::RGB_U8;
-	case ImageLoader::RGBA_U8: return TexelsFormat::RGBA_U8;
-	case ImageLoader::None:
+	case Image::R_U8:    return TexelsFormat::R_U8;
+	case Image::RG_U8:   return TexelsFormat::RG_U8;
+	case Image::RGB_U8:  return TexelsFormat::RGB_U8;
+	case Image::RGBA_U8: return TexelsFormat::RGBA_U8;
+	case Image::None:
 	default: return TexelsFormat::None;
 	}
 }
 //-----------------------------------------------------------------------------
 Texture2DRef RenderSystem::CreateTexture2D(const char* fileName, bool useCache, const Texture2DInfo& textureInfo)
 {
+	// TODO: отрефакторить все CreateTexture2D()
 	if( useCache )
 	{
 		auto it = m_cacheFileTextures2D.find(fileName);
@@ -179,12 +180,12 @@ Texture2DRef RenderSystem::CreateTexture2D(const char* fileName, bool useCache, 
 
 	LogPrint("Load texture: " + std::string(fileName));
 
-	ImageLoader imageLoad(fileName);
+	Image imageLoad(fileName);
 	auto* pixelData = imageLoad.GetTexels();
 	if( pixelData == nullptr )
 	{
 		LogError("Image loading failed! Filename='" + std::string(fileName) + "'");
-		return {};
+		return nullptr;
 	}
 	const Texture2DCreateInfo createInfo = {
 		.format = Convert(imageLoad.GetImageFormat()),
@@ -198,8 +199,68 @@ Texture2DRef RenderSystem::CreateTexture2D(const char* fileName, bool useCache, 
 	return m_cacheFileTextures2D[fileName];
 }
 //-----------------------------------------------------------------------------
+Texture2DRef RenderSystem::CreateTexture2D(ImageLoaderRef image, const Texture2DInfo& textureInfo)
+{
+	// TODO: отрефакторить все CreateTexture2D()
+	if (!image || !image->IsValid())
+	{
+		LogError("Image not create");
+		return nullptr;
+	}
+
+	auto* pixelData = image->GetTexels();
+	if (pixelData == nullptr)
+	{
+		LogError("Image loading failed!");
+		return nullptr;
+	}
+	const Texture2DCreateInfo createInfo = {
+		.format = Convert(image->GetImageFormat()),
+		.width = static_cast<uint16_t>(image->GetWidth()),
+		.height = static_cast<uint16_t>(image->GetHeight()),
+		.pixelData = pixelData,
+		.hasTransparency = image->HasTransparency()
+	};
+
+	return CreateTexture2D(createInfo, textureInfo);
+}
+//-----------------------------------------------------------------------------
+Texture2DRef RenderSystem::CreateTexture2D(ImageLoaderRef image, const char* nameInCache, const Texture2DInfo& textureInfo)
+{
+	// TODO: отрефакторить все CreateTexture2D()
+	auto it = m_cacheFileTextures2D.find(nameInCache);
+	if (it != m_cacheFileTextures2D.end())
+		return it->second;
+
+	if (!image || !image->IsValid())
+	{
+		LogError("Image not create");
+		return nullptr;
+	}
+
+	LogPrint("Load texture: " + std::string(nameInCache));
+
+	auto* pixelData = image->GetTexels();
+	if (pixelData == nullptr)
+	{
+		LogError("Image loading failed! Filename='" + std::string(nameInCache) + "'");
+		return nullptr;
+	}
+	const Texture2DCreateInfo createInfo = {
+		.format = Convert(image->GetImageFormat()),
+		.width = static_cast<uint16_t>(image->GetWidth()),
+		.height = static_cast<uint16_t>(image->GetHeight()),
+		.pixelData = pixelData,
+		.hasTransparency = image->HasTransparency()
+	};
+
+	m_cacheFileTextures2D[nameInCache] = CreateTexture2D(createInfo, textureInfo);
+	return m_cacheFileTextures2D[nameInCache];
+}
+//-----------------------------------------------------------------------------
 Texture2DRef RenderSystem::CreateTexture2D(const Texture2DCreateInfo& createInfo, const Texture2DInfo& textureInfo)
 {
+	// TODO: отрефакторить все CreateTexture2D()
 	Texture2DRef resource(new Texture2D(createInfo.width, createInfo.height, createInfo.format));
 	resource->hasTransparency = createInfo.hasTransparency;
 	// gen texture res

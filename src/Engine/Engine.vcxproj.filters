@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="Core\IO\ImageLoader.cpp">
+    <ClCompile Include="Core\IO\Image.cpp">
       <Filter>Core\IO</Filter>
     </ClCompile>
     <ClCompile Include="Core\IO\FileSystem.cpp">
@@ -155,7 +155,7 @@
     <ClCompile Include="Core\Resource\JSONFile.cpp">
       <Filter>Core\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Resource\Image.cpp">
+    <ClCompile Include="Core\Resource\TempImage.cpp">
       <Filter>Core\Resource</Filter>
     </ClCompile>
     <ClCompile Include="Core\Resource\Decompress.cpp">
@@ -205,7 +205,7 @@
     <ClInclude Include="Core\IO\FileSystem.h">
       <Filter>Core\IO</Filter>
     </ClInclude>
-    <ClInclude Include="Core\IO\ImageLoader.h">
+    <ClInclude Include="Core\IO\Image.h">
       <Filter>Core\IO</Filter>
     </ClInclude>
     <ClInclude Include="Core\Logging\LogSystem.h">
@@ -379,7 +379,7 @@
     <ClInclude Include="Core\Resource\JSONFile.h">
       <Filter>Core\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Resource\Image.h">
+    <ClInclude Include="Core\Resource\TempImage.h">
       <Filter>Core\Resource</Filter>
     </ClInclude>
     <ClInclude Include="Core\Resource\Decompress.h">

@@ -108,7 +108,7 @@
     <ClCompile Include="Core\Geometry\Triangle.cpp" />
     <ClCompile Include="Core\IO\File.cpp" />
     <ClCompile Include="Core\IO\FileSystem.cpp" />
-    <ClCompile Include="Core\IO\ImageLoader.cpp" />
+    <ClCompile Include="Core\IO\Image.cpp" />
     <ClCompile Include="Core\IO\JSONValue.cpp" />
     <ClCompile Include="Core\IO\MemoryBuffer.cpp" />
     <ClCompile Include="Core\IO\ResourceRef.cpp" />
@@ -126,7 +126,7 @@
     <ClCompile Include="Core\Object\Ptr.cpp" />
     <ClCompile Include="Core\Object\Serializable.cpp" />
     <ClCompile Include="Core\Resource\Decompress.cpp" />
-    <ClCompile Include="Core\Resource\Image.cpp" />
+    <ClCompile Include="Core\Resource\TempImage.cpp" />
     <ClCompile Include="Core\Resource\JSONFile.cpp" />
     <ClCompile Include="Core\Resource\Resource.cpp" />
     <ClCompile Include="Core\Resource\ResourceCache.cpp" />
@@ -183,7 +183,7 @@
     <ClInclude Include="Core\Geometry\Triangle.h" />
     <ClInclude Include="Core\IO\File.h" />
     <ClInclude Include="Core\IO\FileSystem.h" />
-    <ClInclude Include="Core\IO\ImageLoader.h" />
+    <ClInclude Include="Core\IO\Image.h" />
     <ClInclude Include="Core\IO\JSONValue.h" />
     <ClInclude Include="Core\IO\MemoryBuffer.h" />
     <ClInclude Include="Core\IO\ObjectRef.h" />
@@ -205,7 +205,7 @@
     <ClInclude Include="Core\Object\Ptr.h" />
     <ClInclude Include="Core\Object\Serializable.h" />
     <ClInclude Include="Core\Resource\Decompress.h" />
-    <ClInclude Include="Core\Resource\Image.h" />
+    <ClInclude Include="Core\Resource\TempImage.h" />
     <ClInclude Include="Core\Resource\JSONFile.h" />
     <ClInclude Include="Core\Resource\Resource.h" />
     <ClInclude Include="Core\Resource\ResourceCache.h" />

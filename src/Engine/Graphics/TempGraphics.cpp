@@ -219,14 +219,12 @@ void UpdateModelAnimation(const NewModel& model, const ModelAnimation& anim, int
 			{
 				auto vb = mesh.geometry->GetVBO();
 
-				render.Bind(vb);
 				NewMeshVertex* data = (NewMeshVertex*)render.MapBuffer(vb);
-				for (size_t i = 0, v = 0, n = 0; i < mesh.vert.size(); i++)
+				for (size_t i = 0, v = 0; i < mesh.vert.size(); i++)
 				{
 					data[i].positions = { mesh.animVertices[v + 0], mesh.animVertices[v + 1], mesh.animVertices[v + 2] };
-					data[i].normals = { mesh.animNormals[n + 0], mesh.animNormals[n + 1], mesh.animNormals[n + 2] };
+					data[i].normals = { mesh.animNormals[v + 0], mesh.animNormals[v + 1], mesh.animNormals[v + 2] };
 					v += 3;
-					n += 3;
 				}
 				render.UnmapBuffer(vb);
 			}

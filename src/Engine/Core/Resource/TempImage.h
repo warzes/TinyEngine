@@ -70,15 +70,15 @@ struct ImageLevel
 };
 
 /// %Image resource.
-class Image : public Resource
+class TempImage : public Resource
 {
-	OBJECT(Image);
+	OBJECT(TempImage);
 
 public:
 	/// Construct.
-	Image();
+	TempImage();
 	/// Destruct.
-	~Image();
+	~TempImage();
 
 	/// Register object factory.
 	static void RegisterObject();
@@ -118,7 +118,7 @@ public:
 	/// Return number of mip levels contained in the image data.
 	size_t NumLevels() const { return numLevels; }
 	/// Calculate the next mip image with halved width and height. Supports uncompressed 8 bits per pixel images only. Return true on success.
-	bool GenerateMipImage(Image& dest) const;
+	bool GenerateMipImage(TempImage& dest) const;
 	/// Return the data for a mip level. Images loaded from eg. PNG or JPG formats will only have one (index 0) level.
 	ImageLevel Level(size_t index) const;
 	/// Decompress a mip level as 8-bit RGBA. Supports compressed images only. Return true on success.

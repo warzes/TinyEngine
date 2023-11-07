@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Image.h"
+#include "TempImage.h"
 #include "Decompress.h"
 #include "Core/IO/Stream.h"
 #include "Core/Logging/Log.h"
@@ -14,7 +14,7 @@
 #define FOURCC_DXT4 (MAKEFOURCC('D','X','T','4'))
 #define FOURCC_DXT5 (MAKEFOURCC('D','X','T','5'))
 
-const int Image::components[] =
+const int TempImage::components[] =
 {
 0,      // FMT_NONE
 1,      // FMT_R8
@@ -47,7 +47,7 @@ const int Image::components[] =
 0       // FMT_PVRTC_RGBA_4BPP
 };
 
-const size_t Image::pixelByteSizes[] =
+const size_t TempImage::pixelByteSizes[] =
 {
 0,      // FMT_NONE
 1,      // FMT_R8
@@ -213,9 +213,9 @@ struct DDSurfaceDesc2
 ImageLevel::ImageLevel(const glm::ivec2& size_, ImageFormat format_, const void* data_) :
 	data((unsigned char*)data_),
 	size(glm::ivec3(size_.x, size_.y, 1)),
-	dataSize(Image::pixelByteSizes[format_] * size_.x* size_.y),
-	sliceSize(Image::pixelByteSizes[format_] * size_.x* size_.y),
-	rowSize(Image::pixelByteSizes[format_] * size_.x),
+	dataSize(TempImage::pixelByteSizes[format_] * size_.x* size_.y),
+	sliceSize(TempImage::pixelByteSizes[format_] * size_.x* size_.y),
+	rowSize(TempImage::pixelByteSizes[format_] * size_.x),
 	rows(size_.y)
 {
 }
@@ -223,29 +223,29 @@ ImageLevel::ImageLevel(const glm::ivec2& size_, ImageFormat format_, const void*
 ImageLevel::ImageLevel(const glm::ivec3& size_, ImageFormat format_, const void* data_) :
 	data((unsigned char*)data_),
 	size(size_),
-	dataSize(Image::pixelByteSizes[format_] * size_.x* size_.y* size_.z),
-	sliceSize(Image::pixelByteSizes[format_] * size_.x* size_.y),
-	rowSize(Image::pixelByteSizes[format_] * size_.x),
+	dataSize(TempImage::pixelByteSizes[format_] * size_.x* size_.y* size_.z),
+	sliceSize(TempImage::pixelByteSizes[format_] * size_.x* size_.y),
+	rowSize(TempImage::pixelByteSizes[format_] * size_.x),
 	rows(size_.y)
 {
 }
 
-Image::Image() :
+TempImage::TempImage() :
 	format(FMT_NONE),
 	numLevels(1)
 {
 }
 
-Image::~Image()
+TempImage::~TempImage()
 {
 }
 
-void Image::RegisterObject()
+void TempImage::RegisterObject()
 {
-	RegisterFactory<Image>();
+	RegisterFactory<TempImage>();
 }
 
-bool Image::BeginLoad(Stream& source)
+bool TempImage::BeginLoad(Stream& source)
 {
 	// Check for DDS, KTX or PVR compressed format
 	std::string fileID = source.ReadFileID();
@@ -506,40 +506,12 @@ bool Image::BeginLoad(Stream& source)
 	return true;
 }
 
-//bool Image::Save(Stream& dest)
-//{
-//	if (IsCompressed())
-//	{
-//		LogError("Can not save compressed image " + Name());
-//		return false;
-//	}
-//
-//	if (!data)
-//	{
-//		LogError("Can not save zero-sized image " + Name());
-//		return false;
-//	}
-//
-//	int pixelByteSize = (int)PixelByteSize();
-//	if (pixelByteSize < 1 || pixelByteSize > 4)
-//	{
-//		LogError("Unsupported pixel format for PNG save on image " + Name());
-//		return false;
-//	}
-//
-//	int len;
-//	unsigned char* png = stbi_write_png_to_mem(data.Get(), 0, size.x, size.y, pixelByteSize, &len);
-//	bool success = dest.Write(png, len) == (size_t)len;
-//	free(png);
-//	return success;
-//}
-
-void Image::SetSize(const glm::ivec2& newSize, ImageFormat newFormat)
+void TempImage::SetSize(const glm::ivec2& newSize, ImageFormat newFormat)
 {
 	SetSize(glm::ivec3(newSize.x, newSize.y, 1), newFormat);
 }
 
-void Image::SetSize(const glm::ivec3& newSize, ImageFormat newFormat)
+void TempImage::SetSize(const glm::ivec3& newSize, ImageFormat newFormat)
 {
 	if (newSize == size && newFormat == format)
 		return;
@@ -561,7 +533,7 @@ void Image::SetSize(const glm::ivec3& newSize, ImageFormat newFormat)
 	numLevels = 1;
 }
 
-void Image::SetData(const unsigned char* pixelData)
+void TempImage::SetData(const unsigned char* pixelData)
 {
 	if (!IsCompressed())
 		memcpy(data.Get(), pixelData, size.x * size.y * size.z * PixelByteSize());
@@ -569,7 +541,7 @@ void Image::SetData(const unsigned char* pixelData)
 		LogError("Can not set pixel data of a compressed image");
 }
 
-unsigned char* Image::DecodePixelData(Stream& source, int& width, int& height, int& depth, unsigned& pixelByteSize)
+unsigned char* TempImage::DecodePixelData(Stream& source, int& width, int& height, int& depth, unsigned& pixelByteSize)
 {
 	size_t dataSize = source.Size();
 
@@ -579,7 +551,7 @@ unsigned char* Image::DecodePixelData(Stream& source, int& width, int& height, i
 	return stbi_load_from_memory(buffer, (int)dataSize, &width, &height, (int*)&pixelByteSize, 0);
 }
 
-void Image::FreePixelData(unsigned char* pixelData)
+void TempImage::FreePixelData(unsigned char* pixelData)
 {
 	if (!pixelData)
 		return;
@@ -587,7 +559,7 @@ void Image::FreePixelData(unsigned char* pixelData)
 	stbi_image_free(pixelData);
 }
 
-bool Image::GenerateMipImage(Image& dest) const
+bool TempImage::GenerateMipImage(TempImage& dest) const
 {
 	int pixelByteSize = Components();
 	if (pixelByteSize < 1 || pixelByteSize > 4)
@@ -653,7 +625,7 @@ bool Image::GenerateMipImage(Image& dest) const
 	return true;
 }
 
-ImageLevel Image::Level(size_t index) const
+ImageLevel TempImage::Level(size_t index) const
 {
 	ImageLevel level;
 
@@ -677,7 +649,7 @@ ImageLevel Image::Level(size_t index) const
 	}
 }
 
-bool Image::DecompressLevel(unsigned char* dest, size_t index) const
+bool TempImage::DecompressLevel(unsigned char* dest, size_t index) const
 {
 	if (!dest)
 	{
@@ -720,7 +692,7 @@ bool Image::DecompressLevel(unsigned char* dest, size_t index) const
 	return true;
 }
 
-void Image::CalculateDataSize(const glm::ivec3& size, ImageFormat format, ImageLevel& dest)
+void TempImage::CalculateDataSize(const glm::ivec3& size, ImageFormat format, ImageLevel& dest)
 {
 	if (format < FMT_DXT1)
 	{

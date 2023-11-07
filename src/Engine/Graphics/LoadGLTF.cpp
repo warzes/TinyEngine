@@ -2,145 +2,41 @@
 #include "GraphicsResource.h"
 #include "GraphicsSystem.h"
 #include "Core/IO/FileSystem.h"
-
+#include "Core/IO/Image.h"
+#include "RenderAPI/RenderSystem.h"
 #include <cgltf.h>
-
-// Load data from file into a buffer
-unsigned char* LoadFileData(const char* fileName, int* dataSize)
+//-----------------------------------------------------------------------------
+NewMaterial LoadMaterialDefault();
+const char* strprbrk(const char* s, const char* charset);
+unsigned char* LoadFileData(const char* fileName, int* dataSize);
+const char* GetDirectoryPath(const char* filePath);
+tempVec3 Vector3Lerp(glm::vec3 v1, glm::vec3 v2, float amount);
+tempVec4 QuaternionNlerp(glm::vec4 q1, glm::vec4 q2, float amount);
+tempVec4 QuaternionSlerp(glm::vec4 q1, glm::vec4 q2, float amount);
+//-----------------------------------------------------------------------------
+// Build pose from parent joints
+// NOTE: Required for animations loading (required by IQM and GLTF)
+void BuildPoseFromParentJoints(NewBoneInfo* bones, int boneCount, TempTransform* transforms)
 {
-	unsigned char* data = NULL;
-	*dataSize = 0;
-
-	if (fileName != NULL)
+	for (int i = 0; i < boneCount; i++)
 	{
-		FILE* file = nullptr;
-		errno_t err = fopen_s(&file, fileName, "rb");
-
-		if (file != nullptr && err == 0)
+		if (bones[i].parent >= 0)
 		{
-			// WARNING: On binary streams SEEK_END could not be found,
-			// using fseek() and ftell() could not work in some (rare) cases
-			fseek(file, 0, SEEK_END);
-			int size = ftell(file);     // WARNING: ftell() returns 'long int', maximum size returned is INT_MAX (2147483647 bytes)
-			fseek(file, 0, SEEK_SET);
-
-			if (size > 0)
+			if (bones[i].parent > i)
 			{
-				data = (unsigned char*)malloc(size * sizeof(unsigned char));
-
-				if (data != NULL)
-				{
-					// NOTE: fread() returns number of read elements instead of bytes, so we read [1 byte, size elements]
-					size_t count = fread(data, sizeof(unsigned char), size, file);
-
-					// WARNING: fread() returns a size_t value, usually 'unsigned int' (32bit compilation) and 'unsigned long long' (64bit compilation)
-					// dataSize is unified along raylib as a 'int' type, so, for file-sizes > INT_MAX (2147483647 bytes) we have a limitation
-					if (count > 2147483647)
-					{
-						LogWarning("FILEIO: [" + std::string(fileName) + "] File is bigger than 2147483647 bytes, avoid using LoadFileData()");
-
-						free(data);
-						data = NULL;
-					}
-					else
-					{
-						*dataSize = (int)count;
-
-						if ((*dataSize) != size)
-							LogWarning("FILEIO: [" + std::string(fileName) + "] File partially loaded (" + std::to_string(*dataSize) + " bytes out of %" + std::to_string(*dataSize) + ")");
-						else LogPrint("FILEIO: [" + std::string(fileName) + "] File loaded successfully");
-					}
-				}
-				else LogWarning("FILEIO: [" + std::string(fileName) + "] Failed to allocated memory for file reading");
+				LogWarning("Assumes bones are toplogically sorted, but bone " + std::to_string(i) + " has parent " + std::to_string(bones[i].parent) + ". Skipping.");
+				continue;
 			}
-			else LogWarning("FILEIO: [" + std::string(fileName) + "] Failed to read file");
-
-			fclose(file);
-		}
-		else LogWarning("FILEIO: [" + std::string(fileName) + "] Failed to open file");
-	}
-	else LogWarning("FILEIO: File name provided is not valid");
-
-	return data;
-}
-
-NewMaterial LoadMaterialDefault()
-{
-	NewMaterial material = { 0 };
-	material.maps = (MaterialMap*)calloc(MAX_MATERIAL_MAPS, sizeof(MaterialMap));
-
-	// Using rlgl default shader
-
-	// Using rlgl default texture (1x1 pixel, UNCOMPRESSED_R8G8B8A8, 1 mipmap)
-	//material.maps[MATERIAL_MAP_DIFFUSE].texture = (Texture2D){ rlGetTextureIdDefault(), 1, 1, 1, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 };
-	//material.maps[MATERIAL_MAP_NORMAL].texture;         // NOTE: By default, not set
-	//material.maps[MATERIAL_MAP_SPECULAR].texture;       // NOTE: By default, not set
-
-	material.maps[MATERIAL_MAP_DIFFUSE].color = glm::vec4(1.0);    // Diffuse color
-	material.maps[MATERIAL_MAP_SPECULAR].color = glm::vec4(1.0);   // Specular color
-
-	return material;
-}
-
-// String pointer reverse break: returns right-most occurrence of charset in s
-static const char* strprbrk(const char* s, const char* charset)
-{
-	const char* latestMatch = NULL;
-	for (; s = strpbrk(s, charset), s != NULL; latestMatch = s++) {}
-	return latestMatch;
-}
-
-#define MAX_FILEPATH_LENGTH          4096       // Maximum length for filepaths (Linux PATH_MAX default value)
-// Get directory for a given filePath
-const char* GetDirectoryPath(const char* filePath)
-{
-	/*
-	// NOTE: Directory separator is different in Windows and other platforms,
-	// fortunately, Windows also support the '/' separator, that's the one should be used
-	#if defined(_WIN32)
-		char separator = '\\';
-	#else
-		char separator = '/';
-	#endif
-	*/
-	const char* lastSlash = NULL;
-	static char dirPath[MAX_FILEPATH_LENGTH] = { 0 };
-	memset(dirPath, 0, MAX_FILEPATH_LENGTH);
-
-	// In case provided path does not contain a root drive letter (C:\, D:\) nor leading path separator (\, /),
-	// we add the current directory path to dirPath
-	if (filePath[1] != ':' && filePath[0] != '\\' && filePath[0] != '/')
-	{
-		// For security, we set starting path to current directory,
-		// obtained path will be concatenated to this
-		dirPath[0] = '.';
-		dirPath[1] = '/';
-	}
-
-	lastSlash = strprbrk(filePath, "\\/");
-	if (lastSlash)
-	{
-		if (lastSlash == filePath)
-		{
-			// The last and only slash is the leading one: path is in a root directory
-			dirPath[0] = filePath[0];
-			dirPath[1] = '\0';
-		}
-		else
-		{
-			// NOTE: Be careful, strncpy() is not safe, it does not care about '\0'
-			char* dirPathPtr = dirPath;
-			if ((filePath[1] != ':') && (filePath[0] != '\\') && (filePath[0] != '/')) dirPathPtr += 2;     // Skip drive letter, "C:"
-			memcpy(dirPathPtr, filePath, strlen(filePath) - (strlen(lastSlash) - 1));
-			dirPath[strlen(filePath) - strlen(lastSlash) + (((filePath[1] != ':') && (filePath[0] != '\\') && (filePath[0] != '/')) ? 2 : 0)] = '\0';  // Add '\0' manually
+			transforms[i].rotation = transforms[bones[i].parent].rotation * transforms[i].rotation;
+			transforms[i].translation = transforms[bones[i].parent].rotation * transforms[i].translation; // Vector3RotateByQuaternion
+			transforms[i].translation = transforms[i].translation + transforms[bones[i].parent].translation;
+			transforms[i].scale = transforms[i].scale * transforms[bones[i].parent].scale;
 		}
 	}
-
-	return dirPath;
 }
-
+//-----------------------------------------------------------------------------
 // Load bone info from GLTF skin data
-static NewBoneInfo* LoadBoneInfoGLTF(cgltf_skin skin, int* boneCount)
+NewBoneInfo* LoadBoneInfoGLTF(cgltf_skin skin, int* boneCount)
 {
 	*boneCount = (int)skin.joints_count;
 	NewBoneInfo* bones = (NewBoneInfo*)malloc(skin.joints_count * sizeof(NewBoneInfo));
@@ -167,28 +63,78 @@ static NewBoneInfo* LoadBoneInfoGLTF(cgltf_skin skin, int* boneCount)
 
 	return bones;
 }
-
-// Build pose from parent joints
-// NOTE: Required for animations loading (required by IQM and GLTF)
-static void BuildPoseFromParentJoints(NewBoneInfo* bones, int boneCount, TempTransform* transforms)
+//-----------------------------------------------------------------------------
+// Load image from different glTF provided methods (uri, path, buffer_view)
+ImageLoaderRef LoadImageFromCgltfImage(cgltf_image* cgltfImage, const char* texPath)
 {
-	for (int i = 0; i < boneCount; i++)
+	ImageLoaderRef image{ new Image() };
+
+	if (cgltfImage->uri != NULL)     // Check if image data is provided as an uri (base64 or path)
 	{
-		if (bones[i].parent >= 0)
+		if ((strlen(cgltfImage->uri) > 5) &&
+			(cgltfImage->uri[0] == 'd') &&
+			(cgltfImage->uri[1] == 'a') &&
+			(cgltfImage->uri[2] == 't') &&
+			(cgltfImage->uri[3] == 'a') &&
+			(cgltfImage->uri[4] == ':'))     // Check if image is provided as base64 text data
 		{
-			if (bones[i].parent > i)
+			// Data URI Format: data:<mediatype>;base64,<data>
+
+			// Find the comma
+			int i = 0;
+			while ((cgltfImage->uri[i] != ',') && (cgltfImage->uri[i] != 0)) i++;
+
+			if (cgltfImage->uri[i] == 0) 
+				LogWarning("IMAGE: glTF data URI is not a valid image");
+			else
 			{
-				LogWarning("Assumes bones are toplogically sorted, but bone " + std::to_string(i) + " has parent " + std::to_string(bones[i].parent) + ". Skipping.");
-				continue;
+				int base64Size = (int)strlen(cgltfImage->uri + i + 1);
+				int outSize = 3 * (base64Size / 4);         // TODO: Consider padding (-numberOfPaddingCharacters)
+				void* data = NULL;
+
+				cgltf_options options = { };
+				cgltf_result result = cgltf_load_buffer_base64(&options, outSize, cgltfImage->uri + i + 1, &data);
+
+				if (result == cgltf_result_success)
+				{
+
+					image->LoadFromMemory((uint8_t*)data, outSize);
+					free(data);
+				}
 			}
-			transforms[i].rotation = transforms[bones[i].parent].rotation * transforms[i].rotation;
-			transforms[i].translation = transforms[bones[i].parent].rotation * transforms[i].translation; // Vector3RotateByQuaternion
-			transforms[i].translation = transforms[i].translation + transforms[bones[i].parent].translation;
-			transforms[i].scale = transforms[i].scale * transforms[bones[i].parent].scale;
+		}
+		else     // Check if image is provided as image path
+		{
+			image->LoadFromFile(std::string(texPath) + "/" + std::string(cgltfImage->uri));
 		}
 	}
-}
+	else if (cgltfImage->buffer_view->buffer->data != NULL)    // Check if image is provided as data buffer
+	{
+		unsigned char* data = (unsigned char*)malloc(cgltfImage->buffer_view->size);
+		int offset = (int)cgltfImage->buffer_view->offset;
+		int stride = (int)cgltfImage->buffer_view->stride ? (int)cgltfImage->buffer_view->stride : 1;
 
+		// Copy buffer data to memory for loading
+		for (unsigned int i = 0; i < cgltfImage->buffer_view->size; i++)
+		{
+			data[i] = ((unsigned char*)cgltfImage->buffer_view->buffer->data)[offset];
+			offset += stride;
+		}
+
+		// Check mime_type for image: (cgltfImage->mime_type == "image/png")
+		// NOTE: Detected that some models define mime_type as "image\\/png"
+		if ((strcmp(cgltfImage->mime_type, "image\\/png") == 0) ||
+			(strcmp(cgltfImage->mime_type, "image/png") == 0)) image->LoadFromMemory(data, (int)cgltfImage->buffer_view->size);
+		else if ((strcmp(cgltfImage->mime_type, "image\\/jpeg") == 0) ||
+			(strcmp(cgltfImage->mime_type, "image/jpeg") == 0)) image->LoadFromMemory(data, (int)cgltfImage->buffer_view->size);
+		else LogWarning("MODEL: glTF image data MIME type not recognized" + std::string(texPath) + "/" + std::string(cgltfImage->uri));
+
+		free(data);
+	}
+
+	return image;
+}
+//-----------------------------------------------------------------------------
 // Load glTF file into model struct, .gltf and .glb supported
 NewModel LoadGLTF(const std::string& fileName)
 {
@@ -215,7 +161,7 @@ NewModel LoadGLTF(const std::string& fileName)
 	***********************************************************************************************/
 
 	// Macro to simplify attributes loading code
-	#define LOAD_ATTRIBUTE(accesor, numComp, dataType, dstPtr) \
+#define LOAD_ATTRIBUTE(accesor, numComp, dataType, dstPtr) \
 	{ \
 		int n = 0; \
 		dataType *buffer = (dataType *)accesor->buffer_view->buffer->data + accesor->buffer_view->offset/sizeof(dataType) + accesor->offset/sizeof(dataType); \
@@ -228,6 +174,8 @@ NewModel LoadGLTF(const std::string& fileName)
 			n += (int)(accesor->stride/sizeof(dataType));\
 		}\
 	}
+
+	auto& render = GetRenderSystem();
 
 	NewModel model = { };
 
@@ -244,7 +192,7 @@ NewModel LoadGLTF(const std::string& fileName)
 
 	if (result == cgltf_result_success)
 	{
-		if (data->file_type == cgltf_file_type_glb) LogPrint("MODEL: [" + std::string(fileName) +  "] Model basic data (glb) loaded successfully");
+		if (data->file_type == cgltf_file_type_glb) LogPrint("MODEL: [" + std::string(fileName) + "] Model basic data (glb) loaded successfully");
 		else if (data->file_type == cgltf_file_type_gltf) LogPrint("MODEL: [" + std::string(fileName) + "] Model basic data (glTF) loaded successfully");
 		else LogWarning("MODEL: [" + std::string(fileName) + "] Model format not recognized");
 
@@ -288,13 +236,11 @@ NewModel LoadGLTF(const std::string& fileName)
 				// Load base color texture (albedo)
 				if (data->materials[i].pbr_metallic_roughness.base_color_texture.texture)
 				{
-					// TODO: доделать загрузку материала
-					//Image imAlbedo = LoadImageFromCgltfImage(data->materials[i].pbr_metallic_roughness.base_color_texture.texture->image, texPath);
-					//if (imAlbedo.data != NULL)
-					//{
-					//	model.materials[j].maps[MATERIAL_MAP_ALBEDO].texture = LoadTextureFromImage(imAlbedo);
-					//	UnloadImage(imAlbedo);
-					//}
+					ImageLoaderRef imAlbedo = LoadImageFromCgltfImage(data->materials[i].pbr_metallic_roughness.base_color_texture.texture->image, texPath);
+					if (imAlbedo->IsValid())
+					{
+						model.materials[j].maps[MATERIAL_MAP_ALBEDO].texture = render.CreateTexture2D(imAlbedo); // TODO: не забыть про textureInfo
+					}
 				}
 				// Load base color factor (tint)
 				model.materials[j].maps[MATERIAL_MAP_ALBEDO].color.x = (unsigned char)(data->materials[i].pbr_metallic_roughness.base_color_factor[0] * 255);
@@ -306,13 +252,11 @@ NewModel LoadGLTF(const std::string& fileName)
 				// Load metallic/roughness texture
 				if (data->materials[i].pbr_metallic_roughness.metallic_roughness_texture.texture)
 				{
-					// TODO: доделать загрузку материала
-					/*Image imMetallicRoughness = LoadImageFromCgltfImage(data->materials[i].pbr_metallic_roughness.metallic_roughness_texture.texture->image, texPath);
-					if (imMetallicRoughness.data != NULL)
+					ImageLoaderRef imMetallicRoughness = LoadImageFromCgltfImage(data->materials[i].pbr_metallic_roughness.metallic_roughness_texture.texture->image, texPath);
+					if (imMetallicRoughness->IsValid())
 					{
-						model.materials[j].maps[MATERIAL_MAP_ROUGHNESS].texture = LoadTextureFromImage(imMetallicRoughness);
-						UnloadImage(imMetallicRoughness);
-					}*/
+						model.materials[j].maps[MATERIAL_MAP_ROUGHNESS].texture = render.CreateTexture2D(imMetallicRoughness); // TODO: не забыть про textureInfo
+					}
 
 					// Load metallic/roughness material properties
 					float roughness = data->materials[i].pbr_metallic_roughness.roughness_factor;
@@ -325,37 +269,31 @@ NewModel LoadGLTF(const std::string& fileName)
 				// Load normal texture
 				if (data->materials[i].normal_texture.texture)
 				{
-					// TODO: доделать загрузку материала
-					/*Image imNormal = LoadImageFromCgltfImage(data->materials[i].normal_texture.texture->image, texPath);
-					if (imNormal.data != NULL)
+					ImageLoaderRef imNormal = LoadImageFromCgltfImage(data->materials[i].normal_texture.texture->image, texPath);
+					if (imNormal->IsValid())
 					{
-						model.materials[j].maps[MATERIAL_MAP_NORMAL].texture = LoadTextureFromImage(imNormal);
-						UnloadImage(imNormal);
-					}*/
+						model.materials[j].maps[MATERIAL_MAP_NORMAL].texture = render.CreateTexture2D(imNormal); // TODO: не забыть про textureInfo
+					}
 				}
 
 				// Load ambient occlusion texture
 				if (data->materials[i].occlusion_texture.texture)
 				{
-					// TODO: доделать загрузку материала
-					/*Image imOcclusion = LoadImageFromCgltfImage(data->materials[i].occlusion_texture.texture->image, texPath);
-					if (imOcclusion.data != NULL)
+					ImageLoaderRef imOcclusion = LoadImageFromCgltfImage(data->materials[i].occlusion_texture.texture->image, texPath);
+					if (imOcclusion->IsValid())
 					{
-						model.materials[j].maps[MATERIAL_MAP_OCCLUSION].texture = LoadTextureFromImage(imOcclusion);
-						UnloadImage(imOcclusion);
-					}*/
+						model.materials[j].maps[MATERIAL_MAP_OCCLUSION].texture = render.CreateTexture2D(imOcclusion); // TODO: не забыть про textureInfo
+					}
 				}
 
 				// Load emissive texture
 				if (data->materials[i].emissive_texture.texture)
 				{
-					// TODO: доделать загрузку материала
-					/*Image imEmissive = LoadImageFromCgltfImage(data->materials[i].emissive_texture.texture->image, texPath);
-					if (imEmissive.data != NULL)
+					ImageLoaderRef imEmissive = LoadImageFromCgltfImage(data->materials[i].emissive_texture.texture->image, texPath);
+					if (imEmissive->IsValid())
 					{
-						model.materials[j].maps[MATERIAL_MAP_EMISSION].texture = LoadTextureFromImage(imEmissive);
-						UnloadImage(imEmissive);
-					}*/
+						model.materials[j].maps[MATERIAL_MAP_EMISSION].texture = render.CreateTexture2D(imEmissive); // TODO: не забыть про textureInfo
+					}
 
 					// Load emissive color factor
 					model.materials[j].maps[MATERIAL_MAP_EMISSION].color.x = (unsigned char)(data->materials[i].emissive_factor[0] * 255);
@@ -410,7 +348,7 @@ NewModel LoadGLTF(const std::string& fileName)
 
 						if ((attribute->component_type == cgltf_component_type_r_32f) && (attribute->type == cgltf_type_vec3))
 						{
-							// Init raylib mesh normals to copy glTF attribute data
+							// Init mesh normals to copy glTF attribute data
 							model.meshes[meshIndex].normals = (float*)malloc(attribute->count * 3 * sizeof(float));
 
 							// Load 3 components of float data type into mesh.normals
@@ -659,105 +597,9 @@ NewModel LoadGLTF(const std::string& fileName)
 
 	return model;
 }
-
-struct tempVec3
-{
-	float x, y, z;
-};
-struct tempVec4 // TODO: это кватернион здесь
-{
-	float x, y, z, w;
-};
-
-// Calculate linear interpolation between two vectors
-tempVec3 Vector3Lerp(glm::vec3 v1, glm::vec3 v2, float amount)
-{
-	tempVec3 result = { 0 };
-	result.x = v1.x + amount * (v2.x - v1.x);
-	result.y = v1.y + amount * (v2.y - v1.y);
-	result.z = v1.z + amount * (v2.z - v1.z);
-	return result;
-}
-
-// Calculate slerp-optimized interpolation between two quaternions
-tempVec4 QuaternionNlerp(glm::vec4 q1, glm::vec4 q2, float amount)
-{
-	tempVec4 result = { 0 };
-
-	// QuaternionLerp(q1, q2, amount)
-	result.x = q1.x + amount * (q2.x - q1.x);
-	result.y = q1.y + amount * (q2.y - q1.y);
-	result.z = q1.z + amount * (q2.z - q1.z);
-	result.w = q1.w + amount * (q2.w - q1.w);
-
-	// QuaternionNormalize(q);
-	tempVec4 q = result;
-	float length = sqrtf(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
-	if (length == 0.0f) length = 1.0f;
-	float ilength = 1.0f / length;
-
-	result.x = q.x * ilength;
-	result.y = q.y * ilength;
-	result.z = q.z * ilength;
-	result.w = q.w * ilength;
-
-	return result;
-}
-
-// Calculates spherical linear interpolation between two quaternions
-tempVec4 QuaternionSlerp(glm::vec4 q1, glm::vec4 q2, float amount)
-{
-	tempVec4 result = { 0 };
-
-#if !defined(EPSILON)
-#define EPSILON 0.000001f
-#endif
-
-	float cosHalfTheta = q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w;
-
-	if (cosHalfTheta < 0)
-	{
-		q2.x = -q2.x; q2.y = -q2.y; q2.z = -q2.z; q2.w = -q2.w;
-		cosHalfTheta = -cosHalfTheta;
-	}
-
-	if (fabsf(cosHalfTheta) >= 1.0f)
-	{
-		result.x = q1.x;
-		result.y = q1.y;
-		result.z = q1.z;
-		result.w = q1.w;
-	}
-	else if (cosHalfTheta > 0.95f) result = QuaternionNlerp(q1, q2, amount);
-	else
-	{
-		float halfTheta = acosf(cosHalfTheta);
-		float sinHalfTheta = sqrtf(1.0f - cosHalfTheta * cosHalfTheta);
-
-		if (fabsf(sinHalfTheta) < EPSILON)
-		{
-			result.x = (q1.x * 0.5f + q2.x * 0.5f);
-			result.y = (q1.y * 0.5f + q2.y * 0.5f);
-			result.z = (q1.z * 0.5f + q2.z * 0.5f);
-			result.w = (q1.w * 0.5f + q2.w * 0.5f);
-		}
-		else
-		{
-			float ratioA = sinf((1 - amount) * halfTheta) / sinHalfTheta;
-			float ratioB = sinf(amount * halfTheta) / sinHalfTheta;
-
-			result.x = (q1.x * ratioA + q2.x * ratioB);
-			result.y = (q1.y * ratioA + q2.y * ratioB);
-			result.z = (q1.z * ratioA + q2.z * ratioB);
-			result.w = (q1.w * ratioA + q2.w * ratioB);
-		}
-	}
-
-	return result;
-}
-
+//-----------------------------------------------------------------------------
 // Get interpolated pose for bone sampler at a specific time. Returns true on success.
-static bool GetPoseAtTimeGLTF(cgltf_accessor* input, cgltf_accessor* output, float time, void* data)
+bool GetPoseAtTimeGLTF(cgltf_accessor* input, cgltf_accessor* output, float time, void* data)
 {
 	// Input and output should have the same count
 	float tstart = 0.0f;
@@ -811,7 +653,7 @@ static bool GetPoseAtTimeGLTF(cgltf_accessor* input, cgltf_accessor* output, flo
 
 	return true;
 }
-
+//-----------------------------------------------------------------------------
 #define GLTF_ANIMDELAY 17    // Animation frames delay, (~1000 ms/60 FPS = 16.666666* ms)
 ModelAnimation* LoadModelAnimationsGLTF(const std::string& fileName, unsigned int& animCount)
 {
@@ -975,3 +817,4 @@ ModelAnimation* LoadModelAnimationsGLTF(const std::string& fileName, unsigned in
 	free(fileData);
 	return animations;
 }
+//-----------------------------------------------------------------------------

@@ -3,6 +3,7 @@
 #include "OpenGLCore.h"
 #include "RenderResource.h"
 #include "Capabilities.h"
+#include "Core/IO/Image.h"
 
 constexpr int MaxBindingTextures = 16;
 
@@ -65,6 +66,8 @@ public:
 	GeometryBufferRef CreateGeometryBuffer(VertexBufferRef vertexBuffer, IndexBufferRef indexBuffer, const std::vector<VertexAttribute>& attribs);
 
 	Texture2DRef CreateTexture2D(const char* fileName, bool useCache = true, const Texture2DInfo& textureInfo = {});
+	Texture2DRef CreateTexture2D(ImageLoaderRef image, const Texture2DInfo& textureInfo = {});
+	Texture2DRef CreateTexture2D(ImageLoaderRef image, const char* nameInCache, const Texture2DInfo& textureInfo = {});
 	Texture2DRef CreateTexture2D(const Texture2DCreateInfo& createInfo, const Texture2DInfo& textureInfo = {});
 
 	RenderbufferRef CreateRenderbuffer(const glm::uvec2& size, ImageFormat format, int multisample = 1);

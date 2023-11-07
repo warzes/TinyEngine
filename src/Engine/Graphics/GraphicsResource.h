@@ -192,10 +192,8 @@ class NewModel final
 public:
 	glm::mat4 transform = glm::mat4(1.0f); // Local transform matrix
 
-	//int meshCount = 0;          // Number of meshes
 	int materialCount = 0;      // Number of materials
-	std::vector<NewMesh> meshes;
-	//NewMesh* meshes = nullptr;        // Meshes array
+	std::vector<NewMesh> meshes; // Meshes array
 	NewMaterial* materials = nullptr; // Materials array
 	int* meshMaterial = nullptr;      // Mesh material number
 
@@ -236,3 +234,12 @@ enum MaterialMapIndex {
 NewModel LoadModel(const std::string& fileName);
 ModelAnimation* LoadModelAnimations(const std::string& fileName, unsigned int& animCount);// Load model animations from file
 void UpdateModelAnimation(const NewModel& model, const ModelAnimation& anim, int frame); // Update model animation pose
+
+struct tempVec3
+{
+	float x, y, z;
+};
+struct tempVec4 // TODO: это кватернион здесь
+{
+	float x, y, z, w;
+};

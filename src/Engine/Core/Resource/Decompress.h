@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Resource/Image.h"
+#include "Core/Resource/TempImage.h"
 
 /// Decompress DXT1/3/5 image data.
 void DecompressImageDXT(unsigned char* dest, const void* blocks, int width, int height, ImageFormat format);

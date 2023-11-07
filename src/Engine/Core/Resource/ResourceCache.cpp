@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "ResourceCache.h"
 #include "Resource.h"
-#include "Image.h"
+#include "TempImage.h"
 #include "JSONFile.h"
 #include "Core/IO/File.h"
 #include "Core/Utilities/StringUtilities.h"
@@ -367,7 +367,7 @@ void RegisterResourceLibrary()
 	if (registered)
 		return;
 
-	Image::RegisterObject();
+	TempImage::RegisterObject();
 	JSONFile::RegisterObject();
 
 	registered = true;
