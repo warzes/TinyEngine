@@ -2,16 +2,16 @@
 #include "Image.h"
 #include "Core/Logging/Log.h"
 //-----------------------------------------------------------------------------
-inline Image::ImageFormat convertSTBToEngine(int nrChannels)
+inline ImageLoaderFormat convertSTBToEngine(int nrChannels)
 {
-	if (nrChannels == STBI_grey) return Image::ImageFormat::R_U8;
-	else if (nrChannels == STBI_grey_alpha) return Image::ImageFormat::RG_U8;
-	else if (nrChannels == STBI_rgb) return Image::ImageFormat::RGB_U8;
-	else if (nrChannels == STBI_rgb_alpha) return Image::ImageFormat::RGBA_U8;
+	if (nrChannels == STBI_grey) return            ImageLoaderFormat::R_U8;
+	else if (nrChannels == STBI_grey_alpha) return ImageLoaderFormat::RG_U8;
+	else if (nrChannels == STBI_rgb) return        ImageLoaderFormat::RGB_U8;
+	else if (nrChannels == STBI_rgb_alpha) return  ImageLoaderFormat::RGBA_U8;
 	else
 	{
 		LogFatal("unknown nrChannels");
-		return Image::ImageFormat::RGBA_U8;
+		return ImageLoaderFormat::RGBA_U8;
 	}
 }
 //-----------------------------------------------------------------------------
@@ -27,7 +27,16 @@ Image::Image(const std::string& fileName)
 //-----------------------------------------------------------------------------
 Image::~Image()
 {
-	stbi_image_free((void*)m_pixelData);
+	if (m_source == stb) stbi_image_free((void*)m_pixelData);
+}
+//-----------------------------------------------------------------------------
+void Image::Create(ImageLoaderFormat imageFormat, int width, int height, uint8_t* pixelData)
+{
+	m_imageFormat = imageFormat;
+	m_width = width;
+	m_height = height;
+	m_pixelData = pixelData;
+	m_source = custom;
 }
 //-----------------------------------------------------------------------------
 bool Image::LoadFromMemory(const uint8_t* data, size_t dataSize)
@@ -48,6 +57,7 @@ bool Image::LoadFromMemory(const uint8_t* data, size_t dataSize)
 		m_pixelData = nullptr;
 		return false;
 	}
+	m_source = stb;
 	m_mipmaps = 1;
 	m_hasTransparency = isPixelsHaveTransparency();
 	return true;
@@ -67,6 +77,7 @@ bool Image::LoadFromFile(const std::string& fileName)
 		return false;
 	}
 
+	m_source = stb;
 	m_mipmaps = 1;
 	m_hasTransparency = isPixelsHaveTransparency();
 	return true;
@@ -75,7 +86,7 @@ bool Image::LoadFromFile(const std::string& fileName)
 bool Image::isPixelsHaveTransparency() const
 {
 	if (!m_pixelData) return false;
-	if (m_imageFormat != ImageFormat::RGBA_U8) return false;
+	if (m_imageFormat != ImageLoaderFormat::RGBA_U8) return false;
 
 	const size_t sizeData = m_width * m_height * 4;
 	for (std::size_t i = 3; i < sizeData; i += 4)

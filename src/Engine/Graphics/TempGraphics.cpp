@@ -119,6 +119,7 @@ ModelAnimation* LoadModelAnimations(const std::string& fileName, unsigned int& a
 	ModelAnimation* animations = nullptr;
 
 	if (FileSystem::IsFileExtension(fileName, ".iqm")) animations = LoadModelAnimationsIQM(fileName, animCount);
+	if (FileSystem::IsFileExtension(fileName, ".m3d")) animations = LoadModelAnimationsM3D(fileName, animCount);
 	if (FileSystem::IsFileExtension(fileName, ".gltf") || FileSystem::IsFileExtension(fileName, ".glb"))
 		animations = LoadModelAnimationsGLTF(fileName, animCount);
 

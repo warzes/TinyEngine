@@ -155,15 +155,15 @@ GeometryBufferRef RenderSystem::CreateGeometryBuffer(VertexBufferRef vb, IndexBu
 	return geom;
 }
 //-----------------------------------------------------------------------------
-TexelsFormat Convert(Image::ImageFormat format)
+TexelsFormat Convert(ImageLoaderFormat format)
 {
 	switch (format)
 	{
-	case Image::R_U8:    return TexelsFormat::R_U8;
-	case Image::RG_U8:   return TexelsFormat::RG_U8;
-	case Image::RGB_U8:  return TexelsFormat::RGB_U8;
-	case Image::RGBA_U8: return TexelsFormat::RGBA_U8;
-	case Image::None:
+	case ImageLoaderFormat::R_U8:    return TexelsFormat::R_U8;
+	case ImageLoaderFormat::RG_U8:   return TexelsFormat::RG_U8;
+	case ImageLoaderFormat::RGB_U8:  return TexelsFormat::RGB_U8;
+	case ImageLoaderFormat::RGBA_U8: return TexelsFormat::RGBA_U8;
+	case ImageLoaderFormat::None:
 	default: return TexelsFormat::None;
 	}
 }
@@ -199,7 +199,7 @@ Texture2DRef RenderSystem::CreateTexture2D(const char* fileName, bool useCache, 
 	return m_cacheFileTextures2D[fileName];
 }
 //-----------------------------------------------------------------------------
-Texture2DRef RenderSystem::CreateTexture2D(ImageLoaderRef image, const Texture2DInfo& textureInfo)
+Texture2DRef RenderSystem::CreateTexture2D(ImageRef image, const Texture2DInfo& textureInfo)
 {
 	// TODO: отрефакторить все CreateTexture2D()
 	if (!image || !image->IsValid())
@@ -225,7 +225,7 @@ Texture2DRef RenderSystem::CreateTexture2D(ImageLoaderRef image, const Texture2D
 	return CreateTexture2D(createInfo, textureInfo);
 }
 //-----------------------------------------------------------------------------
-Texture2DRef RenderSystem::CreateTexture2D(ImageLoaderRef image, const char* nameInCache, const Texture2DInfo& textureInfo)
+Texture2DRef RenderSystem::CreateTexture2D(ImageRef image, const char* nameInCache, const Texture2DInfo& textureInfo)
 {
 	// TODO: отрефакторить все CreateTexture2D()
 	auto it = m_cacheFileTextures2D.find(nameInCache);

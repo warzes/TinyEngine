@@ -65,9 +65,9 @@ NewBoneInfo* LoadBoneInfoGLTF(cgltf_skin skin, int* boneCount)
 }
 //-----------------------------------------------------------------------------
 // Load image from different glTF provided methods (uri, path, buffer_view)
-ImageLoaderRef LoadImageFromCgltfImage(cgltf_image* cgltfImage, const char* texPath)
+ImageRef LoadImageFromCgltfImage(cgltf_image* cgltfImage, const char* texPath)
 {
-	ImageLoaderRef image{ new Image() };
+	ImageRef image{ new Image() };
 
 	if (cgltfImage->uri != NULL)     // Check if image data is provided as an uri (base64 or path)
 	{
@@ -208,7 +208,7 @@ NewModel LoadGLTF(const std::string& fileName)
 		if (result != cgltf_result_success) LogPrint("MODEL: [" + std::string(fileName) + "] Failed to load mesh/material buffers");
 
 		int primitivesCount = 0;
-		// NOTE: We will load every primitive in the glTF as a separate raylib mesh
+		// NOTE: We will load every primitive in the glTF as a separate mesh
 		for (unsigned int i = 0; i < data->meshes_count; i++) primitivesCount += (int)data->meshes[i].primitives_count;
 
 		// Load our model data: meshes and materials
@@ -236,7 +236,7 @@ NewModel LoadGLTF(const std::string& fileName)
 				// Load base color texture (albedo)
 				if (data->materials[i].pbr_metallic_roughness.base_color_texture.texture)
 				{
-					ImageLoaderRef imAlbedo = LoadImageFromCgltfImage(data->materials[i].pbr_metallic_roughness.base_color_texture.texture->image, texPath);
+					ImageRef imAlbedo = LoadImageFromCgltfImage(data->materials[i].pbr_metallic_roughness.base_color_texture.texture->image, texPath);
 					if (imAlbedo->IsValid())
 					{
 						model.materials[j].maps[MATERIAL_MAP_ALBEDO].texture = render.CreateTexture2D(imAlbedo); // TODO: не забыть про textureInfo
@@ -252,7 +252,7 @@ NewModel LoadGLTF(const std::string& fileName)
 				// Load metallic/roughness texture
 				if (data->materials[i].pbr_metallic_roughness.metallic_roughness_texture.texture)
 				{
-					ImageLoaderRef imMetallicRoughness = LoadImageFromCgltfImage(data->materials[i].pbr_metallic_roughness.metallic_roughness_texture.texture->image, texPath);
+					ImageRef imMetallicRoughness = LoadImageFromCgltfImage(data->materials[i].pbr_metallic_roughness.metallic_roughness_texture.texture->image, texPath);
 					if (imMetallicRoughness->IsValid())
 					{
 						model.materials[j].maps[MATERIAL_MAP_ROUGHNESS].texture = render.CreateTexture2D(imMetallicRoughness); // TODO: не забыть про textureInfo
@@ -269,7 +269,7 @@ NewModel LoadGLTF(const std::string& fileName)
 				// Load normal texture
 				if (data->materials[i].normal_texture.texture)
 				{
-					ImageLoaderRef imNormal = LoadImageFromCgltfImage(data->materials[i].normal_texture.texture->image, texPath);
+					ImageRef imNormal = LoadImageFromCgltfImage(data->materials[i].normal_texture.texture->image, texPath);
 					if (imNormal->IsValid())
 					{
 						model.materials[j].maps[MATERIAL_MAP_NORMAL].texture = render.CreateTexture2D(imNormal); // TODO: не забыть про textureInfo
@@ -279,7 +279,7 @@ NewModel LoadGLTF(const std::string& fileName)
 				// Load ambient occlusion texture
 				if (data->materials[i].occlusion_texture.texture)
 				{
-					ImageLoaderRef imOcclusion = LoadImageFromCgltfImage(data->materials[i].occlusion_texture.texture->image, texPath);
+					ImageRef imOcclusion = LoadImageFromCgltfImage(data->materials[i].occlusion_texture.texture->image, texPath);
 					if (imOcclusion->IsValid())
 					{
 						model.materials[j].maps[MATERIAL_MAP_OCCLUSION].texture = render.CreateTexture2D(imOcclusion); // TODO: не забыть про textureInfo
@@ -289,7 +289,7 @@ NewModel LoadGLTF(const std::string& fileName)
 				// Load emissive texture
 				if (data->materials[i].emissive_texture.texture)
 				{
-					ImageLoaderRef imEmissive = LoadImageFromCgltfImage(data->materials[i].emissive_texture.texture->image, texPath);
+					ImageRef imEmissive = LoadImageFromCgltfImage(data->materials[i].emissive_texture.texture->image, texPath);
 					if (imEmissive->IsValid())
 					{
 						model.materials[j].maps[MATERIAL_MAP_EMISSION].texture = render.CreateTexture2D(imEmissive); // TODO: не забыть про textureInfo
@@ -333,7 +333,7 @@ NewModel LoadGLTF(const std::string& fileName)
 
 						if ((attribute->component_type == cgltf_component_type_r_32f) && (attribute->type == cgltf_type_vec3))
 						{
-							// Init raylib mesh vertices to copy glTF attribute data
+							// Init mesh vertices to copy glTF attribute data
 							model.meshes[meshIndex].vertexCount = (int)attribute->count;
 							model.meshes[meshIndex].vertices = (float*)malloc(attribute->count * 3 * sizeof(float));
 
@@ -362,7 +362,7 @@ NewModel LoadGLTF(const std::string& fileName)
 
 						if ((attribute->component_type == cgltf_component_type_r_32f) && (attribute->type == cgltf_type_vec4))
 						{
-							// Init raylib mesh tangent to copy glTF attribute data
+							// Init mesh tangent to copy glTF attribute data
 							model.meshes[meshIndex].tangents = (float*)malloc(attribute->count * 4 * sizeof(float));
 
 							// Load 4 components of float data type into mesh.tangents
@@ -378,7 +378,7 @@ NewModel LoadGLTF(const std::string& fileName)
 
 						if ((attribute->component_type == cgltf_component_type_r_32f) && (attribute->type == cgltf_type_vec2))
 						{
-							// Init raylib mesh texcoords to copy glTF attribute data
+							// Init mesh texcoords to copy glTF attribute data
 							model.meshes[meshIndex].texcoords = (float*)malloc(attribute->count * 2 * sizeof(float));
 
 							// Load 3 components of float data type into mesh.texcoords
@@ -394,7 +394,7 @@ NewModel LoadGLTF(const std::string& fileName)
 
 						if ((attribute->component_type == cgltf_component_type_r_8u) && (attribute->type == cgltf_type_vec4))
 						{
-							// Init raylib mesh color to copy glTF attribute data
+							// Init mesh color to copy glTF attribute data
 							model.meshes[meshIndex].colors = (unsigned char*)malloc(attribute->count * 4 * sizeof(unsigned char));
 
 							// Load 4 components of unsigned char data type into mesh.colors
@@ -402,28 +402,28 @@ NewModel LoadGLTF(const std::string& fileName)
 						}
 						else if ((attribute->component_type == cgltf_component_type_r_16u) && (attribute->type == cgltf_type_vec4))
 						{
-							// Init raylib mesh color to copy glTF attribute data
+							// Init mesh color to copy glTF attribute data
 							model.meshes[meshIndex].colors = (unsigned char*)malloc(attribute->count * 4 * sizeof(unsigned char));
 
-							// Load data into a temp buffer to be converted to raylib data type
+							// Load data into a temp buffer to be converted to data type
 							unsigned short* temp = (unsigned short*)malloc(attribute->count * 4 * sizeof(unsigned short));
 							LOAD_ATTRIBUTE(attribute, 4, unsigned short, temp);
 
-							// Convert data to raylib color data type (4 bytes)
+							// Convert data to color data type (4 bytes)
 							for (unsigned int c = 0; c < attribute->count * 4; c++) model.meshes[meshIndex].colors[c] = (unsigned char)(((float)temp[c] / 65535.0f) * 255.0f);
 
 							free(temp);
 						}
 						else if ((attribute->component_type == cgltf_component_type_r_32f) && (attribute->type == cgltf_type_vec4))
 						{
-							// Init raylib mesh color to copy glTF attribute data
+							// Init mesh color to copy glTF attribute data
 							model.meshes[meshIndex].colors = (unsigned char*)malloc(attribute->count * 4 * sizeof(unsigned char));
 
-							// Load data into a temp buffer to be converted to raylib data type
+							// Load data into a temp buffer to be converted to data type
 							float* temp = (float*)malloc(attribute->count * 4 * sizeof(float));
 							LOAD_ATTRIBUTE(attribute, 4, float, temp);
 
-							// Convert data to raylib color data type (4 bytes), we expect the color data normalized
+							// Convert data to color data type (4 bytes), we expect the color data normalized
 							for (unsigned int c = 0; c < attribute->count * 4; c++) model.meshes[meshIndex].colors[c] = (unsigned char)(temp[c] * 255.0f);
 
 							free(temp);
@@ -536,7 +536,7 @@ NewModel LoadGLTF(const std::string& fileName)
 
 				for (unsigned int j = 0; j < data->meshes[i].primitives[p].attributes_count; j++)
 				{
-					// NOTE: JOINTS_1 + WEIGHT_1 will be used for +4 joints influencing a vertex -> Not supported by raylib
+					// NOTE: JOINTS_1 + WEIGHT_1 will be used for +4 joints influencing a vertex -> Not supported
 
 					if (data->meshes[i].primitives[p].attributes[j].type == cgltf_attribute_type_joints)        // JOINTS_n (vec4: 4 bones max per vertex / u8, u16)
 					{
@@ -544,7 +544,7 @@ NewModel LoadGLTF(const std::string& fileName)
 
 						if ((attribute->component_type == cgltf_component_type_r_8u) && (attribute->type == cgltf_type_vec4))
 						{
-							// Init raylib mesh bone ids to copy glTF attribute data
+							// Init mesh bone ids to copy glTF attribute data
 							model.meshes[meshIndex].boneIds = (unsigned char*)calloc(model.meshes[meshIndex].vertexCount * 4, sizeof(unsigned char));
 
 							// Load 4 components of unsigned char data type into mesh.boneIds
@@ -561,7 +561,7 @@ NewModel LoadGLTF(const std::string& fileName)
 
 						if ((attribute->component_type == cgltf_component_type_r_32f) && (attribute->type == cgltf_type_vec4))
 						{
-							// Init raylib mesh bone weight to copy glTF attribute data
+							// Init mesh bone weight to copy glTF attribute data
 							model.meshes[meshIndex].boneWeights = (float*)calloc(model.meshes[meshIndex].vertexCount * 4, sizeof(float));
 
 							// Load 4 components of float data type into mesh.boneWeights

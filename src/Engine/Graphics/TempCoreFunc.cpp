@@ -56,7 +56,7 @@ unsigned char* LoadFileData(const char* fileName, int* dataSize)
 					size_t count = fread(data, sizeof(unsigned char), size, file);
 
 					// WARNING: fread() returns a size_t value, usually 'unsigned int' (32bit compilation) and 'unsigned long long' (64bit compilation)
-					// dataSize is unified along raylib as a 'int' type, so, for file-sizes > INT_MAX (2147483647 bytes) we have a limitation
+					// dataSize is unified along as a 'int' type, so, for file-sizes > INT_MAX (2147483647 bytes) we have a limitation
 					if (count > 2147483647)
 					{
 						LogWarning("FILEIO: [" + std::string(fileName) + "] File is bigger than 2147483647 bytes, avoid using LoadFileData()");
