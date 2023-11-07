@@ -5,8 +5,6 @@
 
 #include <cgltf.h>
 
-glm::vec3 Vector3RotateByQuaternion(const glm::vec3& v, const glm::quat& q);
-
 // Load data from file into a buffer
 unsigned char* LoadFileData(const char* fileName, int* dataSize)
 {
@@ -184,7 +182,7 @@ static void BuildPoseFromParentJoints(NewBoneInfo* bones, int boneCount, TempTra
 				continue;
 			}
 			transforms[i].rotation = transforms[bones[i].parent].rotation * transforms[i].rotation;
-			transforms[i].translation = Vector3RotateByQuaternion(transforms[i].translation, transforms[bones[i].parent].rotation);
+			transforms[i].translation = transforms[bones[i].parent].rotation * transforms[i].translation; // Vector3RotateByQuaternion
 			transforms[i].translation = transforms[i].translation + transforms[bones[i].parent].translation;
 			transforms[i].scale = transforms[i].scale * transforms[bones[i].parent].scale;
 		}

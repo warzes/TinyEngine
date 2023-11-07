@@ -26,7 +26,6 @@ NewModel LoadM3D(const std::string& filename);
 ModelAnimation* LoadModelAnimationsM3D(const std::string& fileName, unsigned int& animCount);
 //-----------------------------------------------------------------------------
 NewMaterial LoadMaterialDefault();
-glm::vec3 Vector3RotateByQuaternion(const glm::vec3& v, const glm::quat& q);
 //-----------------------------------------------------------------------------
 // Upload vertex data into a VAO and VBO
 void UploadMesh(NewMesh& mesh, bool dynamic)
@@ -194,7 +193,7 @@ void UpdateModelAnimation(const NewModel& model, const ModelAnimation& anim, int
 					animVertex = { mesh.vertices[vCounter + 0], mesh.vertices[vCounter + 1], mesh.vertices[vCounter + 2] };
 					animVertex = animVertex - inTranslation;
 					animVertex = animVertex * outScale;
-					animVertex = Vector3RotateByQuaternion(animVertex, (outRotation * glm::inverse(inRotation)));
+					animVertex = (outRotation * glm::inverse(inRotation)) * animVertex; // Vector3RotateByQuaternion
 					animVertex = animVertex + outTranslation;
 					mesh.animVertices[vCounter + 0] += animVertex.x * boneWeight;
 					mesh.animVertices[vCounter + 1] += animVertex.y * boneWeight;
@@ -206,7 +205,7 @@ void UpdateModelAnimation(const NewModel& model, const ModelAnimation& anim, int
 					if (mesh.normals != nullptr)
 					{
 						animNormal = { mesh.normals[vCounter], mesh.normals[vCounter + 1], mesh.normals[vCounter + 2] };
-						animNormal = Vector3RotateByQuaternion(animNormal, (outRotation * glm::inverse(inRotation)));
+						animNormal = (outRotation * glm::inverse(inRotation)) * animNormal; // Vector3RotateByQuaternion
 						mesh.animNormals[vCounter + 0] += animNormal.x * boneWeight;
 						mesh.animNormals[vCounter + 1] += animNormal.y * boneWeight;
 						mesh.animNormals[vCounter + 2] += animNormal.z * boneWeight;
