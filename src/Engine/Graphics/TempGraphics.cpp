@@ -10,7 +10,7 @@ NewMaterial LoadMaterialDefault();
 ModelAnimation* LoadModelAnimationsGLTF(const char* fileName, unsigned int* animCount);
 
 // Upload vertex data into a VAO (if supported) and VBO
-void UploadMesh(NewMesh* mesh, bool dynamic, ShaderProgramRef program)
+void UploadMesh(NewMesh* mesh, bool dynamic)
 {
 	if (GetRenderSystem().IsValid(mesh->geometry))
 	{
@@ -93,10 +93,20 @@ void UploadMesh(NewMesh* mesh, bool dynamic, ShaderProgramRef program)
 		}
 	}
 
-	mesh->geometry = GetRenderSystem().CreateGeometryBuffer(dynamic ? BufferUsage::DynamicDraw : BufferUsage::StaticDraw, mesh->vert.size(), sizeof(NewMeshVertex), mesh->vert.data(), mesh->index.size(), IndexFormat::UInt32, mesh->index.data(), program);
+	std::vector<VertexAttribute> attribs =
+	{
+		{.location = 0, .size = 3, .normalized = GL_FALSE, .stride = sizeof(NewMeshVertex), .offset = (void*)offsetof(NewMeshVertex, positions) },
+		{.location = 1, .size = 3, .normalized = GL_FALSE, .stride = sizeof(NewMeshVertex), .offset = (void*)offsetof(NewMeshVertex, normals) },
+		{.location = 2, .size = 4, .normalized = GL_FALSE, .stride = sizeof(NewMeshVertex), .offset = (void*)offsetof(NewMeshVertex, tangents) },
+		{.location = 3, .size = 4, .normalized = GL_FALSE, .stride = sizeof(NewMeshVertex), .offset = (void*)offsetof(NewMeshVertex, colors) },
+		{.location = 4, .size = 2, .normalized = GL_FALSE, .stride = sizeof(NewMeshVertex), .offset = (void*)offsetof(NewMeshVertex, texCoords) },
+		{.location = 5, .size = 2, .normalized = GL_FALSE, .stride = sizeof(NewMeshVertex), .offset = (void*)offsetof(NewMeshVertex, texCoords2) },
+	};
+
+	mesh->geometry = GetRenderSystem().CreateGeometryBuffer(dynamic ? BufferUsage::DynamicDraw : BufferUsage::StaticDraw, mesh->vert.size(), sizeof(NewMeshVertex), mesh->vert.data(), mesh->index.size(), IndexFormat::UInt32, mesh->index.data(), attribs);
 }
 
-NewModel LoadModel(const char* fileName, ShaderProgramRef program)
+NewModel LoadModel(const char* fileName)
 {
 	NewModel model = {};
 
@@ -110,7 +120,7 @@ NewModel LoadModel(const char* fileName, ShaderProgramRef program)
 	if ((model.meshCount != 0) && (model.meshes != NULL))
 	{
 		// Upload vertex data to GPU (static meshes)
-		for (int i = 0; i < model.meshCount; i++) UploadMesh(&model.meshes[i], false, program);
+		for (int i = 0; i < model.meshCount; i++) UploadMesh(&model.meshes[i], false);
 	}
 	else LogWarning("MESH: [" + std::string(fileName) + "] Failed to load model mesh(es) data");
 
@@ -130,7 +140,7 @@ NewModel LoadModel(const char* fileName, ShaderProgramRef program)
 
 ModelAnimation* LoadModelAnimations(const char* fileName, unsigned int* animCount)
 {
-	ModelAnimation* animations = NULL;
+	ModelAnimation* animations = nullptr;
 
 	//if (FileSystem::IsFileExtension(fileName, ".gltf;.glb")) 
 	if (FileSystem::IsFileExtension(fileName, ".gltf") || FileSystem::IsFileExtension(fileName, ".glb"))

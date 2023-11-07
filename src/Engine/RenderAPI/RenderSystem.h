@@ -41,6 +41,10 @@ public:
 	VertexBufferRef CreateVertexBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* data);
 	IndexBufferRef CreateIndexBuffer(BufferUsage usage);
 	IndexBufferRef CreateIndexBuffer(BufferUsage usage, unsigned indexCount, IndexFormat indexFormat, const void* data);
+
+	/*
+	* разница между attribs и shaders. при передаче шейдера, при создании вао движок пытается создать описание формата вершины из кода шейдера. Такой вариант удобнее, но если в шейдере не использовался какой-либо атрибут вершины (например нигде не используется тангенс), то при компиляции glsl кода шейдера этот атрибут будет выкинут из-за чего чтение данных из вершины будет совершенно некоректным. Подумать как решить эту проблему
+	*/
 	VertexArrayRef CreateVertexArray(VertexBufferRef vbo, IndexBufferRef ibo, const std::vector<VertexAttribute>& attribs);
 	VertexArrayRef CreateVertexArray(VertexBufferRef vbo, IndexBufferRef ibo, ShaderProgramRef shaders);
 
@@ -147,6 +151,7 @@ public:
 	void Bind(StencilState state);
 	void Bind(RasterizerState state);
 	void Bind(ShaderProgramRef resource);
+	void Bind(unsigned rawShader);
 	void Bind(VertexBufferRef buffer);
 	void Bind(IndexBufferRef buffer);
 	void Bind(VertexArrayRef vao);
@@ -157,7 +162,6 @@ public:
 	//-------------------------------------------------------------------------
 	// Raw GL State
 	//-------------------------------------------------------------------------
-	void BindGLShaderProgram(unsigned id);
 	void BindGLVertexBuffer(unsigned id);
 	void BindGLIndexBuffer(unsigned id);
 	void BindGLVertexArray(unsigned id);
@@ -169,7 +173,6 @@ public:
 	//-------------------------------------------------------------------------
 	void Draw(VertexArrayRef vao, PrimitiveTopology primitive = PrimitiveTopology::Triangles);
 	void Draw(GeometryBufferRef geom, PrimitiveTopology primitive = PrimitiveTopology::Triangles);
-
 
 	//-------------------------------------------------------------------------
 	// Binding state
@@ -183,6 +186,8 @@ private:
 
 	void initializeExtensions(bool print);
 	void initializeCapabilities(bool print);
+
+	void validationShaderCode(std::string& vertexCode, std::string& fragmentCode);
 
 	ShaderRef compileShader(ShaderPipelineStage type, const std::string& source);
 	void attachmentFrameBufferColor(FramebufferRef fbo, RenderbufferRef colorBuffer);

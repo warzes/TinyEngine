@@ -375,32 +375,6 @@ FramebufferRef RenderSystem::CreateFramebuffer(FramebufferAttachment attachment,
 	return resource;
 }
 //-----------------------------------------------------------------------------
-ShaderRef RenderSystem::compileShader(ShaderPipelineStage type, const std::string& source)
-{
-	const char* shaderText = source.data();
-	const GLint lenShaderText = static_cast<GLint>(source.size());
-
-	ShaderRef shader(new Shader(type));
-	glShaderSource(*shader, 1, &shaderText, &lenShaderText);
-	glCompileShader(*shader);
-
-	GLint compileStatus = GL_FALSE;
-	glGetShaderiv(*shader, GL_COMPILE_STATUS, &compileStatus);
-	if( compileStatus == GL_FALSE )
-	{
-		GLint infoLogLength;
-		glGetShaderiv(*shader, GL_INFO_LOG_LENGTH, &infoLogLength);
-		std::unique_ptr<GLchar> errorInfoText{ new GLchar[static_cast<size_t>(infoLogLength + 1)] };
-		glGetShaderInfoLog(*shader, infoLogLength, nullptr, errorInfoText.get());
-
-		const std::string shaderName = ConvertToStr(type);
-		LogError(shaderName + " Shader compilation failed : " + std::string(errorInfoText.get()) + ", Source: " + source);
-		return {};
-	}
-
-	return shader;
-}
-//-----------------------------------------------------------------------------
 void RenderSystem::attachmentFrameBufferColor(FramebufferRef fbo, RenderbufferRef colorBuffer)
 {
 	if( colorBuffer )

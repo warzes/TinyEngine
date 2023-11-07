@@ -13,13 +13,6 @@
 class glObject
 {
 public:
-	glObject(const glObject&) = delete;
-	glObject& operator=(const glObject&) = delete;
-
-	glObject(glObject&& other) noexcept : m_handle{ other.m_handle }
-	{
-		other.m_handle = 0;
-	}
 	glObject& operator=(glObject&& other) noexcept
 	{
 		std::swap(m_handle, other.m_handle);
@@ -32,6 +25,14 @@ public:
 
 protected:
 	glObject() = default;
+	glObject(const glObject&) = delete;
+	glObject& operator=(const glObject&) = delete;
+
+	glObject(glObject&& other) noexcept : m_handle{ other.m_handle }
+	{
+		other.m_handle = 0;
+	}
+
 	GLuint m_handle = 0;
 };
 

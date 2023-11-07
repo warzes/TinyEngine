@@ -233,6 +233,6 @@ enum MaterialMapIndex {
 #define MAX_MATERIAL_MAPS              12       // Maximum number of shader maps supported
 
 // TEMP Func
-NewModel LoadModel(const char* fileName, ShaderProgramRef program);
+NewModel LoadModel(const char* fileName);
 ModelAnimation* LoadModelAnimations(const char* fileName, unsigned int* animCount);// Load model animations from file
 void UpdateModelAnimation(NewModel model, ModelAnimation anim, int frame); // Update model animation pose

@@ -940,7 +940,8 @@ ModelAnimation* LoadModelAnimationsGLTF(const char* fileName, unsigned int* anim
 					for (int k = 0; k < animations[i].boneCount; k++)
 					{
 						glm::vec3 translation = { 0, 0, 0 };
-						glm::quat rotation = { 1, 0, 0, 0 };
+						//glm::quat rotation = { 1, 0, 0, 0 };
+						glm::vec4 rotation = { 0, 0, 0, 1 }; // GetPoseAtTimeGLTF() работает с vec4 в которм w последний (в кватернионе он первый). потом пофиксить
 						glm::vec3 scale = { 1, 1, 1 };
 
 						if (boneChannels[k].translate)
@@ -969,7 +970,7 @@ ModelAnimation* LoadModelAnimationsGLTF(const char* fileName, unsigned int* anim
 
 						animations[i].framePoses[j][k] = TempTransform{
 							.translation = translation,
-							.rotation = rotation,
+							.rotation = {rotation.w, rotation.x, rotation.y, rotation.z},
 							.scale = scale
 						};
 					}
