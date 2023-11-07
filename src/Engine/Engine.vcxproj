@@ -137,6 +137,10 @@
     <ClCompile Include="Graphics\GraphicsResource.cpp" />
     <ClCompile Include="Graphics\GraphicsSystem.cpp" />
     <ClCompile Include="Graphics\LoadGLTF.cpp" />
+    <ClCompile Include="Graphics\LoadIQM.cpp" />
+    <ClCompile Include="Graphics\LoadM3D.cpp" />
+    <ClCompile Include="Graphics\LoadOBJ.cpp" />
+    <ClCompile Include="Graphics\TempCoreFunc.cpp" />
     <ClCompile Include="Graphics\TempGraphics.cpp" />
     <ClCompile Include="Physics\PhysicsSystem.cpp" />
     <ClCompile Include="Platform\InputSystem.cpp" />

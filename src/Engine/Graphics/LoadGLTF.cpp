@@ -5,18 +5,7 @@
 
 #include <cgltf.h>
 
-// Transform a vector by quaternion rotation
-// удалить?
-glm::vec3 Vector3RotateByQuaternion(const glm::vec3& v, const glm::quat& q)
-{
-	glm::vec3 result = glm::vec3{ 0 };
-
-	result.x = v.x * (q.x * q.x + q.w * q.w - q.y * q.y - q.z * q.z) + v.y * (2 * q.x * q.y - 2 * q.w * q.z) + v.z * (2 * q.x * q.z + 2 * q.w * q.y);
-	result.y = v.x * (2 * q.w * q.z + 2 * q.x * q.y) + v.y * (q.w * q.w - q.x * q.x + q.y * q.y - q.z * q.z) + v.z * (-2 * q.w * q.x + 2 * q.y * q.z);
-	result.z = v.x * (-2 * q.w * q.y + 2 * q.x * q.z) + v.y * (2 * q.w * q.x + 2 * q.y * q.z) + v.z * (q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z);
-
-	return result;
-}
+glm::vec3 Vector3RotateByQuaternion(const glm::vec3& v, const glm::quat& q);
 
 // Load data from file into a buffer
 unsigned char* LoadFileData(const char* fileName, int* dataSize)
@@ -203,7 +192,7 @@ static void BuildPoseFromParentJoints(NewBoneInfo* bones, int boneCount, TempTra
 }
 
 // Load glTF file into model struct, .gltf and .glb supported
-NewModel LoadGLTF(const char* fileName)
+NewModel LoadGLTF(const std::string& fileName)
 {
 	/*********************************************************************************************
 
@@ -246,7 +235,7 @@ NewModel LoadGLTF(const char* fileName)
 
 	// glTF file loading
 	int dataSize = 0;
-	unsigned char* fileData = LoadFileData(fileName, &dataSize);
+	unsigned char* fileData = LoadFileData(fileName.c_str(), &dataSize);
 	if (fileData == NULL) return model;
 
 	// glTF data loading
@@ -269,7 +258,7 @@ NewModel LoadGLTF(const char* fileName)
 
 		// Force reading data buffers (fills buffer_view->buffer->data)
 		// NOTE: If an uri is defined to base64 data or external path, it's automatically loaded
-		result = cgltf_load_buffers(&options, data, fileName);
+		result = cgltf_load_buffers(&options, data, fileName.c_str());
 		if (result != cgltf_result_success) LogPrint("MODEL: [" + std::string(fileName) + "] Failed to load mesh/material buffers");
 
 		int primitivesCount = 0;
@@ -277,8 +266,7 @@ NewModel LoadGLTF(const char* fileName)
 		for (unsigned int i = 0; i < data->meshes_count; i++) primitivesCount += (int)data->meshes[i].primitives_count;
 
 		// Load our model data: meshes and materials
-		model.meshCount = primitivesCount;
-		model.meshes = (NewMesh*)calloc(model.meshCount, sizeof(NewMesh));
+		model.meshes.resize(primitivesCount);
 
 		// NOTE: We keep an extra slot for default material, in case some mesh requires it
 		model.materialCount = (int)data->materials_count + 1;
@@ -286,14 +274,14 @@ NewModel LoadGLTF(const char* fileName)
 		model.materials[0] = LoadMaterialDefault();     // Load default material (index: 0)
 
 		// Load mesh-material indices, by default all meshes are mapped to material index: 0
-		model.meshMaterial = (int*)calloc(model.meshCount, sizeof(int));
+		model.meshMaterial = (int*)calloc(model.meshes.size(), sizeof(int));
 
 		// Load materials data
 		//----------------------------------------------------------------------------------------------------
 		for (unsigned int i = 0, j = 1; i < data->materials_count; i++, j++)
 		{
 			model.materials[j] = LoadMaterialDefault();
-			const char* texPath = GetDirectoryPath(fileName);
+			const char* texPath = GetDirectoryPath(fileName.c_str());
 
 			// Check glTF material flow: PBR metallic/roughness flow
 			// NOTE: Alternatively, materials can follow PBR specular/glossiness flow
@@ -520,22 +508,22 @@ NewModel LoadGLTF(const char* fileName)
 					if (attribute->component_type == cgltf_component_type_r_16u)
 					{
 						// Init mesh indices to copy glTF attribute data
-						model.meshes[meshIndex].indices = (unsigned short*)malloc(attribute->count * sizeof(unsigned short));
+						model.meshes[meshIndex].indices.resize(attribute->count);
 
 						// Load unsigned short data type into mesh.indices
-						LOAD_ATTRIBUTE(attribute, 1, unsigned short, model.meshes[meshIndex].indices)
+						LOAD_ATTRIBUTE(attribute, 1, unsigned short, model.meshes[meshIndex].indices.data())
 					}
 					else if (attribute->component_type == cgltf_component_type_r_32u)
 					{
 						// Init mesh indices to copy glTF attribute data
-						model.meshes[meshIndex].indices = (unsigned short*)malloc(attribute->count * sizeof(unsigned short));
+						model.meshes[meshIndex].indices.resize(attribute->count);
 
 						// Load data into a temp buffer to be converted to data type
 						unsigned int* temp = (unsigned int*)malloc(attribute->count * sizeof(unsigned int));
 						LOAD_ATTRIBUTE(attribute, 1, unsigned int, temp);
 
 						// Convert data to indices data type (unsigned short)
-						for (unsigned int d = 0; d < attribute->count; d++) model.meshes[meshIndex].indices[d] = (unsigned short)temp[d];
+						for (unsigned int d = 0; d < attribute->count; d++) model.meshes[meshIndex].indices[d] = (unsigned)temp[d];
 
 						LogWarning("MODEL: [" + std::string(fileName) + "] Indices data converted from u32 to u16, possible loss of data");
 
@@ -827,11 +815,11 @@ static bool GetPoseAtTimeGLTF(cgltf_accessor* input, cgltf_accessor* output, flo
 }
 
 #define GLTF_ANIMDELAY 17    // Animation frames delay, (~1000 ms/60 FPS = 16.666666* ms)
-ModelAnimation* LoadModelAnimationsGLTF(const char* fileName, unsigned int* animCount)
+ModelAnimation* LoadModelAnimationsGLTF(const std::string& fileName, unsigned int& animCount)
 {
 	// glTF file loading
 	int dataSize = 0;
-	unsigned char* fileData = LoadFileData(fileName, &dataSize);
+	unsigned char* fileData = LoadFileData(fileName.c_str(), &dataSize);
 
 	ModelAnimation* animations = NULL;
 
@@ -843,11 +831,11 @@ ModelAnimation* LoadModelAnimationsGLTF(const char* fileName, unsigned int* anim
 	if (result != cgltf_result_success)
 	{
 		LogWarning("MODEL: [" + std::string(fileName) + "] Failed to load glTF data");
-		*animCount = 0;
+		animCount = 0;
 		return NULL;
 	}
 
-	result = cgltf_load_buffers(&options, data, fileName);
+	result = cgltf_load_buffers(&options, data, fileName.c_str());
 	if (result != cgltf_result_success) LogPrint("MODEL: [" + std::string(fileName) + "] Failed to load animation buffers");
 
 	if (result == cgltf_result_success)
@@ -855,7 +843,7 @@ ModelAnimation* LoadModelAnimationsGLTF(const char* fileName, unsigned int* anim
 		if (data->skins_count == 1)
 		{
 			cgltf_skin skin = data->skins[0];
-			*animCount = (unsigned)data->animations_count;
+			animCount = (unsigned)data->animations_count;
 			animations = (ModelAnimation*)malloc(data->animations_count * sizeof(ModelAnimation));
 
 			for (unsigned int i = 0; i < data->animations_count; i++)

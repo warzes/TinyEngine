@@ -218,6 +218,7 @@ bool FileSystem::IsAbsolutePath(const std::string& pathName)
 //-----------------------------------------------------------------------------
 bool FileSystem::IsFileExtension(const std::string& pathName, const std::string& extension)
 {
+	// TODO: Extension() тут не очень эффективен - переделать
 	return Extension(pathName, true) == extension;
 }
 //-----------------------------------------------------------------------------
