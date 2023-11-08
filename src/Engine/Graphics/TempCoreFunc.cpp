@@ -86,6 +86,56 @@ unsigned char* LoadFileData(const char* fileName, int* dataSize)
 	return data;
 }
 
+// Load text data from file, returns a '\0' terminated string
+// NOTE: text chars array should be freed manually
+char* LoadFileText(const char* fileName)
+{
+	char* text = NULL;
+
+	if (fileName != NULL)
+	{
+		FILE* file = nullptr;
+		errno_t err = fopen_s(&file, fileName, "rt");
+
+		if (file != nullptr && err == 0)
+		{
+			// WARNING: When reading a file as 'text' file,
+			// text mode causes carriage return-linefeed translation...
+			// ...but using fseek() should return correct byte-offset
+			fseek(file, 0, SEEK_END);
+			unsigned int size = (unsigned int)ftell(file);
+			fseek(file, 0, SEEK_SET);
+
+			if (size > 0)
+			{
+				text = (char*)malloc((size + 1) * sizeof(char));
+
+				if (text != NULL)
+				{
+					unsigned int count = (unsigned int)fread(text, sizeof(char), size, file);
+
+					// WARNING: \r\n is converted to \n on reading, so,
+					// read bytes count gets reduced by the number of lines
+					if (count < size) text = (char*)realloc(text, count + 1);
+
+					// Zero-terminate the string
+					text[count] = '\0';
+
+					LogPrint("FILEIO: [" + std::string(fileName) + "] Text file loaded successfully");
+				}
+				else LogWarning("FILEIO: [" + std::string(fileName) + "] Failed to allocated memory for file reading");
+			}
+			else LogWarning("FILEIO: [" + std::string(fileName) + "] Failed to read text file");
+
+			fclose(file);
+		}
+		else LogWarning("FILEIO: [" + std::string(fileName) + "] Failed to open text file");
+	}
+	else LogWarning("FILEIO: File name provided is not valid");
+
+	return text;
+}
+
 
 #define MAX_FILEPATH_LENGTH          4096       // Maximum length for filepaths (Linux PATH_MAX default value)
 // Get directory for a given filePath

@@ -9,7 +9,7 @@ void GLFWKeyCallback(GLFWwindow* /*window*/, int key, int /*scancode*/, int acti
 {
 	if (key < 0) return;
 
-	LogPrint("key " + std::to_string(key));
+	//LogPrint("key " + std::to_string(key));
 
 	if (action == GLFW_RELEASE)
 	{
