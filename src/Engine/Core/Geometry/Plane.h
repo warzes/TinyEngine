@@ -39,7 +39,7 @@ public:
 
 	[[nodiscard]] PlaneIntersectionType Intersects(const glm::vec3& point) const noexcept;
 	[[nodiscard]] PlaneIntersectionType Intersects(const BoundingAABB& aabb) const noexcept;
-	[[nodiscard]] PlaneIntersectionType Intersects(const BoundingFrustum& frustum) const noexcept;
+	[[nodiscard]] PlaneIntersectionType Intersects(const OldBoundingFrustum& frustum) const noexcept;
 	[[nodiscard]] PlaneIntersectionType Intersects(const BoundingSphere& sphere) const noexcept;
 
 	[[nodiscard]] static Plane Transform(const Plane& plane, const glm::mat4& matrix);

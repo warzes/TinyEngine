@@ -66,17 +66,17 @@ namespace
 
 } // namespace
 //-----------------------------------------------------------------------------
-BoundingFrustum::BoundingFrustum(const glm::mat4& matrix)
+OldBoundingFrustum::OldBoundingFrustum(const glm::mat4& matrix)
 {
 	SetMatrix(matrix);
 }
 //-----------------------------------------------------------------------------
-const glm::mat4& BoundingFrustum::GetMatrix() const noexcept
+const glm::mat4& OldBoundingFrustum::GetMatrix() const noexcept
 {
 	return m_matrix;
 }
 //-----------------------------------------------------------------------------
-void BoundingFrustum::SetMatrix(const glm::mat4& matrix) noexcept
+void OldBoundingFrustum::SetMatrix(const glm::mat4& matrix) noexcept
 {
 	m_matrix = matrix;
 
@@ -89,42 +89,42 @@ void BoundingFrustum::SetMatrix(const glm::mat4& matrix) noexcept
 #endif
 }
 //-----------------------------------------------------------------------------
-const Plane& BoundingFrustum::GetNear() const noexcept
+const Plane& OldBoundingFrustum::GetNear() const noexcept
 {
 	return m_planes[PlaneIndex::Near];
 }
 //-----------------------------------------------------------------------------
-const Plane& BoundingFrustum::GetFar() const noexcept
+const Plane& OldBoundingFrustum::GetFar() const noexcept
 {
 	return m_planes[PlaneIndex::Far];
 }
 //-----------------------------------------------------------------------------
-const Plane& BoundingFrustum::GetLeft() const noexcept
+const Plane& OldBoundingFrustum::GetLeft() const noexcept
 {
 	return m_planes[PlaneIndex::Left];
 }
 //-----------------------------------------------------------------------------
-const Plane& BoundingFrustum::GetRight() const noexcept
+const Plane& OldBoundingFrustum::GetRight() const noexcept
 {
 	return m_planes[PlaneIndex::Right];
 }
 //-----------------------------------------------------------------------------
-const Plane& BoundingFrustum::GetTop() const noexcept
+const Plane& OldBoundingFrustum::GetTop() const noexcept
 {
 	return m_planes[PlaneIndex::Top];
 }
 //-----------------------------------------------------------------------------
-const Plane& BoundingFrustum::GetBottom() const noexcept
+const Plane& OldBoundingFrustum::GetBottom() const noexcept
 {
 	return m_planes[PlaneIndex::Bottom];
 }
 //-----------------------------------------------------------------------------
-const std::array<glm::vec3, BoundingFrustum::CornerCount>& BoundingFrustum::GetCorners() const noexcept
+const std::array<glm::vec3, OldBoundingFrustum::CornerCount>& OldBoundingFrustum::GetCorners() const noexcept
 {
 	return m_corners;
 }
 //-----------------------------------------------------------------------------
-ContainmentType BoundingFrustum::Contains(const glm::vec3& point) const noexcept
+ContainmentType OldBoundingFrustum::Contains(const glm::vec3& point) const noexcept
 {
 #if BOUNDING_FRUSTUM_FAST_CONTAINS
 	// NOTE: fast mode
@@ -147,7 +147,7 @@ ContainmentType BoundingFrustum::Contains(const glm::vec3& point) const noexcept
 #endif
 }
 //-----------------------------------------------------------------------------
-ContainmentType BoundingFrustum::Contains(const BoundingAABB& box) const noexcept
+ContainmentType OldBoundingFrustum::Contains(const BoundingAABB& box) const noexcept
 {
 	bool intersects = false;
 	for( auto& plane : m_planes )
@@ -169,7 +169,7 @@ ContainmentType BoundingFrustum::Contains(const BoundingAABB& box) const noexcep
 	return ContainmentType::Contains;
 }
 //-----------------------------------------------------------------------------
-ContainmentType BoundingFrustum::Contains(const BoundingFrustum& frustum) const noexcept
+ContainmentType OldBoundingFrustum::Contains(const OldBoundingFrustum& frustum) const noexcept
 {
 	bool intersects = false;
 	for( auto& plane : m_planes )
@@ -191,7 +191,7 @@ ContainmentType BoundingFrustum::Contains(const BoundingFrustum& frustum) const 
 	return ContainmentType::Contains;
 }
 //-----------------------------------------------------------------------------
-ContainmentType BoundingFrustum::Contains(const BoundingSphere& sphere) const noexcept
+ContainmentType OldBoundingFrustum::Contains(const BoundingSphere& sphere) const noexcept
 {
 	bool intersects = false;
 	for( auto& plane : m_planes )
@@ -213,7 +213,7 @@ ContainmentType BoundingFrustum::Contains(const BoundingSphere& sphere) const no
 	return ContainmentType::Contains;
 }
 //-----------------------------------------------------------------------------
-bool BoundingFrustum::Intersects(const BoundingAABB& box) const noexcept
+bool OldBoundingFrustum::Intersects(const BoundingAABB& box) const noexcept
 {
 	for( auto& plane : m_planes )
 	{
@@ -225,7 +225,7 @@ bool BoundingFrustum::Intersects(const BoundingAABB& box) const noexcept
 	return true;
 }
 //-----------------------------------------------------------------------------
-bool BoundingFrustum::Intersects(const BoundingFrustum& frustum) const noexcept
+bool OldBoundingFrustum::Intersects(const OldBoundingFrustum& frustum) const noexcept
 {
 	for( auto& plane : m_planes )
 	{
@@ -238,7 +238,7 @@ bool BoundingFrustum::Intersects(const BoundingFrustum& frustum) const noexcept
 	return true;
 }
 //-----------------------------------------------------------------------------
-bool BoundingFrustum::Intersects(const BoundingSphere& sphere) const noexcept
+bool OldBoundingFrustum::Intersects(const BoundingSphere& sphere) const noexcept
 {
 	for( auto& plane : m_planes )
 	{
@@ -251,7 +251,7 @@ bool BoundingFrustum::Intersects(const BoundingSphere& sphere) const noexcept
 	return true;
 }
 //-----------------------------------------------------------------------------
-PlaneIntersectionType BoundingFrustum::Intersects(const Plane& plane) const noexcept
+PlaneIntersectionType OldBoundingFrustum::Intersects(const Plane& plane) const noexcept
 {
 	auto result = plane.Intersects(m_corners.front());
 	for( std::size_t i = 1; i < m_corners.size(); ++i )
@@ -264,7 +264,7 @@ PlaneIntersectionType BoundingFrustum::Intersects(const Plane& plane) const noex
 	return result;
 }
 //-----------------------------------------------------------------------------
-std::optional<float> BoundingFrustum::Intersects(const Ray & ray) const noexcept
+std::optional<float> OldBoundingFrustum::Intersects(const Ray & ray) const noexcept
 {
 	std::array<std::optional<float>, PlaneCount> distances;
 	for( int i = 0; i < PlaneCount; ++i )
@@ -301,7 +301,7 @@ std::optional<float> BoundingFrustum::Intersects(const Ray & ray) const noexcept
 	return d;
 }
 //-----------------------------------------------------------------------------
-void BoundingFrustum::createPlanes()
+void OldBoundingFrustum::createPlanes()
 {
 #if CREATE_PLANES_BEFORE_CORNERS
 	makePlane(
@@ -372,7 +372,7 @@ void BoundingFrustum::createPlanes()
 #endif
 }
 //-----------------------------------------------------------------------------
-void BoundingFrustum::createCorners()
+void OldBoundingFrustum::createCorners()
 {
 #if CREATE_PLANES_BEFORE_CORNERS
 	constexpr auto N = PlaneIndex::Near;

@@ -118,7 +118,7 @@ std::optional<float> Ray::Intersects(const BoundingAABB& box) const noexcept
 	return tNear;
 }
 //-----------------------------------------------------------------------------
-std::optional<float> Ray::Intersects(const BoundingFrustum& frustum) const noexcept
+std::optional<float> Ray::Intersects(const OldBoundingFrustum& frustum) const noexcept
 {
 	return frustum.Intersects(*this);
 }

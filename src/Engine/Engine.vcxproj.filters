@@ -14,9 +14,6 @@
     <ClCompile Include="Core\Logging\LogSystem.cpp">
       <Filter>Core\Logging</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Geometry\BoundingAABB.cpp">
-      <Filter>Core\Geometry</Filter>
-    </ClCompile>
     <ClCompile Include="Platform\InputSystem.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
@@ -59,26 +56,8 @@
     <ClCompile Include="Core\Geometry\Collisions.cpp">
       <Filter>Core\Geometry\old</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Geometry\BoundingSphere.cpp">
-      <Filter>Core\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Geometry\BoundingFrustum.cpp">
-      <Filter>Core\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Geometry\Ray.cpp">
-      <Filter>Core\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Geometry\Plane.cpp">
-      <Filter>Core\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Geometry\Intersect.cpp">
-      <Filter>Core\Geometry</Filter>
-    </ClCompile>
     <ClCompile Include="Physics\PhysicsSystem.cpp">
       <Filter>Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Geometry\Triangle.cpp">
-      <Filter>Core\Geometry</Filter>
     </ClCompile>
     <ClCompile Include="RenderAPI\RenderSystem_Shader.cpp">
       <Filter>RenderAPI</Filter>
@@ -88,12 +67,6 @@
     </ClCompile>
     <ClCompile Include="RenderAPI\RenderSystem_State.cpp">
       <Filter>RenderAPI</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Geometry\Rect.cpp">
-      <Filter>Core\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Geometry\Polyhedron.cpp">
-      <Filter>Core\Geometry</Filter>
     </ClCompile>
     <ClCompile Include="Scene\Node.cpp">
       <Filter>Scene</Filter>
@@ -133,9 +106,6 @@
     </ClCompile>
     <ClCompile Include="Core\Object\Attribute.cpp">
       <Filter>Core\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Geometry\IntBox.cpp">
-      <Filter>Core\Geometry</Filter>
     </ClCompile>
     <ClCompile Include="Core\Math\Color.cpp">
       <Filter>Core\Math</Filter>
@@ -185,6 +155,39 @@
     <ClCompile Include="Graphics\LoadM3D.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Geometry\IntBox.cpp">
+      <Filter>Core\Geometry\NewFilter1</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\Intersect.cpp">
+      <Filter>Core\Geometry\NewFilter1</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\Plane.cpp">
+      <Filter>Core\Geometry\NewFilter1</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\Polyhedron.cpp">
+      <Filter>Core\Geometry\NewFilter1</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\Ray.cpp">
+      <Filter>Core\Geometry\NewFilter1</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\Rect.cpp">
+      <Filter>Core\Geometry\NewFilter1</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\Triangle.cpp">
+      <Filter>Core\Geometry\NewFilter1</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\BoundingSphere.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\BoundingAABB.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\BoundingOrientedBox.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\BoundingFrustum.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -222,9 +225,6 @@
     </ClInclude>
     <ClInclude Include="Core\Math\MathLib.h">
       <Filter>Core\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Geometry\BoundingAABB.h">
-      <Filter>Core\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Platform\WindowSystem.h">
       <Filter>Platform</Filter>
@@ -280,41 +280,14 @@
     <ClInclude Include="Core\Geometry\Temp.h">
       <Filter>Core\Geometry\old</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Geometry\BoundingSphere.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Geometry\BoundingFrustum.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Geometry\Ray.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Geometry\Plane.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Geometry\GeometryCore.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Geometry\Intersect.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
     <ClInclude Include="Physics\PhysicsSystem.h">
       <Filter>Physics</Filter>
     </ClInclude>
     <ClInclude Include="Core\Utilities\CoreUtilities.h">
       <Filter>Core\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Geometry\Triangle.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
     <ClInclude Include="RenderAPI\OpenGLTranslateToGL.h">
       <Filter>RenderAPI</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Geometry\Rect.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Geometry\Polyhedron.h">
-      <Filter>Core\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Scene\Node.h">
       <Filter>Scene</Filter>
@@ -361,9 +334,6 @@
     <ClInclude Include="Core\Object\Attribute.h">
       <Filter>Core\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Geometry\IntBox.h">
-      <Filter>Core\Geometry</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Object\ObjectResolver.h">
       <Filter>Core\Object</Filter>
     </ClInclude>
@@ -390,6 +360,42 @@
     </ClInclude>
     <ClInclude Include="RenderAPI\RenderCore.h">
       <Filter>RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\IntBox.h">
+      <Filter>Core\Geometry\NewFilter1</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Intersect.h">
+      <Filter>Core\Geometry\NewFilter1</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Plane.h">
+      <Filter>Core\Geometry\NewFilter1</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Polyhedron.h">
+      <Filter>Core\Geometry\NewFilter1</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Ray.h">
+      <Filter>Core\Geometry\NewFilter1</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Rect.h">
+      <Filter>Core\Geometry\NewFilter1</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\GeometryCore.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\BoundingSphere.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\BoundingOrientedBox.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\BoundingFrustum.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\BoundingAABB.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Triangle.h">
+      <Filter>Core\Geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -453,16 +459,19 @@
     <Filter Include="Core\Resource">
       <UniqueIdentifier>{2a8c4f6e-d82c-4dd6-bfd2-2449dd48662f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Geometry\NewFilter1">
+      <UniqueIdentifier>{e6e30af8-bf7d-438e-b268-5cc5fe7eb384}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Core\Geometry\Collisions.inl">
       <Filter>Core\Geometry\old</Filter>
     </None>
-    <None Include="Core\Geometry\Intersect.inl">
-      <Filter>Core\Geometry</Filter>
-    </None>
     <None Include="Core\Math\MathLib.inl">
       <Filter>Core\Math</Filter>
+    </None>
+    <None Include="Core\Geometry\Intersect.inl">
+      <Filter>Core\Geometry\NewFilter1</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -1,16 +1,50 @@
 #include "stdafx.h"
 #include "BoundingSphere.h"
-#include "BoundingAABB.h"
-#include "Ray.h"
-#include "Plane.h"
 #include "Core/Math/MathLib.h"
+#include "Triangle.h"
+#include "BoundingAABB.h"
+#include "BoundingOrientedBox.h"
+#include "Plane.h"
+#include "Ray.h"
+//-----------------------------------------------------------------------------
+constexpr float SphereEnlargeFactor = 1e-6f; // avoid floating error
+//-----------------------------------------------------------------------------
+BoundingSphere::BoundingSphere(const glm::vec3& a, const glm::vec3& b) noexcept
+{
+	center = (a + b) * 0.5f;
+	radius = glm::length(a - b) * 0.5f + SphereEnlargeFactor;
+}
+//-----------------------------------------------------------------------------
+void BoundingSphere::Transform(BoundingSphere& Out, const glm::mat4& mat) noexcept
+{
+	assert(0); // TODO: Not Impl
+}
+//-----------------------------------------------------------------------------
+void BoundingSphere::Transform(BoundingSphere& out, float scale, const glm::quat& rotation, const glm::vec3& translation) noexcept
+{
+	assert(0); // TODO: Not Impl
+}
 //-----------------------------------------------------------------------------
 ContainmentType BoundingSphere::Contains(const glm::vec3& point) const noexcept
 {
 	const auto distanceSquared = DistanceSquared(point, center);
 	const auto radiusSquared = radius * radius;
-	if( distanceSquared > radiusSquared ) return ContainmentType::Disjoint;
-	else if( distanceSquared < radiusSquared ) return ContainmentType::Contains;
+	if (distanceSquared > radiusSquared) return ContainmentType::Disjoint;
+	else if (distanceSquared < radiusSquared) return ContainmentType::Contains;
+	return ContainmentType::Intersects;
+}
+//-----------------------------------------------------------------------------
+ContainmentType BoundingSphere::Contains(const Triangle& tri) const noexcept
+{
+	assert(0); // TODO: Not Impl
+	return {};
+}
+//-----------------------------------------------------------------------------
+ContainmentType BoundingSphere::Contains(const BoundingSphere& sphere) const noexcept
+{
+	const auto distance = glm::distance(center, sphere.center);
+	if (distance > radius + sphere.radius) return ContainmentType::Disjoint;
+	if (distance + sphere.radius < radius) return ContainmentType::Contains;
 	return ContainmentType::Intersects;
 }
 //-----------------------------------------------------------------------------
@@ -30,12 +64,34 @@ ContainmentType BoundingSphere::Contains(const BoundingAABB& box) const noexcept
 	return ContainmentType::Disjoint;
 }
 //-----------------------------------------------------------------------------
-ContainmentType BoundingSphere::Contains(const BoundingSphere& sphere) const noexcept
+ContainmentType BoundingSphere::Contains(const BoundingOrientedBox& box) const noexcept
+{
+	assert(0); // TODO: Not Impl
+	return ContainmentType();
+}
+//-----------------------------------------------------------------------------
+ContainmentType BoundingSphere::Contains(const BoundingFrustum& fr) const noexcept
+{
+	assert(0); // TODO: Not Impl
+	return ContainmentType();
+}
+//-----------------------------------------------------------------------------
+ContainmentType BoundingSphere::ContainedBy(const Plane& plane0, const Plane& plane1, const Plane& plane2, const Plane& Plane3, const Plane& Plane4, const Plane& Plane5) const noexcept
+{
+	assert(0); // TODO: Not Impl
+	return ContainmentType();
+}
+//-----------------------------------------------------------------------------
+bool BoundingSphere::Intersects(const Triangle& tri) const noexcept
+{
+	assert(0); // TODO: Not Impl
+	return false;
+}
+//-----------------------------------------------------------------------------
+bool BoundingSphere::Intersects(const BoundingSphere& sphere) const noexcept
 {
 	const auto distance = glm::distance(center, sphere.center);
-	if( distance > radius + sphere.radius ) return ContainmentType::Disjoint;
-	if( distance + sphere.radius < radius ) return ContainmentType::Contains;
-	return ContainmentType::Intersects;
+	return distance <= radius + sphere.radius;
 }
 //-----------------------------------------------------------------------------
 bool BoundingSphere::Intersects(const BoundingAABB& box) const noexcept
@@ -43,10 +99,16 @@ bool BoundingSphere::Intersects(const BoundingAABB& box) const noexcept
 	return box.Intersects(*this);
 }
 //-----------------------------------------------------------------------------
-bool BoundingSphere::Intersects(const BoundingSphere& sphere) const noexcept
+bool BoundingSphere::Intersects(const BoundingOrientedBox& box) const noexcept
 {
-	const auto distance = glm::distance(center, sphere.center);
-	return distance <= radius + sphere.radius;
+	assert(0); // TODO: Not Impl
+	return false;
+}
+//-----------------------------------------------------------------------------
+bool BoundingSphere::Intersects(const BoundingFrustum& fr) const noexcept
+{
+	assert(0); // TODO: Not Impl
+	return false;
 }
 //-----------------------------------------------------------------------------
 PlaneIntersectionType BoundingSphere::Intersects(const Plane& plane) const noexcept
@@ -59,95 +121,20 @@ std::optional<float> BoundingSphere::Intersects(const Ray& ray) const noexcept
 	return ray.Intersects(*this);
 }
 //-----------------------------------------------------------------------------
-BoundingSphere BoundingSphere::CreateFromPoints(const glm::vec3* points, std::size_t pointCount) noexcept
+std::optional<CollisionHit> BoundingSphere::Hit(const BoundingSphere& sphere) const noexcept
 {
-	auto accessor = [&](std::size_t i) -> glm::vec3 { return points[i]; };
-	return CreateFromPoints(std::move(accessor), pointCount);
-}
-//-----------------------------------------------------------------------------
-BoundingSphere BoundingSphere::CreateFromPoints(std::function<glm::vec3(std::size_t)> points, std::size_t pointCount) noexcept
-{
-	assert(points != nullptr);
-	assert(pointCount > 0);
+	const glm::vec3 d = sphere.center - center;
+	const float r = radius + sphere.radius;
+	const float d2 = glm::dot(d, d);
+	if (d2 > r * r) return std::nullopt;
 
-	// NOTE: Compute bounding sphere using Jack Ritter's algorithm.
-	std::size_t maxX = 0;
-	std::size_t maxY = 0;
-	std::size_t maxZ = 0;
-	std::size_t minX = 0;
-	std::size_t minY = 0;
-	std::size_t minZ = 0;
+	const float l = sqrtf(d2);
+	const float linv = 1.0f / ((l != 0.0f) ? l : 1.0f);
 
-	for( std::size_t i = 0; i < pointCount; i++ )
-	{
-		const auto& p = points(i);
-		if( p.x < points(minX).x )
-		{
-			minX = i;
-		}
-		if( p.x > points(maxX).x )
-		{
-			maxX = i;
-		}
-		if( p.y < points(minY).y )
-		{
-			minY = i;
-		}
-		if( p.y > points(maxY).y )
-		{
-			maxY = i;
-		}
-		if( p.z < points(minZ).z )
-		{
-			minZ = i;
-		}
-		if( p.z > points(maxZ).z )
-		{
-			maxZ = i;
-		}
-	}
-
-	const auto distX = DistanceSquared(points(maxX), points(minX));
-	const auto distY = DistanceSquared(points(maxY), points(minY));
-	const auto distZ = DistanceSquared(points(maxZ), points(minZ));
-
-	std::size_t max = maxX;
-	std::size_t min = minX;
-	if( distY > distX && distY > distZ )
-	{
-		max = maxY;
-		min = minY;
-	}
-	else if( distZ > distX && distZ > distY )
-	{
-		max = maxZ;
-		min = minZ;
-	}
-
-	auto center = (points(max) + points(min)) * 0.5f;
-	auto radius = glm::distance(points(max), center);
-	auto radiusSq = radius * radius;
-
-	// NOTE: Compute strict bounding sphere.
-	for( std::size_t i = 0; i < pointCount; i++ )
-	{
-		const auto p = points(i);
-		const auto diff = p - center;
-		const auto distanceSq = LengthSquared(diff);
-		if( distanceSq > radiusSq )
-		{
-			const auto distance = std::sqrt(distanceSq);
-			const auto direction = diff / distance;
-			const auto g = center - radius * direction;
-			center = (g + p) * 0.5f;
-			radius = glm::distance(p, center);
-			radiusSq = radius * radius;
-		}
-	}
-
-	BoundingSphere sphere;
-	sphere.center = center;
-	sphere.radius = radius;
-	return sphere;
+	CollisionHit hit;
+	hit.normal = d * linv;
+	hit.depth = r - l;
+	hit.contactPoint = sphere.center - hit.normal * sphere.radius;
+	return hit;
 }
 //-----------------------------------------------------------------------------

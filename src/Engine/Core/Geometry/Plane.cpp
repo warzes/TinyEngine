@@ -116,7 +116,7 @@ PlaneIntersectionType Plane::Intersects(const BoundingAABB& box) const noexcept
 	return PlaneIntersectionType::Intersecting;
 }
 //-----------------------------------------------------------------------------
-PlaneIntersectionType Plane::Intersects(const BoundingFrustum& frustum) const noexcept
+PlaneIntersectionType Plane::Intersects(const OldBoundingFrustum& frustum) const noexcept
 {
 	return frustum.Intersects(*this);
 }

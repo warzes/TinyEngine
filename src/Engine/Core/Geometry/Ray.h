@@ -7,9 +7,11 @@ class Ray final
 {
 public:
 	Ray() noexcept = default;
+	Ray(Ray&&) noexcept = default;
 	Ray(const Ray&) noexcept = default;
 	Ray(const glm::vec3& position, const glm::vec3& direction) noexcept : position(position), direction(direction) {}
 
+	Ray& operator=(Ray&&) noexcept = default;
 	Ray& operator=(const Ray&) noexcept = default;
 
 	bool operator==(const Ray& rhs) const noexcept { return position == rhs.position && direction == rhs.direction; }
@@ -23,9 +25,9 @@ public:
 
 	// Return closest point to another ray.
 	[[nodiscard]] glm::vec3 ClosestPoint(const Ray& ray) const;
-
+	
 	[[nodiscard]] std::optional<float> Intersects(const BoundingAABB& box) const noexcept;
-	[[nodiscard]] std::optional<float> Intersects(const BoundingFrustum& frustum) const noexcept;
+	[[nodiscard]] std::optional<float> Intersects(const OldBoundingFrustum& frustum) const noexcept;
 	[[nodiscard]] std::optional<float> Intersects(const BoundingSphere& sphere) const noexcept;
 	[[nodiscard]] std::optional<float> Intersects(const Plane& plane) const noexcept;
 	// Return hit distance to a triangle and optionally normal, or infinity if no hit.
