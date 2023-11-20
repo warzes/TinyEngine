@@ -68,9 +68,6 @@
     <ClCompile Include="RenderAPI\RenderSystem_State.cpp">
       <Filter>RenderAPI</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\Node.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Utilities\StringUtilities.cpp">
       <Filter>Core\Utilities</Filter>
     </ClCompile>
@@ -289,9 +286,6 @@
     <ClInclude Include="RenderAPI\OpenGLTranslateToGL.h">
       <Filter>RenderAPI</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\Node.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Utilities\StringUtilities.h">
       <Filter>Core\Utilities</Filter>
     </ClInclude>
@@ -450,9 +444,6 @@
     <Filter Include="Core\Pattern">
       <UniqueIdentifier>{4752e7b3-adeb-471e-b109-21a7f25ae89e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene">
-      <UniqueIdentifier>{fb90c67e-42ef-4cfe-92fa-7b0f4fedb094}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Object">
       <UniqueIdentifier>{354e2f57-fd10-4543-804e-14af23b84841}</UniqueIdentifier>
     </Filter>
@@ -461,6 +452,9 @@
     </Filter>
     <Filter Include="Core\Geometry\NewFilter1">
       <UniqueIdentifier>{e6e30af8-bf7d-438e-b268-5cc5fe7eb384}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{a31d95c2-39c3-4e67-83a9-54d95ae03f13}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

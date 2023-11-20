@@ -155,7 +155,6 @@
     <ClCompile Include="RenderAPI\RenderSystem_Buffer.cpp" />
     <ClCompile Include="RenderAPI\RenderSystem_Shader.cpp" />
     <ClCompile Include="RenderAPI\RenderSystem_State.cpp" />
-    <ClCompile Include="Scene\Node.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -229,7 +228,6 @@
     <ClInclude Include="RenderAPI\RenderCore.h" />
     <ClInclude Include="RenderAPI\RenderResource.h" />
     <ClInclude Include="RenderAPI\RenderSystem.h" />
-    <ClInclude Include="Scene\Node.h" />
     <ClInclude Include="TinyEngine.h" />
     <ClInclude Include="EngineBuildSettings.h" />
     <ClInclude Include="stdafx.h" />

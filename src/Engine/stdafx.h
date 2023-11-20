@@ -37,6 +37,7 @@
 #include <unordered_map>
 #include <span>
 #include <set>
+#include <queue>
 
 #if PLATFORM_DESKTOP
 #	include <glad/gl.h>

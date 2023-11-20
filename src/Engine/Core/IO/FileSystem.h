@@ -2,7 +2,10 @@
 
 namespace FileSystem
 {
-	[[nodiscard]] bool IsDirectory(const std::string& pathName);
+	// Returns true if the file exists, false otherwise.
+	[[nodiscard]] bool Exists(const std::string& path) noexcept;
+	// Returns true if the file is directory, false otherwise.
+	[[nodiscard]] bool IsDirectory(const std::string& path) noexcept;
 
 
 	bool CreateDir(const std::string& pathName);
@@ -15,8 +18,7 @@ namespace FileSystem
 	[[nodiscard]] bool SetLastModifiedTime(const std::string& fileName, unsigned newTime);
 
 
-	// Returns true if the file exists, false otherwise.
-	[[nodiscard]] bool Exists(const std::string& path) noexcept;
+
 
 
 #if !PLATFORM_EMSCRIPTEN // TODO:

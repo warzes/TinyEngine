@@ -158,6 +158,8 @@ public:
 	bool Create();
 	void Update();
 
+	// Keyboard
+
 	bool IsKeyPressed(int key);
 	bool IsKeyDown(int key) const;
 	bool IsKeyReleased(int key);
@@ -165,6 +167,8 @@ public:
 
 	int GetKeyPressed();
 	int GetCharPressed();
+
+	// Mouse
 
 	bool IsMouseButtonPressed(int button) const;
 	bool IsMouseButtonDown(int button) const;

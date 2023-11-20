@@ -3,21 +3,22 @@
 #include "Core/Logging/Log.h"
 #include "Core/Utilities/StringUtilities.h"
 //-----------------------------------------------------------------------------
-bool FileSystem::IsDirectory(const std::string& pathName)
+bool FileSystem::Exists(const std::string& path) noexcept
 {
-	return std::filesystem::is_directory(pathName);
+	assert(!path.empty());
+	return std::filesystem::exists(path);
+}
+//-----------------------------------------------------------------------------
+bool FileSystem::IsDirectory(const std::string& path) noexcept
+{
+	assert(!path.empty());
+	return std::filesystem::is_directory(path);
 }
 //-----------------------------------------------------------------------------
 unsigned FileSystem::LastModifiedTime(const std::string& fileName)
 {
 	std::filesystem::file_time_type info = std::filesystem::last_write_time(fileName);
 	return info.time_since_epoch().count();
-}
-//-----------------------------------------------------------------------------
-bool FileSystem::Exists(const std::string& path) noexcept
-{
-	assert(!path.empty());
-	return std::filesystem::exists(path);
 }
 //-----------------------------------------------------------------------------
 #if !PLATFORM_EMSCRIPTEN // TODO:

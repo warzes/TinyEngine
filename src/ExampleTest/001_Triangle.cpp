@@ -1,7 +1,7 @@
 ﻿#include "stdafx.h"
 #include "001_Triangle.h"
 //-----------------------------------------------------------------------------
-bool _001Triangle::Create()
+namespace
 {
 	const char* vertexShaderText = R"(
 #version 330 core
@@ -32,24 +32,27 @@ void main()
 }
 )";
 
-	struct testVertex
+	struct Vertex
 	{
 		glm::vec3 pos;
 		glm::vec3 color;
-	} 
-	vert[] =
+	} vert[] =
 	{
 		{{-1.0f, -1.0f, 4.0f}, {1.0f, 0.0f, 0.0f}},
 		{{ 1.0f, -1.0f, 4.0f}, {0.0f, 1.0f, 0.0f}},
 		{{ 0.0f,  1.0f, 4.0f}, {0.0f, 0.0f, 1.0f}}
 	};
+}
+//-----------------------------------------------------------------------------
+bool _001Triangle::Create()
+{
 	glEnable(GL_CULL_FACE); // для теста - треугольник выше против часой стрелки
 
 	auto& renderSystem = GetRenderSystem();
 
 	m_shader = renderSystem.CreateShaderProgram({ vertexShaderText }, { fragmentShaderText });
 	m_uniformProjectionMatrix = renderSystem.GetUniform(m_shader, "projectionMatrix");
-	m_vb = renderSystem.CreateVertexBuffer(BufferUsage::StaticDraw, (unsigned)Countof(vert), (unsigned)sizeof(testVertex), vert);
+	m_vb = renderSystem.CreateVertexBuffer(BufferUsage::StaticDraw, static_cast<unsigned>(Countof(vert)), static_cast<unsigned>(sizeof(Vertex)), vert);
 	m_vao = renderSystem.CreateVertexArray(m_vb, nullptr, m_shader);
 
 	return true;
@@ -66,13 +69,7 @@ void _001Triangle::Render()
 {
 	auto& renderSystem = GetRenderSystem();
 
-	if( m_windowWidth != GetWindowWidth() || m_windowHeight != GetWindowHeight() )
-	{
-		m_windowWidth = GetWindowWidth();
-		m_windowHeight = GetWindowHeight();
-		m_perspective = glm::perspective(glm::radians(45.0f), GetWindowSizeAspect(), 0.01f, 100.f);
-		renderSystem.SetViewport(m_windowWidth, m_windowHeight);
-	}
+	renderSystem.SetViewport(GetWindowWidth(), GetWindowHeight());
 
 	renderSystem.ClearFrame();
 	renderSystem.Bind(m_shader);
@@ -87,5 +84,7 @@ void _001Triangle::Update(float /*deltaTime*/)
 		ExitRequest();
 		return;
 	}
+
+	m_perspective = glm::perspective(glm::radians(45.0f), GetWindowSizeAspect(), 0.01f, 100.f);
 }
 //-----------------------------------------------------------------------------

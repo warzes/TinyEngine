@@ -38,8 +38,10 @@ public:
 	// Create Render Resource
 	//-------------------------------------------------------------------------
 	ShaderProgramRef CreateShaderProgram(const ShaderBytecode& vertexShaderSource, const ShaderBytecode& fragmentShaderSource);
+
 	VertexBufferRef CreateVertexBuffer(BufferUsage usage);
 	VertexBufferRef CreateVertexBuffer(BufferUsage usage, unsigned vertexCount, unsigned vertexSize, const void* data);
+
 	IndexBufferRef CreateIndexBuffer(BufferUsage usage);
 	IndexBufferRef CreateIndexBuffer(BufferUsage usage, unsigned indexCount, IndexFormat indexFormat, const void* data);
 

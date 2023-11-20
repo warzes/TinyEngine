@@ -85,7 +85,7 @@ void EngineDevice::RunApp(std::shared_ptr<IApp> app)
 
 	LogPrint("EngineDevice RunApp");
 
-	// Init
+	// Init App
 	m_currentApp = app;
 	if( m_currentApp->Create() )
 	{
@@ -102,6 +102,7 @@ void EngineDevice::RunApp(std::shared_ptr<IApp> app)
 	}
 	// Destroy App
 	m_currentApp->Destroy();
+	m_currentApp.reset();
 	m_currentApp = nullptr;
 }
 //-----------------------------------------------------------------------------

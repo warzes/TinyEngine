@@ -18,7 +18,7 @@ private:
 	Uniform m_uniformWorldMatrix;
 
 	glm::mat4 m_perspective;
-	ModelRef m_model;
+	StaticModelRef m_model;
 	Camera m_camera;
 	int unused;
 };
