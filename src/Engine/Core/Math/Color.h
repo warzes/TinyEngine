@@ -1,35 +1,78 @@
 ﻿#pragma once
 
-class Color
+class Color final
 {
 public:
-	enum
-	{
-		RED = 0xff0000ff,
-		GREEN = 0xff00ff00,
-		BLUE = 0xffff0000,
-		BLACK = 0xff000000,
-		WHITE = 0xffFFffFF
-	};
+	inline static constexpr auto Black = { 0, 0, 0, 255 };
+	inline static constexpr auto Red = { 255, 0, 0, 255 };
+	inline static constexpr auto Magenta = { 255, 0, 255, 255 };
+	inline static constexpr auto Green = { 0, 255, 0, 255 };
+	inline static constexpr auto Cyan = { 0, 255, 255, 255 };
+	inline static constexpr auto Blue = { 0, 0, 255, 255 };
+	inline static constexpr auto Yellow = { 255, 255, 0, 255 };
+	inline static constexpr auto White = { 255, 255, 255, 255 };
+	inline static constexpr auto Gray = { 128, 128, 128, 255 };
 
-	Color() {}
-	Color(uint32_t abgr)
+	constexpr Color() noexcept = default;
+	explicit constexpr Color(uint32_t color) noexcept
 	{
-		r = uint8_t(abgr & 0xff);
-		g = uint8_t((abgr >> 8) & 0xff);
-		b = uint8_t((abgr >> 16) & 0xff);
-		a = uint8_t((abgr >> 24) & 0xff);
+		r = static_cast<std::uint8_t>((color & 0xFF000000U) >> 24);
+		g = static_cast<std::uint8_t>((color & 0x00FF0000U) >> 16);
+		b = static_cast<std::uint8_t>((color & 0x0000FF00U) >> 8);
+		a = static_cast<std::uint8_t>( color & 0x000000FFU);
+	}
+	constexpr Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha = 0xFFU) noexcept : r(red), g(green), b(blue), a(alpha) {}
+	constexpr Color(float red, float green, float blue, float alpha = 1.0f) noexcept
+	{
+		r = static_cast<std::uint8_t>(red * 255.0f);
+		g = static_cast<std::uint8_t>(green * 255.0f);
+		b = static_cast<std::uint8_t>(blue * 255.0f);
+		a = static_cast<std::uint8_t>(alpha * 255.0f);
 	}
 
-	Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) : r(r), g(g), b(b), a(a) {}
+	explicit Color(const glm::vec3& v) noexcept
+	{
+		r = static_cast<std::uint8_t>(std::round(v[0] * 255.0f));
+		g = static_cast<std::uint8_t>(std::round(v[1] * 255.0f));
+		b = static_cast<std::uint8_t>(std::round(v[2] * 255.0f));
+		a = 0xFFU;
+	}
 
-	uint32_t abgr() const { return ((uint32_t)a << 24) | ((uint32_t)b << 16) | ((uint32_t)g << 8) | (uint32_t)r; }
+	explicit Color(const glm::vec4& v) noexcept
+	{
+		r = static_cast<std::uint8_t>(std::round(v[0] * 255.0f));
+		g = static_cast<std::uint8_t>(std::round(v[1] * 255.0f));
+		b = static_cast<std::uint8_t>(std::round(v[2] * 255.0f));
+		a = static_cast<std::uint8_t>(std::round(v[3] * 255.0f));
+	}
 
-	uint8_t r;
-	uint8_t g;
-	uint8_t b;
-	uint8_t a;
+	[[nodiscard]] constexpr glm::vec4 GetNormColor() const noexcept
+	{
+		return glm::vec4{r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f};
+	}
+
+	[[nodiscard]] constexpr auto GetNormR() const noexcept { return r / 255.0f; }
+	[[nodiscard]] constexpr auto GetNormG() const noexcept { return g / 255.0f; }
+	[[nodiscard]] constexpr auto GetNormB() const noexcept { return b / 255.0f; }
+	[[nodiscard]] constexpr auto GetNormA() const noexcept { return a / 255.0f; }
+
+	[[nodiscard]] constexpr auto GetIntValue() const noexcept
+	{
+		return 
+			(static_cast<std::uint32_t>(r) << 24) |
+			(static_cast<std::uint32_t>(g) << 16) |
+			(static_cast<std::uint32_t>(b) << 8)  |
+			static_cast<std::uint32_t>(a);
+	}
+
+	uint8_t r = 0xFFU;
+	uint8_t g = 0xFFU;
+	uint8_t b = 0xFFU;
+	uint8_t a = 0xFFU;
 };
+
+
+// TODO: REFACT ==>
 
 #define RGBX(rgb,x)   ( ((rgb)&0xFFFFFF) | (((unsigned)(x))<<24) )
 #define RGB3(r,g,b)   ( ((r)<<16u) | ((g)<<8u) | (b) )

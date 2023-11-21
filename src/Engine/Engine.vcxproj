@@ -146,6 +146,7 @@
     <ClCompile Include="Physics\PhysicsSystem.cpp" />
     <ClCompile Include="Platform\InputSystem.cpp" />
     <ClCompile Include="Platform\Monitor.cpp" />
+    <ClCompile Include="Platform\PlatformSystem.cpp" />
     <ClCompile Include="Platform\WindowSystem.cpp" />
     <ClCompile Include="RenderAPI\Capabilities.cpp" />
     <ClCompile Include="RenderAPI\OpenGLCore.cpp" />
@@ -165,7 +166,7 @@
     <ClInclude Include="Core\Base\BaseFunc.h" />
     <ClInclude Include="Core\Base\BaseMacros.h" />
     <ClInclude Include="Core\Base\DebugNew.h" />
-    <ClInclude Include="Core\Base\PlatformMacros.h" />
+    <ClInclude Include="Core\Base\DetectPlatform.h" />
     <ClInclude Include="Core\Geometry\BoundingAABB.h" />
     <ClInclude Include="Core\Geometry\BoundingFrustum.h" />
     <ClInclude Include="Core\Geometry\BoundingOrientedBox.h" />
@@ -221,6 +222,7 @@
     <ClInclude Include="Physics\PhysicsSystem.h" />
     <ClInclude Include="Platform\InputSystem.h" />
     <ClInclude Include="Platform\Monitor.h" />
+    <ClInclude Include="Platform\PlatformSystem.h" />
     <ClInclude Include="Platform\WindowSystem.h" />
     <ClInclude Include="RenderAPI\Capabilities.h" />
     <ClInclude Include="RenderAPI\OpenGLCore.h" />

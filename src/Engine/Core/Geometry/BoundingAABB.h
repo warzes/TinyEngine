@@ -52,10 +52,11 @@ public:
 
 	[[nodiscard]] std::array<glm::vec3, CornerCount> GetCorners() const noexcept; // Gets the 8 corners of the box
 
-	[[nodiscard]] glm::vec3 GetCenter() const noexcept { return (max + min) * 0.5f; }
+	[[nodiscard]] glm::vec3 GetCenter() const noexcept { return (max + min) * 0.5f; } // TODO: проверить, возможно нужно так (min + (max-min)*0.5)
 	[[nodiscard]] glm::vec3 GetSize() const noexcept { return max - min; }
 	[[nodiscard]] glm::vec3 GetHalfSize() const noexcept { return (max - min) * 0.5f; }
 
+	[[nodiscard]] static BoundingAABB CreateFromCenterAndHalfExtents(const glm::vec3& center, const glm::vec3& halfExtents) noexcept;
 	[[nodiscard]] static BoundingAABB CreateMerged(const BoundingAABB& b1, const BoundingAABB& b2) noexcept;
 	[[nodiscard]] static BoundingAABB CreateFromSphere(const BoundingSphere& sphere) noexcept;
 	[[nodiscard]] static BoundingAABB CreateFromPoints(const glm::vec3& pt1, const glm::vec3& pt2) noexcept;

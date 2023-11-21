@@ -53,6 +53,16 @@ enum class ImageFormat : uint8_t
 #endif
 };
 
+enum class ColorMask : uint8_t
+{
+	None = 0x00,
+	Red = 0x01,
+	Green = 0x02,
+	Blue = 0x04,
+	Alpha = 0x08,
+	All = Red | Green | Blue | Alpha
+};
+
 //=============================================================================
 // Depth Stencil enum
 //=============================================================================
@@ -69,7 +79,7 @@ enum class ComparisonFunction : uint8_t
 	Always,
 };
 
-enum class StencilOp : uint8_t
+enum class StencilOperation : uint8_t
 {
 	Keep,
 	Zero,
@@ -85,7 +95,7 @@ enum class StencilOp : uint8_t
 // Blend enum
 //=============================================================================
 
-enum class BlendOp : uint8_t
+enum class BlendOperation : uint8_t
 {
 	Add,
 	Subrtact,
@@ -421,6 +431,75 @@ enum class FramebufferBinding : uint8_t
 // Pipeline State Core
 //=============================================================================
 
+struct DepthState final
+{
+	ComparisonFunction compareFunction = ComparisonFunction::Less;
+	bool enable = true;
+	bool depthWrite = true;
+};
+
+struct StencilState final
+{
+	bool enable = false;
+	uint32_t readMask = 0xFFFFFFFFU;
+	uint32_t writeMask = 0xFFFFFFFFU;
+
+	ComparisonFunction frontFaceStencilCompareFunction = ComparisonFunction::Always;
+	StencilOperation   frontFaceStencilPassOperation = StencilOperation::Keep;  // stencil and depth pass
+	StencilOperation   frontFaceStencilFailureOperation = StencilOperation::Keep;  // stencil fail (depth irrelevant)
+	StencilOperation   frontFaceStencilDepthFailureOperation = StencilOperation::Keep; // stencil pass, depth fail
+
+	ComparisonFunction backFaceStencilCompareFunction = ComparisonFunction::Always;
+	StencilOperation   backFaceStencilPassOperation = StencilOperation::Keep;
+	StencilOperation   backFaceStencilFailureOperation = StencilOperation::Keep;
+	StencilOperation   backFaceStencilDepthFailureOperation = StencilOperation::Keep;
+
+	int stencilRef = 0;
+};
+
+struct DepthStencilState final
+{
+	DepthState depthState;
+	StencilState stencilState;
+};
+
+struct BlendState final
+{
+	BlendFactor colorBlendSource = BlendFactor::One;
+	BlendFactor colorBlendDest = BlendFactor::Zero;
+	BlendOperation colorOperation = BlendOperation::Add;
+
+	BlendFactor alphaBlendSource = BlendFactor::One;
+	BlendFactor alphaBlendDest = BlendFactor::Zero;
+	BlendOperation alphaOperation = BlendOperation::Add;
+
+	ColorMask colorMask = ColorMask::All;
+	bool enable = false;
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Depth bias descriptor structure to control fragment depth values.
 struct DepthBiasDescriptor
 {
@@ -437,33 +516,6 @@ inline bool IsPolygonOffsetEnabled(const DepthBiasDescriptor& desc)
 	// Ignore clamp factor for this check, since it's useless without the other two parameters
 	return (desc.slopeFactor != 0.0f || desc.constantFactor != 0.0f);
 }
-
-
-struct DepthState final
-{
-	ComparisonFunction depthFunc = ComparisonFunction::Less;
-	bool depthWrite = true;
-	bool enable = true;
-};
-
-struct StencilState final
-{
-	bool enable = false;
-	uint8_t readMask = 0xFF;
-	uint8_t writeMask = 0xFF;
-
-	ComparisonFunction stencilFuncFront = ComparisonFunction::Always;
-	StencilOp stencilPassOpFront = StencilOp::Keep;  // stencil and depth pass
-	StencilOp stencilFailOpFront = StencilOp::Keep;  // stencil fail (depth irrelevant)
-	StencilOp stencilZFailOpFront = StencilOp::Keep; // stencil pass, depth fail
-
-	ComparisonFunction stencilFuncBack = ComparisonFunction::Always;
-	StencilOp stencilPassOpBack = StencilOp::Keep;
-	StencilOp stencilFailOpBack = StencilOp::Keep;
-	StencilOp stencilZFailOpBack = StencilOp::Keep;
-
-	int stencilRef = 0;
-};
 
 struct RasterizerState final
 {
@@ -486,10 +538,7 @@ struct RasterizerState final
 	float lineWidth = 1.0f;
 };
 
-struct BlendState final
-{
 
-};
 
 //=============================================================================
 // Shader Core

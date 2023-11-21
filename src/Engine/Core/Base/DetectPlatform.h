@@ -14,7 +14,7 @@
 #elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
 #	undef  PLATFORM_BSD
 #	define PLATFORM_BSD 1
-#elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+#elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WINDOWS)
 #	undef  PLATFORM_WINDOWS
 #	define PLATFORM_WINDOWS 1
 #elif defined(__EMSCRIPTEN__)
@@ -23,6 +23,8 @@
 #elif defined(ANDROID) || defined(__ANDROID__)
 #	undef  PLATFORM_ANDROID
 #	define PLATFORM_ANDROID 1
+#else
+#	error "Unknown Platform"
 #endif
 
 #if PLATFORM_LINUX || PLATFORM_BSD || PLATFORM_WINDOWS

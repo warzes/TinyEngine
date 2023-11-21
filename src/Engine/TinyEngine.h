@@ -4,7 +4,7 @@
 // Config
 //=============================================================================
 
-#include "Core/Base/PlatformMacros.h"
+#include "Core/Base/DetectPlatform.h"
 #include "EngineBuildSettings.h"
 
 //=============================================================================

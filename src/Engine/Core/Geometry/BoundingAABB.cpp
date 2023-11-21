@@ -108,6 +108,11 @@ std::array<glm::vec3, BoundingAABB::CornerCount> BoundingAABB::GetCorners() cons
 		}};
 }
 //-----------------------------------------------------------------------------
+BoundingAABB BoundingAABB::CreateFromCenterAndHalfExtents(const glm::vec3& center, const glm::vec3& halfExtents) noexcept
+{
+	return { center - halfExtents, center + halfExtents };
+}
+//-----------------------------------------------------------------------------
 bool StringUtils::FromString(BoundingAABB& out, const char* string)
 {
 	size_t elements = CountElements(string);

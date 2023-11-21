@@ -141,9 +141,9 @@ void WindowSystem::Present()
 	glfwSwapBuffers(m_window);
 }
 //-----------------------------------------------------------------------------
-[[nodiscard]] void* WindowSystem::GetHandle() const noexcept
+[[nodiscard]] GLFWwindow* WindowSystem::GetHandle() const noexcept
 {
-	return (void*)m_window;
+	return m_window;
 }
 //-----------------------------------------------------------------------------
 [[nodiscard]] int WindowSystem::GetWidth() const noexcept
@@ -197,7 +197,7 @@ WindowSystem& GetWindowSystem()
 	return gWindowSystem;
 }
 //-----------------------------------------------------------------------------
-[[nodiscard]] void* GetWindowHandle() noexcept
+[[nodiscard]] GLFWwindow* GetGLFWWindow() noexcept
 {
 	return gWindowSystem.GetHandle();
 }

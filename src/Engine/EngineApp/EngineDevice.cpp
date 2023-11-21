@@ -1,5 +1,7 @@
 ﻿#include "stdafx.h"
 #include "EngineDevice.h"
+#include "Platform/InputSystem.h"
+#include "Graphics/GraphicsSystem.h"
 //-----------------------------------------------------------------------------
 #if defined(_MSC_VER)
 #	pragma comment( lib, "3rdparty.lib" )
@@ -83,12 +85,13 @@ void EngineDevice::RunApp(std::shared_ptr<IApp> app)
 	if (!thisEngineDevice) return;
 #endif
 
-	LogPrint("EngineDevice RunApp");
+	LogPrint("EngineDevice RunApp()");
 
 	// Init App
 	m_currentApp = app;
 	if( m_currentApp->Create() )
 	{
+		// Main Loop
 #if PLATFORM_EMSCRIPTEN
 		emscripten_set_main_loop(mainLoop, 0, true);
 #else

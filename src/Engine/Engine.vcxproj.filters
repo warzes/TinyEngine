@@ -185,12 +185,15 @@
     <ClCompile Include="Core\Geometry\BoundingFrustum.cpp">
       <Filter>Core\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="Platform\PlatformSystem.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="EngineBuildSettings.h" />
     <ClInclude Include="TinyEngine.h" />
-    <ClInclude Include="Core\Base\PlatformMacros.h">
+    <ClInclude Include="Core\Base\DetectPlatform.h">
       <Filter>Core\Base</Filter>
     </ClInclude>
     <ClInclude Include="Core\Base\BaseFunc.h">
@@ -390,6 +393,9 @@
     </ClInclude>
     <ClInclude Include="Core\Geometry\Triangle.h">
       <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\PlatformSystem.h">
+      <Filter>Platform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -4,8 +4,6 @@
 namespace
 {
 	const char* vertexShaderText = R"(
-#version 330 core
-
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 color;
 
@@ -21,8 +19,6 @@ void main()
 )";
 
 	const char* fragmentShaderText = R"(
-#version 330 core
-
 in vec3 fragmentColor;
 out vec4 color;
 
@@ -52,6 +48,7 @@ bool _001Triangle::Create()
 
 	m_shader = renderSystem.CreateShaderProgram({ vertexShaderText }, { fragmentShaderText });
 	m_uniformProjectionMatrix = renderSystem.GetUniform(m_shader, "projectionMatrix");
+	
 	m_vb = renderSystem.CreateVertexBuffer(BufferUsage::StaticDraw, static_cast<unsigned>(Countof(vert)), static_cast<unsigned>(sizeof(Vertex)), vert);
 	m_vao = renderSystem.CreateVertexArray(m_vb, nullptr, m_shader);
 
@@ -69,12 +66,14 @@ void _001Triangle::Render()
 {
 	auto& renderSystem = GetRenderSystem();
 
+	renderSystem.SetClearColor({0.0f, 0.64f, 0.91f});
 	renderSystem.SetViewport(GetWindowWidth(), GetWindowHeight());
-
 	renderSystem.ClearFrame();
-	renderSystem.Bind(m_shader);
-	renderSystem.SetUniform(m_uniformProjectionMatrix, m_perspective);
-	renderSystem.Draw(m_vao);
+
+
+	//renderSystem.Bind(m_shader);
+	//renderSystem.SetUniform(m_uniformProjectionMatrix, m_perspective);
+	//renderSystem.Draw(m_vao);
 }
 //-----------------------------------------------------------------------------
 void _001Triangle::Update(float /*deltaTime*/)

@@ -1,14 +1,11 @@
 ﻿#pragma once
 
 #include "Core/Logging/LogSystem.h"
-#include "EngineTimestamp.h"
-#include "Core/IO/FileSystem.h"
+#include "EngineApp/EngineTimestamp.h"
 #include "Platform/WindowSystem.h"
-#include "Platform/InputSystem.h"
 #include "RenderAPI/RenderSystem.h"
-#include "Graphics/GraphicsSystem.h"
 #include "Physics/PhysicsSystem.h"
-#include "IApp.h"
+#include "EngineApp/IApp.h"
 
 struct EngineDeviceCreateInfo final
 {

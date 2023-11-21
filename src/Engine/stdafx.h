@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Core/Base/PlatformMacros.h"
+#include "Core/Base/DetectPlatform.h"
 #include "EngineBuildSettings.h"
 
 #if defined(_MSC_VER)

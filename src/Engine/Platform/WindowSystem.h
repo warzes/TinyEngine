@@ -28,11 +28,9 @@ public:
 	void Update();
 	void Present();
 
-	[[nodiscard]] void* GetHandle() const noexcept;
-
+	[[nodiscard]] GLFWwindow* GetHandle() const noexcept;
 	[[nodiscard]] int GetWidth() const noexcept;
 	[[nodiscard]] int GetHeight() const noexcept;
-
 	[[nodiscard]] glm::vec2 GetPosition() const;
 
 	void SetTitle(const char* title);
@@ -56,7 +54,7 @@ private:
 };
 
 WindowSystem& GetWindowSystem();
-[[nodiscard]] void* GetWindowHandle() noexcept;
+[[nodiscard]] GLFWwindow* GetGLFWWindow() noexcept;
 [[nodiscard]] bool IsWindowFullscreen() noexcept;
 [[nodiscard]] int GetWindowWidth() noexcept;
 [[nodiscard]] int GetWindowHeight() noexcept;

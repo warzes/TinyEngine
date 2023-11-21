@@ -62,33 +62,33 @@
 	return 0;
 }
 //-----------------------------------------------------------------------------
-[[nodiscard]] inline GLenum TranslateToGL(StencilOp op)
+[[nodiscard]] inline GLenum TranslateToGL(StencilOperation op)
 {
 	switch (op)
 	{
-	case StencilOp::Keep:                return GL_KEEP;
-	case StencilOp::Zero:                return GL_ZERO;
-	case StencilOp::Replace:             return GL_REPLACE;
-	case StencilOp::IncrementSaturation: return GL_INCR;
-	case StencilOp::DecrementSaturation: return GL_DECR;
-	case StencilOp::Invert:              return GL_INVERT;
-	case StencilOp::IncrementWrap:       return GL_INCR_WRAP;
-	case StencilOp::DecrementWrap:       return GL_DECR_WRAP;
+	case StencilOperation::Keep:                return GL_KEEP;
+	case StencilOperation::Zero:                return GL_ZERO;
+	case StencilOperation::Replace:             return GL_REPLACE;
+	case StencilOperation::IncrementSaturation: return GL_INCR;
+	case StencilOperation::DecrementSaturation: return GL_DECR;
+	case StencilOperation::Invert:              return GL_INVERT;
+	case StencilOperation::IncrementWrap:       return GL_INCR_WRAP;
+	case StencilOperation::DecrementWrap:       return GL_DECR_WRAP;
 	default: break;
 	}
 	assert(false && "Unknown StencilOp");
 	return 0;
 }
 //-----------------------------------------------------------------------------
-[[nodiscard]] inline GLenum TranslateToGL(BlendOp op)
+[[nodiscard]] inline GLenum TranslateToGL(BlendOperation op)
 {
 	switch (op)
 	{
-	case BlendOp::Add:             return GL_FUNC_ADD;
-	case BlendOp::Subrtact:        return GL_FUNC_SUBTRACT;
-	case BlendOp::ReverseSubtract: return GL_FUNC_REVERSE_SUBTRACT;
-	case BlendOp::Min:             return GL_MIN;
-	case BlendOp::Max:             return GL_MAX;
+	case BlendOperation::Add:             return GL_FUNC_ADD;
+	case BlendOperation::Subrtact:        return GL_FUNC_SUBTRACT;
+	case BlendOperation::ReverseSubtract: return GL_FUNC_REVERSE_SUBTRACT;
+	case BlendOperation::Min:             return GL_MIN;
+	case BlendOperation::Max:             return GL_MAX;
 	default: break;
 	}
 	assert(false && "Unknown BlendOp");

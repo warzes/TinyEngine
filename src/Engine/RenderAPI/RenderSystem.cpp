@@ -202,8 +202,8 @@ void RenderSystem::Bind(DepthState state)
 		setClearMask(true, state.enable, m_cache.CurrentStencilState.enable);
 	}
 
-	if (m_cache.CurrentDepthState.depthFunc != state.depthFunc)
-		glDepthFunc(TranslateToGL(state.depthFunc));
+	if (m_cache.CurrentDepthState.compareFunction != state.compareFunction)
+		glDepthFunc(TranslateToGL(state.compareFunction));
 
 	if (m_cache.CurrentDepthState.depthWrite != state.depthWrite)
 		glDepthMask(static_cast<GLboolean>(state.depthWrite ? GL_TRUE : GL_FALSE));
@@ -224,19 +224,19 @@ void RenderSystem::Bind(StencilState state)
 
 	if (cache.stencilRef != state.stencilRef 
 		|| cache.readMask != state.readMask
-		|| cache.stencilFuncFront != state.stencilFuncFront
-		|| cache.stencilFailOpFront != state.stencilFailOpFront
-		|| cache.stencilZFailOpFront != state.stencilZFailOpFront
-		|| cache.stencilPassOpFront != state.stencilPassOpFront
-		|| cache.stencilFuncBack != state.stencilFuncBack
-		|| cache.stencilFailOpBack != state.stencilFailOpBack
-		|| cache.stencilZFailOpBack != state.stencilZFailOpBack
-		|| cache.stencilPassOpBack != state.stencilPassOpBack)
+		|| cache.frontFaceStencilCompareFunction != state.frontFaceStencilCompareFunction
+		|| cache.frontFaceStencilFailureOperation != state.frontFaceStencilFailureOperation
+		|| cache.frontFaceStencilDepthFailureOperation != state.frontFaceStencilDepthFailureOperation
+		|| cache.frontFaceStencilPassOperation != state.frontFaceStencilPassOperation
+		|| cache.backFaceStencilCompareFunction != state.backFaceStencilCompareFunction
+		|| cache.backFaceStencilFailureOperation != state.backFaceStencilFailureOperation
+		|| cache.backFaceStencilDepthFailureOperation != state.backFaceStencilDepthFailureOperation
+		|| cache.backFaceStencilPassOperation != state.backFaceStencilPassOperation)
 	{
-		glStencilFuncSeparate(GL_FRONT, TranslateToGL(state.stencilFuncFront), state.stencilRef, state.readMask);
-		glStencilOpSeparate(GL_FRONT, TranslateToGL(state.stencilFailOpFront), TranslateToGL(state.stencilZFailOpFront), TranslateToGL(state.stencilPassOpFront));
-		glStencilFuncSeparate(GL_BACK, TranslateToGL(state.stencilFuncBack), state.stencilRef, state.readMask);
-		glStencilOpSeparate(GL_BACK, TranslateToGL(state.stencilFailOpBack), TranslateToGL(state.stencilZFailOpBack), TranslateToGL(state.stencilPassOpBack));
+		glStencilFuncSeparate(GL_FRONT, TranslateToGL(state.frontFaceStencilCompareFunction), state.stencilRef, state.readMask);
+		glStencilOpSeparate(GL_FRONT, TranslateToGL(state.frontFaceStencilFailureOperation), TranslateToGL(state.frontFaceStencilDepthFailureOperation), TranslateToGL(state.frontFaceStencilPassOperation));
+		glStencilFuncSeparate(GL_BACK, TranslateToGL(state.backFaceStencilCompareFunction), state.stencilRef, state.readMask);
+		glStencilOpSeparate(GL_BACK, TranslateToGL(state.backFaceStencilFailureOperation), TranslateToGL(state.backFaceStencilDepthFailureOperation), TranslateToGL(state.backFaceStencilPassOperation));
 	}
 
 	if (cache.writeMask != state.writeMask)
