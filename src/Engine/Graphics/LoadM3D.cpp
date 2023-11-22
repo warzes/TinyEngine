@@ -256,9 +256,9 @@ NewModel LoadM3D(const std::string& filename)
 					{
 						ImageRef image{ new Image() };
 
-						ImageLoaderFormat format = (m3d->texture[prop->value.textureid].f == 4) ? ImageLoaderFormat::RGBA_U8:
-							((m3d->texture[prop->value.textureid].f == 3) ? ImageLoaderFormat::RGB_U8 :
-							((m3d->texture[prop->value.textureid].f == 2) ? ImageLoaderFormat::RG_U8 : ImageLoaderFormat::R_U8));
+						Image::PixelFormat format = (m3d->texture[prop->value.textureid].f == 4) ? Image::PixelFormat::RGBA_U8:
+							((m3d->texture[prop->value.textureid].f == 3) ? Image::PixelFormat::RGB_U8 :
+							((m3d->texture[prop->value.textureid].f == 2) ? Image::PixelFormat::RG_U8 : Image::PixelFormat::R_U8));
 
 						image->Create(format, m3d->texture[prop->value.textureid].w, m3d->texture[prop->value.textureid].h, m3d->texture[prop->value.textureid].d);
 

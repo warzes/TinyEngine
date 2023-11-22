@@ -155,15 +155,15 @@ GeometryBufferRef RenderSystem::CreateGeometryBuffer(VertexBufferRef vb, IndexBu
 	return geom;
 }
 //-----------------------------------------------------------------------------
-TexelsFormat Convert(ImageLoaderFormat format)
+TexelsFormat Convert(Image::PixelFormat format)
 {
 	switch (format)
 	{
-	case ImageLoaderFormat::R_U8:    return TexelsFormat::R_U8;
-	case ImageLoaderFormat::RG_U8:   return TexelsFormat::RG_U8;
-	case ImageLoaderFormat::RGB_U8:  return TexelsFormat::RGB_U8;
-	case ImageLoaderFormat::RGBA_U8: return TexelsFormat::RGBA_U8;
-	case ImageLoaderFormat::None:
+	case Image::PixelFormat::R_U8:    return TexelsFormat::R_U8;
+	case Image::PixelFormat::RG_U8:   return TexelsFormat::RG_U8;
+	case Image::PixelFormat::RGB_U8:  return TexelsFormat::RGB_U8;
+	case Image::PixelFormat::RGBA_U8: return TexelsFormat::RGBA_U8;
+	case Image::PixelFormat::None:
 	default: return TexelsFormat::None;
 	}
 }
@@ -188,7 +188,7 @@ Texture2DRef RenderSystem::CreateTexture2D(const char* fileName, bool useCache, 
 		return nullptr;
 	}
 	const Texture2DCreateInfo createInfo = {
-		.format = Convert(imageLoad.GetImageFormat()),
+		.format = Convert(imageLoad.GetPixelFormat()),
 		.width = static_cast<uint16_t>(imageLoad.GetWidth()),
 		.height = static_cast<uint16_t>(imageLoad.GetHeight()),
 		.pixelData = pixelData,
@@ -215,7 +215,7 @@ Texture2DRef RenderSystem::CreateTexture2D(ImageRef image, const Texture2DInfo& 
 		return nullptr;
 	}
 	const Texture2DCreateInfo createInfo = {
-		.format = Convert(image->GetImageFormat()),
+		.format = Convert(image->GetPixelFormat()),
 		.width = static_cast<uint16_t>(image->GetWidth()),
 		.height = static_cast<uint16_t>(image->GetHeight()),
 		.pixelData = pixelData,
@@ -247,7 +247,7 @@ Texture2DRef RenderSystem::CreateTexture2D(ImageRef image, const char* nameInCac
 		return nullptr;
 	}
 	const Texture2DCreateInfo createInfo = {
-		.format = Convert(image->GetImageFormat()),
+		.format = Convert(image->GetPixelFormat()),
 		.width = static_cast<uint16_t>(image->GetWidth()),
 		.height = static_cast<uint16_t>(image->GetHeight()),
 		.pixelData = pixelData,
