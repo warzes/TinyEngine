@@ -46,10 +46,14 @@ public:
 		a = static_cast<std::uint8_t>(std::round(v[3] * 255.0f));
 	}
 
+	Color& operator=(const Color&) = default;
+
 	[[nodiscard]] constexpr glm::vec4 GetNormColor() const noexcept
 	{
 		return glm::vec4{r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f};
 	}
+
+	bool operator==(const Color& c) { return r == c.r && g == c.g && b == c.b && a == c.a; }
 
 	[[nodiscard]] constexpr auto GetNormR() const noexcept { return r / 255.0f; }
 	[[nodiscard]] constexpr auto GetNormG() const noexcept { return g / 255.0f; }
