@@ -94,9 +94,9 @@ bool BoundingSphere::Intersects(const BoundingSphere& sphere) const noexcept
 	return distance <= radius + sphere.radius;
 }
 //-----------------------------------------------------------------------------
-bool BoundingSphere::Intersects(const BoundingAABB& box) const noexcept
+bool BoundingSphere::Intersects(const BoundingAABB& aabb) const noexcept
 {
-	return box.Intersects(*this);
+	return aabb.Intersects(*this);
 }
 //-----------------------------------------------------------------------------
 bool BoundingSphere::Intersects(const BoundingOrientedBox& box) const noexcept

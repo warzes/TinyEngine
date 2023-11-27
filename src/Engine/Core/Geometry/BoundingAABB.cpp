@@ -79,8 +79,8 @@ bool BoundingAABB::Intersects(const BoundingAABB& aabb) const noexcept
 //-----------------------------------------------------------------------------
 bool BoundingAABB::Intersects(const BoundingSphere& sphere) const noexcept
 {
-	const auto clamped = glm::clamp(sphere.center, min, max);
-	const auto distanceSquared = DistanceSquared(sphere.center, clamped);
+	const glm::vec3 clamped = glm::clamp(sphere.center, min, max);
+	const float distanceSquared = DistanceSquared(sphere.center, clamped);
 	return distanceSquared <= sphere.radius * sphere.radius;
 }
 //-----------------------------------------------------------------------------

@@ -158,9 +158,6 @@
     <ClCompile Include="Core\Geometry\Intersect.cpp">
       <Filter>Core\Geometry\NewFilter1</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Geometry\Plane.cpp">
-      <Filter>Core\Geometry\NewFilter1</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Geometry\Polyhedron.cpp">
       <Filter>Core\Geometry\NewFilter1</Filter>
     </ClCompile>
@@ -187,6 +184,9 @@
     </ClCompile>
     <ClCompile Include="Platform\PlatformSystem.cpp">
       <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\Plane.cpp">
+      <Filter>Core\Geometry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -364,9 +364,6 @@
     <ClInclude Include="Core\Geometry\Intersect.h">
       <Filter>Core\Geometry\NewFilter1</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Geometry\Plane.h">
-      <Filter>Core\Geometry\NewFilter1</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Geometry\Polyhedron.h">
       <Filter>Core\Geometry\NewFilter1</Filter>
     </ClInclude>
@@ -396,6 +393,9 @@
     </ClInclude>
     <ClInclude Include="Platform\PlatformSystem.h">
       <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Plane.h">
+      <Filter>Core\Geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

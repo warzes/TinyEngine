@@ -57,9 +57,10 @@ bool _005BasicTexture::Create()
 	m_shader = renderSystem.CreateShaderProgram({ vertexShaderText }, { fragmentShaderText });
 	m_uniformProjectionMatrix = renderSystem.GetUniform(m_shader, "ProjectionMatrix");
 
-	m_geom = renderSystem.CreateGeometryBuffer(BufferUsage::StaticDraw, 
-		static_cast<unsigned>(Countof(vert)), static_cast<unsigned>(sizeof(Vertex)), vert, 
-		static_cast<unsigned>(Countof(indices)), IndexFormat::UInt32, indices, m_shader);
+	m_geom = renderSystem.CreateGeometryBuffer(BufferUsage::StaticDraw,
+		static_cast<unsigned>(Countof(vert)), static_cast<unsigned>(sizeof(Vertex)), vert,
+		static_cast<unsigned>(Countof(indices)), IndexFormat::UInt32, indices,
+		m_shader);
 
 	m_texture = renderSystem.CreateTexture2D("../ExampleData/textures/1mx1m.png");
 

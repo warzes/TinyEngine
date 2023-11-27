@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GeometryCore.h"
+#include "Core/Geometry/GeometryCore.h"
 
 // Surface in three-dimensional space.
 class Plane final
@@ -9,7 +9,8 @@ public:
 	// Plane at origin with normal pointing up.
 	static const Plane Up;
 
-	Plane() = default;
+	Plane() noexcept = default;
+	Plane(Plane&&) noexcept = default;
 	Plane(const Plane&) noexcept = default;
 	Plane(const glm::vec3& normal, float distance) noexcept : normal(normal), distance(distance) {}
 	Plane(const glm::vec3& normal, const glm::vec3& point) noexcept;
@@ -17,6 +18,7 @@ public:
 	Plane(const Triangle& tri) noexcept;
 	Plane(const glm::vec4& plane) noexcept;
 
+	Plane& operator=(Plane&&) noexcept = default;
 	Plane& operator=(const Plane&) noexcept = default;
 
 	[[nodiscard]] glm::vec4 ToVector4() const noexcept { return glm::vec4(normal, distance); }

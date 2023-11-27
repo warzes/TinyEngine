@@ -57,7 +57,13 @@ bool _004Quad::Create()
 
 	m_vb = renderSystem.CreateVertexBuffer(BufferUsage::StaticDraw, static_cast<unsigned>(Countof(vert)), static_cast<unsigned>(sizeof(Vertex)), vert);
 	m_ib = renderSystem.CreateIndexBuffer(BufferUsage::StaticDraw, static_cast<unsigned>(Countof(indices)), IndexFormat::UInt32, indices);
-	m_vao = renderSystem.CreateVertexArray(m_vb, m_ib, m_shader);
+
+	const std::vector<VertexAttribute> formatVertex =
+	{
+		{.location = 0, .size = 3, .normalized = false, .stride = sizeof(Vertex), .offset = (void*)offsetof(Vertex, pos)},
+		{.location = 1, .size = 3, .normalized = false, .stride = sizeof(Vertex), .offset = (void*)offsetof(Vertex, color)},
+	};
+	m_vao = renderSystem.CreateVertexArray(m_vb, m_ib, formatVertex);
 
 	return true;
 }
