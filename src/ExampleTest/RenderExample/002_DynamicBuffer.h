@@ -1,5 +1,14 @@
 ﻿#pragma once
 
+/*
+В этом примере создается треугольник в котором можно изменять вершины путем загрузки нового массива данных.
+Из системы рендера используются следующие объекты:
+	ShaderProgramRef - указатель на шейдерную программу
+	Uniform - параметр который передается в шейдер
+	VertexBufferRef - буффер вершин, создается с динамическим атрибутом
+	VertexArrayRef -
+*/
+
 class _002DynamicBuffer final : public IApp
 {
 	bool Create() final;
@@ -9,9 +18,6 @@ class _002DynamicBuffer final : public IApp
 	void Update(float deltaTime) final;
 
 private:
-	int m_windowWidth = 0;
-	int m_windowHeight = 0;
-
 	ShaderProgramRef m_shader;
 	Uniform m_uniformProjectionMatrix;
 	glm::mat4 m_perspective;

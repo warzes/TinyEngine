@@ -4,27 +4,27 @@
 namespace
 {
 	const char* vertexShaderText = R"(
-layout(location = 0) in vec3 position;
-layout(location = 1) in vec3 color;
+layout(location = 0) in vec3 aPosition;
+layout(location = 1) in vec3 aColor;
 
-uniform mat4 projectionMatrix;
+uniform mat4 ProjectionMatrix;
 
-out vec3 fragmentColor;
+out vec3 Color;
 
 void main()
 {
-	gl_Position   = projectionMatrix * vec4(position, 1.0);
-	fragmentColor = color;
+	gl_Position = ProjectionMatrix * vec4(aPosition, 1.0);
+	Color       = aColor;
 }
 )";
 
 	const char* fragmentShaderText = R"(
-in vec3 fragmentColor;
-out vec4 color;
+in vec3 Color;
+out vec4 FragmentColor;
 
 void main()
 {
-	color = vec4(fragmentColor, 1.0);
+	FragmentColor = vec4(Color, 1.0);
 }
 )";
 
@@ -45,7 +45,7 @@ bool _002DynamicBuffer::Create()
 	auto& renderSystem = GetRenderSystem();
 
 	m_shader = renderSystem.CreateShaderProgram({ vertexShaderText }, { fragmentShaderText });
-	m_uniformProjectionMatrix = renderSystem.GetUniform(m_shader, "projectionMatrix");
+	m_uniformProjectionMatrix = renderSystem.GetUniform(m_shader, "ProjectionMatrix");
 
 	m_vb = renderSystem.CreateVertexBuffer(BufferUsage::DynamicDraw);
 	m_vao = renderSystem.CreateVertexArray(m_vb, nullptr, m_shader);
