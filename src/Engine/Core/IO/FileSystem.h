@@ -8,6 +8,24 @@ namespace FileSystem
 	[[nodiscard]] bool IsDirectory(const std::string& path) noexcept;
 
 
+
+
+
+
+
+
+
+
+
+
+	// отрефакторить ==>
+
+
+
+
+
+
+
 	bool CreateDir(const std::string& pathName);
 	bool RenameFile(const std::string& srcFileName, const std::string& destFileName);
 	bool DeleteFile(const std::string& fileName);

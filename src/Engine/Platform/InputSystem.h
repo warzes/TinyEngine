@@ -156,6 +156,8 @@ public:
 	InputSystem() = default;
 
 	bool Create();
+	void Destroy();
+
 	void Update();
 
 	// Keyboard

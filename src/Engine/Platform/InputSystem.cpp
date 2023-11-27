@@ -122,6 +122,32 @@ bool InputSystem::Create()
 	return true;
 }
 //-----------------------------------------------------------------------------
+void InputSystem::Destroy()
+{
+	// reset state
+	for (size_t i = 0; i < MAX_KEYBOARD_KEYS; i++) m_keyboard.keyState[i] = 0;
+	for (size_t i = 0; i < MAX_KEY_PRESSED_QUEUE; i++) m_keyboard.keyPressedQueue[i] = 0;
+	m_keyboard.keyPressedQueueCount = 0;
+	for (size_t i = 0; i < MAX_CHAR_PRESSED_QUEUE; i++) m_keyboard.charPressedQueue[i] = 0;
+	m_keyboard.charPressedQueueCount = 0;
+
+	m_mouse.currentPosition = glm::vec2(0.0f);
+	m_mouse.previousPosition = glm::vec2(0.0f);
+	m_mouse.deltaPosition = glm::vec2(0.0f);
+	m_mouse.cursorLocked = false;
+	m_mouse.cursorLockRequested = false;
+	m_mouse.cursorOnScreen = false;
+	for (size_t i = 0; i < MAX_MOUSE_BUTTONS; i++)
+	{
+		m_mouse.previousButtonState[i] = 0;
+		m_mouse.currentButtonState[i] = 0;
+	}
+	m_mouse.currentWheelMove = glm::vec2(0.0f);
+	m_mouse.previousWheelMove = glm::vec2(0.0f);
+
+	LogPrint("InputSystem Destroy");
+}
+//-----------------------------------------------------------------------------
 void InputSystem::Update()
 {
 	m_keyboard.keyPressedQueueCount = 0;

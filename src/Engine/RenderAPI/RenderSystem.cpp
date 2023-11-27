@@ -95,6 +95,7 @@ bool RenderSystem::Create(const RenderCreateInfo& createInfo)
 //-----------------------------------------------------------------------------
 void RenderSystem::Destroy()
 {
+	ResetAllStates();
 	m_cacheFileTextures2D.clear();
 }
 //-----------------------------------------------------------------------------

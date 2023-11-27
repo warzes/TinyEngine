@@ -1,20 +1,9 @@
 ﻿#include "stdafx.h"
-#include "002_DinamicVertex.h"
+#include "001_Triangle.h"
 //-----------------------------------------------------------------------------
-struct testVertex
-{
-	glm::vec3 pos;
-	glm::vec3 color;
-};
-//-----------------------------------------------------------------------------
-static float pos = 0.0f;
-static bool invert = false;
-//-----------------------------------------------------------------------------
-bool _002DinamicVertex::Create()
+namespace
 {
 	const char* vertexShaderText = R"(
-#version 330 core
-
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 color;
 
@@ -30,8 +19,6 @@ void main()
 )";
 
 	const char* fragmentShaderText = R"(
-#version 330 core
-
 in vec3 fragmentColor;
 out vec4 color;
 
@@ -41,64 +28,61 @@ void main()
 }
 )";
 
+	struct Vertex
+	{
+		glm::vec3 pos;
+		glm::vec3 color;
+	} vert[] =
+	{
+		{{-1.0f, -1.0f, 4.0f}, {1.0f, 0.0f, 0.0f}},
+		{{ 1.0f, -1.0f, 4.0f}, {0.0f, 1.0f, 0.0f}},
+		{{ 0.0f,  1.0f, 4.0f}, {0.0f, 0.0f, 1.0f}}
+	};
+}
+//-----------------------------------------------------------------------------
+bool _001Triangle::Create()
+{
 	glEnable(GL_CULL_FACE); // для теста - треугольник выше против часой стрелки
 
 	auto& renderSystem = GetRenderSystem();
 
 	m_shader = renderSystem.CreateShaderProgram({ vertexShaderText }, { fragmentShaderText });
 	m_uniformProjectionMatrix = renderSystem.GetUniform(m_shader, "projectionMatrix");
-	m_vb = renderSystem.CreateVertexBuffer(BufferUsage::DynamicDraw);
+	
+	m_vb = renderSystem.CreateVertexBuffer(BufferUsage::StaticDraw, static_cast<unsigned>(Countof(vert)), static_cast<unsigned>(sizeof(Vertex)), vert);
 	m_vao = renderSystem.CreateVertexArray(m_vb, nullptr, m_shader);
 
 	return true;
 }
 //-----------------------------------------------------------------------------
-void _002DinamicVertex::Destroy()
+void _001Triangle::Destroy()
 {
 	m_shader.reset();
 	m_vb.reset();
 	m_vao.reset();
 }
 //-----------------------------------------------------------------------------
-void _002DinamicVertex::Render()
+void _001Triangle::Render()
 {
 	auto& renderSystem = GetRenderSystem();
 
-	if (m_windowWidth != GetWindowWidth() || m_windowHeight != GetWindowHeight())
-	{
-		m_windowWidth = GetWindowWidth();
-		m_windowHeight = GetWindowHeight();
-		m_perspective = glm::perspective(glm::radians(45.0f), GetWindowSizeAspect(), 0.01f, 1000.f);
-		renderSystem.SetViewport(m_windowWidth, m_windowHeight);
-	}
-
-	{
-		testVertex vert[] =
-		{
-			{{-1.0f, -1.0f, 4.0f}, {1.0f, 0.0f, 0.0f}},
-			{{ 1.0f, -1.0f, 4.0f}, {0.0f, 1.0f, 0.0f}},
-			{{ pos,   1.0f, 4.0f}, {0.0f, 0.0f, 1.0f}}
-		};
-		renderSystem.UpdateBuffer(m_vb, 0, (unsigned)Countof(vert), (unsigned)sizeof(testVertex), vert);
-	}
-
+	renderSystem.SetClearColor({0.0f, 0.64f, 0.91f});
+	renderSystem.SetViewport(GetWindowWidth(), GetWindowHeight());
 	renderSystem.ClearFrame();
+
 	renderSystem.Bind(m_shader);
 	renderSystem.SetUniform(m_uniformProjectionMatrix, m_perspective);
 	renderSystem.Draw(m_vao);
 }
 //-----------------------------------------------------------------------------
-void _002DinamicVertex::Update(float deltaTime)
+void _001Triangle::Update(float /*deltaTime*/)
 {
-	pos += deltaTime * (invert ? -1.0f : 1.0f);
-
-	if (pos < -1.0f || pos > 1.0f)
-		invert = !invert;
-
-	if (GetInputSystem().IsKeyDown(Input::KEY_ESCAPE))
+	if( GetInputSystem().IsKeyDown(Input::KEY_ESCAPE) )
 	{
 		ExitRequest();
 		return;
 	}
+
+	m_perspective = glm::perspective(glm::radians(45.0f), GetWindowSizeAspect(), 0.01f, 100.f);
 }
 //-----------------------------------------------------------------------------

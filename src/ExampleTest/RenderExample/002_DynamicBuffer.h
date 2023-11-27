@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-class _002DinamicVertex final : public IApp
+class _002DynamicBuffer final : public IApp
 {
 	bool Create() final;
 	void Destroy() final;

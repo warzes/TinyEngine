@@ -1,22 +1,22 @@
 ﻿#include "stdafx.h"
-// Basic Example
-#include "001_Triangle.h"
-#include "002_DinamicVertex.h"
-#include "003_BufferMapping.h"
-#include "004_Quad.h"
-#include "005_BasicTexture.h"
-#include "006_Multitexturing.h"
-#include "007_LightMaps.h"
-#include "008_AlphaMapping.h"
-#include "009_DiffuseLighting.h"
-#include "010_AmbientLighting.h"
-#include "011_SpecularLighting.h"
-#include "012_MultiplePointLights.h"
-#include "013_OtherMultipleLights.h"
-#include "014_NormalMapping.h"
-#include "015_SpecularMapping.h"
-#include "016_BasicObjModel.h"
-#include "017_Framebuffer.h"
+// Render Example
+#include "RenderExample/001_Triangle.h"
+#include "RenderExample/002_DynamicBuffer.h"
+#include "RenderExample/003_BufferMapping.h"
+#include "RenderExample/004_Quad.h"
+#include "RenderExample/005_BasicTexture.h"
+#include "RenderExample/006_Multitexturing.h"
+#include "RenderExample/007_LightMaps.h"
+#include "RenderExample/008_AlphaMapping.h"
+#include "RenderExample/009_DiffuseLighting.h"
+#include "RenderExample/010_AmbientLighting.h"
+#include "RenderExample/011_SpecularLighting.h"
+#include "RenderExample/012_MultiplePointLights.h"
+#include "RenderExample/013_OtherMultipleLights.h"
+#include "RenderExample/014_NormalMapping.h"
+#include "RenderExample/015_SpecularMapping.h"
+#include "RenderExample/016_BasicObjModel.h"
+#include "RenderExample/017_Framebuffer.h"
 //-----------------------------------------------------------------------------
 #if defined(_MSC_VER)
 #	pragma comment( lib, "Engine.lib" )
@@ -63,7 +63,7 @@ int main(
 			engineDevice->RunApp(std::make_shared<x>()); \
 		}
 		START_SCENE("b1", _001Triangle);
-		START_SCENE("b2", _002DinamicVertex);
+		START_SCENE("b2", _002DynamicBuffer);
 		START_SCENE("b3", _003BufferMapping);
 		START_SCENE("b4", _004Quad);
 		START_SCENE("b5", _005BasicTexture);

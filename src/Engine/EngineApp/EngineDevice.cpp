@@ -66,6 +66,7 @@ EngineDevice::~EngineDevice()
 #endif
 	gGraphicsSystem.Destroy();
 	gRenderSystem.Destroy();
+	gInputSystem.Destroy();
 	gWindowSystem.Destroy();
 	gLogSystem.Destroy();
 }
