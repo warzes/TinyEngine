@@ -19,6 +19,7 @@
 #include "RenderExample/017_Framebuffer.h"
 
 #include "RenderDemo/001_PhongLighting.h"
+#include "RenderDemo/002_PhongLightingTexture.h"
 //-----------------------------------------------------------------------------
 #if defined(_MSC_VER)
 #	pragma comment( lib, "Engine.lib" )
@@ -51,6 +52,7 @@ int main(
 		std::cout << "    b17 - Framebuffer" << std::endl;
 		std::cout << "Demo:" << std::endl;
 		std::cout << "    d1 - Basic Phong Lighting" << std::endl;
+		std::cout << "    d2 - Texture Phong Lighting" << std::endl;
 
 		std::cout << std::endl;
 
@@ -86,6 +88,7 @@ int main(
 
 
 		START_SCENE("d1", _001PhongLighting);
+		START_SCENE("d2", _002PhongLightingTexture);
 #undef START_SCENE
 	}}
 //-----------------------------------------------------------------------------
