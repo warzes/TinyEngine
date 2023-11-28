@@ -17,6 +17,8 @@
 #include "RenderExample/015_SpecularMapping.h"
 #include "RenderExample/016_BasicObjModel.h"
 #include "RenderExample/017_Framebuffer.h"
+
+#include "RenderDemo/001_PhongLighting.h"
 //-----------------------------------------------------------------------------
 #if defined(_MSC_VER)
 #	pragma comment( lib, "Engine.lib" )
@@ -29,7 +31,7 @@ int main(
 	while( 1 )
 	{
 		std::cout << "Select Example (q - exit):" << std::endl;
-		std::cout << "Basic:" << std::endl;
+		std::cout << "Basic render:" << std::endl;
 		std::cout << "    b1 - Basic Draw Triangle" << std::endl;
 		std::cout << "    b2 - Dinamic Vertex" << std::endl;
 		std::cout << "    b3 - Buffer Mapping" << std::endl;
@@ -47,6 +49,8 @@ int main(
 		std::cout << "    b15 - Specular Mapping" << std::endl;
 		std::cout << "    b16 - Basic ObjModel Loader" << std::endl;
 		std::cout << "    b17 - Framebuffer" << std::endl;
+		std::cout << "Demo:" << std::endl;
+		std::cout << "    d1 - Basic Phong Lighting" << std::endl;
 
 		std::cout << std::endl;
 
@@ -80,6 +84,8 @@ int main(
 		START_SCENE("b16", _016BasicObjModel);
 		START_SCENE("b17", _017Framebuffer);
 
+
+		START_SCENE("d1", _001PhongLighting);
 #undef START_SCENE
 	}}
 //-----------------------------------------------------------------------------

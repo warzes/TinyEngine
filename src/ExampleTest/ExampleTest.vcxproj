@@ -96,6 +96,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RenderDemo\001_PhongLighting.cpp" />
     <ClCompile Include="RenderExample\001_Triangle.cpp" />
     <ClCompile Include="RenderExample\002_DynamicBuffer.cpp" />
     <ClCompile Include="RenderExample\003_BufferMapping.cpp" />
@@ -119,6 +120,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="RenderDemo\001_PhongLighting.h" />
     <ClInclude Include="RenderExample\001_Triangle.h" />
     <ClInclude Include="RenderExample\002_DynamicBuffer.h" />
     <ClInclude Include="RenderExample\003_BufferMapping.h" />

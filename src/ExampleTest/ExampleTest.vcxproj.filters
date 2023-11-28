@@ -54,6 +54,9 @@
     <ClCompile Include="RenderExample\006_Multitexturing.cpp">
       <Filter>RenderExample\old</Filter>
     </ClCompile>
+    <ClCompile Include="RenderDemo\001_PhongLighting.cpp">
+      <Filter>RenderDemo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -108,6 +111,9 @@
     <ClInclude Include="RenderExample\006_Multitexturing.h">
       <Filter>RenderExample\old</Filter>
     </ClInclude>
+    <ClInclude Include="RenderDemo\001_PhongLighting.h">
+      <Filter>RenderDemo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="RenderExample">
@@ -115,6 +121,9 @@
     </Filter>
     <Filter Include="RenderExample\old">
       <UniqueIdentifier>{3cfc8668-6614-4c86-a50b-c41733121129}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderDemo">
+      <UniqueIdentifier>{4550f62a-fe34-4cdd-b5b9-abc025796e10}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
