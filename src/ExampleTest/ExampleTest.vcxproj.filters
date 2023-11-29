@@ -60,6 +60,9 @@
     <ClCompile Include="RenderDemo\002_PhongLightingTexture.cpp">
       <Filter>RenderDemo</Filter>
     </ClCompile>
+    <ClCompile Include="RenderDemo\003_MultipleLights.cpp">
+      <Filter>RenderDemo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -118,6 +121,9 @@
       <Filter>RenderDemo</Filter>
     </ClInclude>
     <ClInclude Include="RenderDemo\002_PhongLightingTexture.h">
+      <Filter>RenderDemo</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderDemo\003_MultipleLights.h">
       <Filter>RenderDemo</Filter>
     </ClInclude>
   </ItemGroup>

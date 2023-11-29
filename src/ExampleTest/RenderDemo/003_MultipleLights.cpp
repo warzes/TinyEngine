@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "002_PhongLightingTexture.h"
+#include "003_MultipleLights.h"
 //-----------------------------------------------------------------------------
 namespace
 {
@@ -144,7 +144,7 @@ void main()
 	};
 }
 //-----------------------------------------------------------------------------
-bool _002PhongLightingTexture::Create()
+bool _003MultipleLights::Create()
 {
 	auto& renderSystem = GetRenderSystem();
 
@@ -179,7 +179,7 @@ bool _002PhongLightingTexture::Create()
 	return true;
 }
 //-----------------------------------------------------------------------------
-void _002PhongLightingTexture::Destroy()
+void _003MultipleLights::Destroy()
 {
 	GetInputSystem().SetMouseLock(false);
 	m_shaderObject.reset();
@@ -189,7 +189,7 @@ void _002PhongLightingTexture::Destroy()
 	m_specular.reset();
 }
 //-----------------------------------------------------------------------------
-void _002PhongLightingTexture::Render()
+void _003MultipleLights::Render()
 {
 	auto& renderSystem = GetRenderSystem();
 	auto& graphicsSystem = GetGraphicsSystem();
@@ -238,7 +238,7 @@ void _002PhongLightingTexture::Render()
 	renderSystem.Draw(m_geom);
 }
 //-----------------------------------------------------------------------------
-void _002PhongLightingTexture::Update(float deltaTime)
+void _003MultipleLights::Update(float deltaTime)
 {
 	if (GetInputSystem().IsKeyDown(Input::KEY_ESCAPE))
 	{

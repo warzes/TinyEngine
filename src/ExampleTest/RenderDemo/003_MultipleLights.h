@@ -1,6 +1,6 @@
 #pragma once
 
-class _002PhongLightingTexture final : public IApp
+class _003MultipleLights final : public IApp
 {
 	bool Create() final;
 	void Destroy() final;

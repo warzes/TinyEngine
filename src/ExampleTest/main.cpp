@@ -20,6 +20,7 @@
 
 #include "RenderDemo/001_PhongLighting.h"
 #include "RenderDemo/002_PhongLightingTexture.h"
+#include "RenderDemo/003_MultipleLights.h"
 //-----------------------------------------------------------------------------
 #if defined(_MSC_VER)
 #	pragma comment( lib, "Engine.lib" )
@@ -53,6 +54,8 @@ int main(
 		std::cout << "Demo:" << std::endl;
 		std::cout << "    d1 - Basic Phong Lighting" << std::endl;
 		std::cout << "    d2 - Texture Phong Lighting" << std::endl;
+		std::cout << "    d3 - Multiple Lights" << std::endl;
+
 
 		std::cout << std::endl;
 
@@ -89,6 +92,7 @@ int main(
 
 		START_SCENE("d1", _001PhongLighting);
 		START_SCENE("d2", _002PhongLightingTexture);
+		START_SCENE("d3", _003MultipleLights);
 #undef START_SCENE
 	}}
 //-----------------------------------------------------------------------------
