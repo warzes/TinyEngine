@@ -94,5 +94,6 @@ int main(
 		START_SCENE("d2", _002PhongLightingTexture);
 		START_SCENE("d3", _003MultipleLights);
 #undef START_SCENE
-	}}
+	}
+}
 //-----------------------------------------------------------------------------
