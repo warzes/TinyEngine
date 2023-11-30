@@ -78,6 +78,7 @@ bool WindowSystem::Create(const WindowCreateInfo& createInfo)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_FALSE);
 #	if defined(_DEBUG)
+	glfwWindowHint(GLFW_CONTEXT_DEBUG, GLFW_TRUE);
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 #	else
 	glfwWindowHint(GLFW_CONTEXT_NO_ERROR, GLFW_TRUE);
@@ -129,6 +130,13 @@ void WindowSystem::Destroy()
 	glfwDestroyWindow(m_window);
 	glfwTerminate();
 	LogPrint("WindowSystem Destroy");
+	// reset member var
+	m_window = nullptr;
+	m_requestedVSync = false;
+	m_windowWidth = 0;
+	m_windowHeight = 0;
+	m_focused = true;
+	m_isFullscreen = false;
 }
 //-----------------------------------------------------------------------------
 void WindowSystem::Update()
@@ -190,6 +198,33 @@ void WindowSystem::SetSize(int width, int height)
 bool WindowSystem::IsFocused() const
 {
 	return m_focused;
+}
+//-----------------------------------------------------------------------------
+void WindowSystem::SetFullscreen(bool fullscreen)
+{
+	if (m_isFullscreen == fullscreen) return;
+
+	// TODO:
+
+	//GLFWmonitor* monitor = glfwGetWindowMonitor(m_window);
+	//const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+	//if (fullscreen)
+	//{
+	//	//glfwGetWindowPos(m_window, &m_preFullScreenPos[0], &m_preFullScreenPos[1]);
+	//	//glfwGetWindowSize(m_window, &m_preFullScreenSize[0], &m_preFullScreenSize[1]);
+	//	glfwSetWindowMonitor(m_window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+	//	glfwSetWindowAttrib(m_window, GLFW_RESIZABLE, GLFW_FALSE);
+	//	glfwSetWindowAttrib(m_window, GLFW_DECORATED, GLFW_FALSE);
+	//}
+	//else
+	//{
+	//	//glfwSetWindowMonitor(m_window, nullptr, m_preFullScreenPos[0], m_preFullScreenPos[1], m_preFullScreenSize[0], m_preFullScreenSize[1], 0);
+	//	glfwSetWindowAttrib(m_window, GLFW_RESIZABLE, GLFW_TRUE);
+	//	glfwSetWindowAttrib(m_window, GLFW_DECORATED, GLFW_TRUE);
+	//}
+
+	m_isFullscreen = fullscreen;
 }
 //-----------------------------------------------------------------------------
 WindowSystem& GetWindowSystem()

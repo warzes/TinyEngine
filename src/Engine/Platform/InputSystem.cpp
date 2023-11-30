@@ -13,21 +13,13 @@ void GLFWKeyCallback(GLFWwindow* /*window*/, int key, int /*scancode*/, int acti
 
 	if (action == GLFW_RELEASE)
 	{
-#if 0 // OLD Input system
-		gInputSystem.m_keyboard.currentKeyState[key] = 0;
-#else
-		if (gInputSystem.m_keyboard.keyState[key] > 1)
-			gInputSystem.m_keyboard.keyState[key] = 1;
-#endif
+		if (gInputSystem.m_keyboard.keyState[key] > Input::BUTTON_RELEASE)
+			gInputSystem.m_keyboard.keyState[key] = Input::BUTTON_RELEASE;
 	}
 	else
 	{
-#if 0 // OLD Input system
-		gInputSystem.m_keyboard.currentKeyState[key] = 1;
-#else
-		if (gInputSystem.m_keyboard.keyState[key] < 2)
-			gInputSystem.m_keyboard.keyState[key] = 2;
-#endif
+		if (gInputSystem.m_keyboard.keyState[key] < Input::BUTTON_PRESS)
+			gInputSystem.m_keyboard.keyState[key] = Input::BUTTON_PRESS;
 	}
 
 #if !PLATFORM_EMSCRIPTEN && 0 // TODO: fix
@@ -153,11 +145,6 @@ void InputSystem::Update()
 	m_keyboard.keyPressedQueueCount = 0;
 	m_keyboard.charPressedQueueCount = 0;
 
-#if 0 // OLD Input system
-	for (int i = 0; i < MAX_KEYBOARD_KEYS; i++) m_keyboard.previousKeyState[i] = m_keyboard.currentKeyState[i];
-	for (int i = 0; i < MAX_MOUSE_BUTTONS; i++) m_mouse.previousButtonState[i] = m_mouse.currentButtonState[i];
-#endif
-
 	// TODO: если игра свернута - нужно стирать все состояния клавиш и мыши
 
 	m_mouse.previousWheelMove = m_mouse.currentWheelMove;
@@ -171,56 +158,35 @@ void InputSystem::Update()
 //-----------------------------------------------------------------------------
 bool InputSystem::IsKeyPressed(int key)
 {
-#if 0 // OLD Input system
-	bool pressed = false;
-	if ((m_keyboard.previousKeyState[key] == 0) && (m_keyboard.currentKeyState[key] == 1)) pressed = true;
-	return pressed;
-#else
-	if (m_keyboard.keyState[key] == 2)
+	if (m_keyboard.keyState[key] == Input::BUTTON_PRESS)
 	{
-		m_keyboard.keyState[key] = 3;
+		m_keyboard.keyState[key] = Input::BUTTON_REPEAT;
 		return true;
 	}
 	else return false;
-#endif
 }
 //-----------------------------------------------------------------------------
 bool InputSystem::IsKeyDown(int key) const
 {
-#if 0 // OLD Input system
-	if (m_keyboard.currentKeyState[key] == 1) return true;
+	if (m_keyboard.keyState[key] >= Input::BUTTON_PRESS) return true;
 	else return false;
-#else
-	if (m_keyboard.keyState[key] >= 2) return true;
-	else return false;
-#endif
 
 }
 //-----------------------------------------------------------------------------
 bool InputSystem::IsKeyReleased(int key)
 {
-#if 0 // OLD Input system
-	if ((m_keyboard.previousKeyState[key] == 1) && (m_keyboard.currentKeyState[key] == 0)) return true;
-	return false;
-#else
-	if (m_keyboard.keyState[key] == 1)
+	if (m_keyboard.keyState[key] == Input::BUTTON_RELEASE)
 	{
-		m_keyboard.keyState[key] = 0;
+		m_keyboard.keyState[key] = Input::BUTTON_NONE;
 		return true;
 	}
 	else return false;
-#endif
 }
 //-----------------------------------------------------------------------------
 bool InputSystem::IsKeyUp(int key) const
 {
-#if 0 // OLD Input system
-	if (m_keyboard.currentKeyState[key] == 0) return true;
+	if (m_keyboard.keyState[key] <= Input::BUTTON_RELEASE) return true;
 	else return false;
-#else
-	if (m_keyboard.keyState[key] <= 1) return true;
-	else return false;
-#endif
 }
 //-----------------------------------------------------------------------------
 int InputSystem::GetKeyPressed()
@@ -294,11 +260,6 @@ glm::vec2 InputSystem::GetMousePosition() const
 glm::vec2 InputSystem::GetMouseDeltaPosition() const
 {
 	return m_mouse.deltaPosition;
-	//return
-	//{
-	//	m_mouse.currentPosition.x - m_mouse.previousPosition.x,
-	//	m_mouse.currentPosition.y - m_mouse.previousPosition.y
-	//};
 }
 //-----------------------------------------------------------------------------
 void InputSystem::SetMousePosition(int x, int y)
