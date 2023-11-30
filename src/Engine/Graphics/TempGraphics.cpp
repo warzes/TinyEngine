@@ -105,11 +105,30 @@ NewModel LoadModel(const std::string& fileName)
 
 		// TODO: убрать сырой массив в пользу вектора
 		model.materialCount = 1;
-		model.materials = (NewMaterial*)calloc(model.materialCount, sizeof(Material));
+		model.materials = (NewMaterial*)calloc(model.materialCount, sizeof(NewMaterial));
 		model.materials[0] = LoadMaterialDefault();
 
 		if (model.meshMaterial == NULL) model.meshMaterial = (int*)calloc(model.meshes.size(), sizeof(int));
 	}
+
+	return model;
+}
+//-----------------------------------------------------------------------------
+NewModel LoadModelFromMesh(NewMesh mesh)
+{
+	NewModel model;
+
+	model.transform = glm::mat4(1.0f);
+
+	model.meshes.resize(1);
+	model.meshes[0] = mesh;
+
+	model.materialCount = 1;
+	model.materials = (NewMaterial*)calloc(model.materialCount, sizeof(NewMaterial));
+	model.materials[0] = LoadMaterialDefault();
+
+	model.meshMaterial = (int*)calloc(model.meshes.size(), sizeof(int));
+	model.meshMaterial[0] = 0;  // First material index
 
 	return model;
 }
