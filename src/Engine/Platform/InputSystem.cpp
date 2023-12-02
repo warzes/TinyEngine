@@ -116,6 +116,8 @@ bool InputSystem::Create()
 //-----------------------------------------------------------------------------
 void InputSystem::Destroy()
 {
+	SetMouseLock(false);
+
 	// reset state
 	for (size_t i = 0; i < MAX_KEYBOARD_KEYS; i++) m_keyboard.keyState[i] = 0;
 	for (size_t i = 0; i < MAX_KEY_PRESSED_QUEUE; i++) m_keyboard.keyPressedQueue[i] = 0;
