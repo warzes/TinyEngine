@@ -4,6 +4,7 @@
 #include "BoundingSphere.h"
 #include "BoundingFrustum.h"
 #include "Triangle.h"
+#include "Ray.h"
 #include "Core/Math/MathLib.h"
 //-----------------------------------------------------------------------------
 const Plane Plane::Up(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
@@ -31,6 +32,10 @@ Plane::Plane(const glm::vec4& plane) noexcept
 {
 	normal = { plane.x, plane.y, plane.z };
 	distance = plane.w;
+}
+glm::vec3 Plane::GetOrigin() const noexcept
+{
+	return -(normal * distance);
 }
 //-----------------------------------------------------------------------------
 void Plane::Normalize() noexcept
@@ -80,6 +85,11 @@ float Plane::GetDistanceToPoint(const glm::vec3& point) const noexcept
 glm::vec3 Plane::Reflect(const glm::vec3& direction) const noexcept
 {
 	return direction - (2.0f * glm::dot(normal, direction) * normal);
+}
+//-----------------------------------------------------------------------------
+std::optional<float> Plane::Intersects(const Ray& ray) const noexcept
+{
+	return ray.Intersects(*this);
 }
 //-----------------------------------------------------------------------------
 PlaneIntersectionType Plane::Intersects(const glm::vec3& point) const noexcept

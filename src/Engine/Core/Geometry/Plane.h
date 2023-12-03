@@ -23,6 +23,8 @@ public:
 
 	[[nodiscard]] glm::vec4 ToVector4() const noexcept { return glm::vec4(normal, distance); }
 
+	[[nodiscard]] glm::vec3 GetOrigin() const noexcept;
+
 	void Normalize() noexcept;
 	[[nodiscard]] static Plane Normalize(const Plane& plane) noexcept;
 
@@ -39,6 +41,7 @@ public:
 	// Reflect a normalized direction vector.
 	[[nodiscard]] glm::vec3 Reflect(const glm::vec3& direction) const noexcept;
 
+	[[nodiscard]] std::optional<float> Intersects(const Ray& ray) const noexcept;
 	[[nodiscard]] PlaneIntersectionType Intersects(const glm::vec3& point) const noexcept;
 	[[nodiscard]] PlaneIntersectionType Intersects(const BoundingAABB& aabb) const noexcept;
 	[[nodiscard]] PlaneIntersectionType Intersects(const OldBoundingFrustum& frustum) const noexcept;
