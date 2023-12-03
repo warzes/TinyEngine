@@ -180,7 +180,7 @@ Texture2DRef RenderSystem::CreateTexture2D(const char* fileName, bool useCache, 
 
 	LogPrint("Load texture: " + std::string(fileName));
 
-	Image imageLoad(fileName);
+	Image imageLoad(fileName, textureInfo.verticallyFlip);
 	auto* pixelData = imageLoad.GetTexels();
 	if( pixelData == nullptr )
 	{

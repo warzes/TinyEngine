@@ -20,9 +20,9 @@ Image::Image(const uint8_t* data, size_t dataSize)
 	LoadFromMemory(data, dataSize);
 }
 //-----------------------------------------------------------------------------
-Image::Image(const std::string& fileName)
+Image::Image(const std::string& fileName, bool verticallyFlip)
 {
-	LoadFromFile(fileName);
+	LoadFromFile(fileName, verticallyFlip);
 }
 //-----------------------------------------------------------------------------
 Image::~Image()
@@ -63,9 +63,10 @@ bool Image::LoadFromMemory(const uint8_t* data, size_t dataSize)
 	return true;
 }
 //-----------------------------------------------------------------------------
-bool Image::LoadFromFile(const std::string& fileName)
+bool Image::LoadFromFile(const std::string& fileName, bool verticallyFlip)
 {
-	//stbi_set_flip_vertically_on_load(verticallyFlip ? 1 : 0);
+	stbi_set_flip_vertically_on_load(verticallyFlip ? 1 : 0);
+
 	const int desiredСhannels = STBI_default;
 	int nrChannels = 0;
 	m_pixelData = stbi_load(fileName.c_str(), &m_width, &m_height, &nrChannels, desiredСhannels);
