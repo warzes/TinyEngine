@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "BoundingAABB.h"
 #include "Plane.h"
 #include "BoundingSphere.h"
@@ -6,22 +6,146 @@
 #include "Core/Math/MathLib.h"
 #include "Core/Utilities/StringUtilities.h"
 //-----------------------------------------------------------------------------
-void BoundingAABB::Insert(const glm::vec3& point) noexcept
+BoundingAABB::BoundingAABB(const glm::vec3* points, uint32_t numPoints) noexcept
+{
+	Set(points, numPoints);
+}
+//-----------------------------------------------------------------------------
+BoundingAABB::BoundingAABB(const std::vector<glm::vec3> points) noexcept
+{
+	Set(points.data(), points.size());
+}
+//-----------------------------------------------------------------------------
+void BoundingAABB::Set(const glm::vec3& _min, const glm::vec3& _max) noexcept
+{
+	min = _min;
+	max = _max;
+}
+//-----------------------------------------------------------------------------
+void BoundingAABB::Set(float fmin, float fmax) noexcept
+{
+	min = glm::vec3(fmin);
+	max = glm::vec3(fmax);
+}
+//-----------------------------------------------------------------------------
+void BoundingAABB::Set(const glm::vec3* points, uint32_t numPoints) noexcept
+{
+	min = glm::vec3(FLT_MAX);
+	max = glm::vec3(-FLT_MAX);
+
+	for (uint32_t i = 0; i < numPoints; i++)
+	{
+		min = glm::min(min, points[i]);
+		max = glm::max(max, points[i]);
+	}
+}
+//-----------------------------------------------------------------------------
+void BoundingAABB::Set(const glm::vec3* points, uint32_t numPoints, const glm::mat4& transform) noexcept
+{
+	min = glm::vec3(FLT_MAX);
+	max = glm::vec3(-FLT_MAX);
+
+	for (uint32_t i = 0; i < numPoints; i++)
+	{
+		const glm::vec3 transformed = transform * glm::vec4(points[i], 1.0f);
+
+		min = glm::min(min, transformed);
+		max = glm::max(max, transformed);
+	}
+}
+//-----------------------------------------------------------------------------
+void BoundingAABB::SetFromTransformedAABB(const BoundingAABB& aabb, const glm::mat4& transform) noexcept
+{
+	const glm::vec3 minTransformed = transform * glm::vec4(aabb.min, 1.0f);
+	const glm::vec3 maxTransformed = transform * glm::vec4(aabb.max, 1.0f);
+
+	min = glm::min(minTransformed, maxTransformed);
+	max = glm::max(minTransformed, maxTransformed);
+}
+//-----------------------------------------------------------------------------
+void BoundingAABB::Merge(const BoundingAABB& other) noexcept
+{
+	min = glm::min(min, other.min);
+	max = glm::max(max, other.max);
+}
+//-----------------------------------------------------------------------------
+void BoundingAABB::Merge(const glm::vec3& point) noexcept
 {
 	min = glm::min(point, min);
 	max = glm::max(point, max);
 }
 //-----------------------------------------------------------------------------
-void BoundingAABB::Insert(const BoundingAABB& otherAABB) noexcept
+void BoundingAABB::Merge(const BoundingAABB& other, const glm::mat4& transform) noexcept
 {
-	Insert(otherAABB.min);
-	Insert(otherAABB.max);
+	Merge(other.Transformed(transform));
+}
+//-----------------------------------------------------------------------------
+void BoundingAABB::Merge(const glm::vec3& point, const glm::mat4& transform) noexcept
+{
+	glm::vec3 transformed = transform * glm::vec4(point, 1.0f);
+	Merge(transformed);
+}
+//-----------------------------------------------------------------------------
+void BoundingAABB::Merge(const BoundingAABB& other, const glm::mat3& transform) noexcept
+{
+	Merge(other.Transformed(glm::mat4(transform)));
+}
+//-----------------------------------------------------------------------------
+void BoundingAABB::Merge(const glm::vec3& point, const glm::mat3& transform) noexcept
+{
+	glm::vec3 transformed = transform * glm::vec4(point, 1.0f);
+	Merge(transformed);
 }
 //-----------------------------------------------------------------------------
 void BoundingAABB::Translate(const glm::vec3& position) noexcept
 {
 	min += position;
 	max += position;
+}
+//-----------------------------------------------------------------------------
+void BoundingAABB::Scale(const glm::vec3& scale) noexcept
+{
+	min *= scale;
+	max *= scale;
+}
+//-----------------------------------------------------------------------------
+void BoundingAABB::Rotate(const glm::mat3& rotation) noexcept
+{
+	glm::vec3 center = GetCenter();
+	glm::vec3 extents = GetSize();
+
+	glm::vec3 rotatedExtents = glm::vec3(rotation * glm::vec4(extents, 1.0f));
+
+	min = center - rotatedExtents;
+	max = center + rotatedExtents;
+}
+//-----------------------------------------------------------------------------
+void BoundingAABB::Transform(const glm::mat4& transform) noexcept
+{
+	glm::vec3 newCenter = transform * glm::vec4(GetCenter(), 1.0f);
+	glm::vec3 oldEdge = GetHalfSize();
+	glm::vec3 newEdge = glm::vec3(
+		glm::abs(transform[0][0]) * oldEdge.x + glm::abs(transform[1][0]) * oldEdge.y + glm::abs(transform[2][0]) * oldEdge.z,
+		glm::abs(transform[0][1]) * oldEdge.x + glm::abs(transform[1][1]) * oldEdge.y + glm::abs(transform[2][1]) * oldEdge.z,
+		glm::abs(transform[0][2]) * oldEdge.x + glm::abs(transform[1][2]) * oldEdge.y + glm::abs(transform[2][2]) * oldEdge.z);
+
+	min = newCenter - newEdge;
+	max = newCenter + newEdge;
+}
+//-----------------------------------------------------------------------------
+void BoundingAABB::Transform(float scale, const glm::vec3& rotation, const glm::vec3& translation) noexcept
+{
+	glm::mat4 transform = glm::mat4(1.0f);
+	// TODO: провести все операции трансформации над матрицей
+	assert(0);
+	Transform(transform);
+}
+//-----------------------------------------------------------------------------
+BoundingAABB BoundingAABB::Transformed(const glm::mat4& transform) const noexcept
+{
+	BoundingAABB aabb(*this);
+	aabb.Transform(transform);
+	return aabb;
 }
 //-----------------------------------------------------------------------------
 ContainmentType BoundingAABB::Contains(const glm::vec3& point) const noexcept
@@ -34,6 +158,31 @@ ContainmentType BoundingAABB::Contains(const glm::vec3& point) const noexcept
 		return ContainmentType::Intersects;
 
 	return ContainmentType::Contains;
+}
+//-----------------------------------------------------------------------------
+ContainmentType BoundingAABB::Contains(const Triangle& tri) const noexcept
+{
+	assert(0); // TODO: нереализовано
+	return ContainmentType();
+}
+//-----------------------------------------------------------------------------
+ContainmentType BoundingAABB::Contains(const BoundingSphere& sphere) const noexcept
+{
+	const auto clamped = glm::clamp(sphere.center, min, max);
+	const auto distanceSquared = DistanceSquared(sphere.center, clamped);
+
+	if (distanceSquared > sphere.radius * sphere.radius)
+		return ContainmentType::Disjoint;
+
+	if ((sphere.radius <= sphere.center.x - min.x) &&
+		(sphere.radius <= sphere.center.y - min.y) &&
+		(sphere.radius <= sphere.center.z - min.z) &&
+		(sphere.radius <= max.x - sphere.center.x) &&
+		(sphere.radius <= max.y - sphere.center.y) &&
+		(sphere.radius <= max.z - sphere.center.z))
+		return ContainmentType::Contains;
+
+	return ContainmentType::Intersects;
 }
 //-----------------------------------------------------------------------------
 ContainmentType BoundingAABB::Contains(const BoundingAABB& aabb) const noexcept
@@ -50,23 +199,29 @@ ContainmentType BoundingAABB::Contains(const BoundingAABB& aabb) const noexcept
 	return ContainmentType::Intersects;
 }
 //-----------------------------------------------------------------------------
-ContainmentType BoundingAABB::Contains(const BoundingSphere& sphere) const noexcept
+ContainmentType BoundingAABB::Contains(const BoundingOrientedBox& box) const noexcept
 {
-	const auto clamped = glm::clamp(sphere.center, min, max);
-	const auto distanceSquared = DistanceSquared(sphere.center, clamped);
-
-	if( distanceSquared > sphere.radius * sphere.radius )
-		return ContainmentType::Disjoint;
-
-	if( (sphere.radius <= sphere.center.x - min.x) &&
-		(sphere.radius <= sphere.center.y - min.y) &&
-		(sphere.radius <= sphere.center.z - min.z) &&
-		(sphere.radius <= max.x - sphere.center.x) &&
-		(sphere.radius <= max.y - sphere.center.y) &&
-		(sphere.radius <= max.z - sphere.center.z) )
-		return ContainmentType::Contains;
-
-	return ContainmentType::Intersects;
+	assert(0); // TODO: нереализовано
+	return ContainmentType();
+}
+//-----------------------------------------------------------------------------
+ContainmentType BoundingAABB::Contains(const BoundingFrustum& fr) const noexcept
+{
+	assert(0); // TODO: нереализовано
+	return ContainmentType();
+}
+//-----------------------------------------------------------------------------
+bool BoundingAABB::Intersects(const Triangle& tri) const noexcept
+{
+	assert(0); // TODO: нереализовано
+	return false;
+}
+//-----------------------------------------------------------------------------
+bool BoundingAABB::Intersects(const BoundingSphere& sphere) const noexcept
+{
+	const glm::vec3 clamped = glm::clamp(sphere.center, min, max);
+	const float distanceSquared = DistanceSquared(sphere.center, clamped);
+	return distanceSquared <= sphere.radius * sphere.radius;
 }
 //-----------------------------------------------------------------------------
 bool BoundingAABB::Intersects(const BoundingAABB& aabb) const noexcept
@@ -77,11 +232,16 @@ bool BoundingAABB::Intersects(const BoundingAABB& aabb) const noexcept
 		(max.z >= aabb.min.z && min.z <= aabb.max.z);
 }
 //-----------------------------------------------------------------------------
-bool BoundingAABB::Intersects(const BoundingSphere& sphere) const noexcept
+bool BoundingAABB::Intersects(const BoundingOrientedBox& box) const noexcept
 {
-	const glm::vec3 clamped = glm::clamp(sphere.center, min, max);
-	const float distanceSquared = DistanceSquared(sphere.center, clamped);
-	return distanceSquared <= sphere.radius * sphere.radius;
+	assert(0); // TODO: нереализовано
+	return false;
+}
+//-----------------------------------------------------------------------------
+bool BoundingAABB::Intersects(const BoundingFrustum& fr) const noexcept
+{
+	assert(0); // TODO: нереализовано
+	return false;
 }
 //-----------------------------------------------------------------------------
 PlaneIntersectionType BoundingAABB::Intersects(const Plane& plane) const noexcept
@@ -106,11 +266,6 @@ std::array<glm::vec3, BoundingAABB::CornerCount> BoundingAABB::GetCorners() cons
 			{ max.x, min.y, min.z },
 			{ min.x, min.y, min.z },
 		}};
-}
-//-----------------------------------------------------------------------------
-BoundingAABB BoundingAABB::CreateFromCenterAndHalfExtents(const glm::vec3& center, const glm::vec3& halfExtents) noexcept
-{
-	return { center - halfExtents, center + halfExtents };
 }
 //-----------------------------------------------------------------------------
 bool StringUtils::FromString(BoundingAABB& out, const char* string)
