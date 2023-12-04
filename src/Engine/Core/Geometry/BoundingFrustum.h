@@ -1,7 +1,53 @@
-#pragma once
+﻿#pragma once
 
 #include "Core/Geometry/Plane.h"
 
+enum FrustumPlane
+{
+	PLANE_NEAR = 0,
+	PLANE_LEFT,
+	PLANE_RIGHT,
+	PLANE_UP,
+	PLANE_DOWN,
+	PLANE_FAR,
+};
+
+class Frustum final
+{
+public:
+	Frustum() noexcept;
+	Frustum(Frustum&&) noexcept = default;
+	Frustum(const Frustum&) noexcept = default;
+	Frustum(const glm::mat4& transform) noexcept;
+	Frustum(const glm::mat4& projection, const glm::mat4& view) noexcept;
+
+	Frustum& operator=(Frustum&&) noexcept = default;
+	Frustum& operator=(const Frustum&) noexcept = default;
+
+	void Set(const glm::mat4& projection, const glm::mat4& view) noexcept;
+	void Set(const glm::mat4& transform) noexcept;
+	void SetOrtho(float scale, float aspectRatio, float n, float f, const glm::mat4& viewMatrix) noexcept; // ortho proj
+	void Set(float fov, float aspectRatio, float n, float f, const glm::mat4& viewMatrix) noexcept;
+
+	void Transform(const glm::mat4& transform) noexcept;
+
+	bool IsInside(const glm::vec3& point) const noexcept;
+	bool IsInside(const BoundingSphere& sphere) const noexcept;
+	bool IsInside(const BoundingAABB& box) const noexcept;
+	bool IsInside(const Plane& plane) const noexcept;
+	bool IsInside(const Ray& ray) const noexcept;
+
+	const Plane& GetPlane(FrustumPlane plane) const noexcept;
+	const Plane& GetPlane(int index) const noexcept { return m_planes[index]; }
+	glm::vec3* GetVerticies() noexcept;
+
+private:
+	void calculateVertices(const glm::mat4& transform) noexcept;
+	Plane m_planes[6];
+	glm::vec3 m_verticies[8];
+};
+
+// старая версия
 class BoundingFrustum final
 {
 public:
@@ -32,8 +78,8 @@ public:
 	[[nodiscard]] bool Intersects(const BoundingAABB& aabb) const noexcept;
 	[[nodiscard]] bool Intersects(const BoundingOrientedBox& box) const noexcept;
 	[[nodiscard]] bool Intersects(const BoundingFrustum& frustum) const noexcept;
-	[[nodiscard]] PlaneIntersectionType Intersects(const Plane& plane) const noexcept;
-	[[nodiscard]] std::optional<float> Intersects(const Ray& ray) const noexcept;
+	//[[nodiscard]] PlaneIntersectionType Intersects(const Plane& plane) const noexcept;
+	//[[nodiscard]] std::optional<float> Intersects(const Ray& ray) const noexcept;
 
 	[[nodiscard]] const std::array<glm::vec3, CornerCount>& GetCorners() const noexcept;
 
@@ -62,6 +108,7 @@ public:
 	float near = 0.0f, far = 1.0f;                             // Z of the near plane and far plane.
 };
 
+// старая версия
 class OldBoundingFrustum final
 {
 	static constexpr int CornerCount = 8;

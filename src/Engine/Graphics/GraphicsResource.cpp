@@ -148,7 +148,7 @@ StaticModelRef GraphicsSystem::createMeshBuffer(std::vector<StaticMesh>&& meshes
 
 		// compute AABB
 		{
-			model->aabb.Insert(model->subMeshes[i].globalAABB);
+			model->aabb.Merge(model->subMeshes[i].globalAABB);
 		}
 	}
 	return model;
@@ -276,7 +276,7 @@ void GraphicsSystem::computeSubMeshesAABB(std::vector<StaticMesh>& meshes)
 	{
 		for( size_t j = 0; j < meshes[i].vertices.size(); j++ )
 		{
-			meshes[i].globalAABB.Insert(meshes[i].vertices[j].positions);
+			meshes[i].globalAABB.Merge(meshes[i].vertices[j].positions);
 		}
 	}
 }

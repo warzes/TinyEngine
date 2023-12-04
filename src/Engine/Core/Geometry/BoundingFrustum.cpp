@@ -1,8 +1,182 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "BoundingFrustum.h"
 #include "BoundingAABB.h"
 #include "BoundingSphere.h"
 #include "Ray.h"
+//-----------------------------------------------------------------------------
+Frustum::Frustum() noexcept
+{
+	Set(glm::mat4(1.0f));
+}
+//-----------------------------------------------------------------------------
+Frustum::Frustum(const glm::mat4& transform) noexcept
+{
+	Set(transform);
+}
+//-----------------------------------------------------------------------------
+Frustum::Frustum(const glm::mat4& projection, const glm::mat4& view) noexcept
+{
+	glm::mat4 m = projection * view;
+	Set(m);
+}
+//-----------------------------------------------------------------------------
+void Frustum::Set(const glm::mat4& projection, const glm::mat4& view) noexcept
+{
+	glm::mat4 m = projection * view;
+	Set(m);
+}
+//-----------------------------------------------------------------------------
+void Frustum::Set(const glm::mat4& transform) noexcept
+{
+	auto& m = transform;
+	m_planes[PLANE_LEFT] = Plane({ m[0][3] + m[0][0], m[1][3] + m[1][0], m[2][3] + m[2][0] }, m[3][3] + m[3][0]);
+	m_planes[PLANE_RIGHT] = Plane({ m[0][3] - m[0][0], m[1][3] - m[1][0], m[2][3] - m[2][0] }, m[3][3] - m[3][0]);
+	m_planes[PLANE_DOWN] = Plane({ m[0][3] + m[0][1], m[1][3] + m[1][1], m[2][3] + m[2][1] }, m[3][3] + m[3][1]);
+	m_planes[PLANE_UP] = Plane({ m[0][3] - m[0][1], m[1][3] - m[1][1], m[2][3] - m[2][1] }, m[3][3] - m[3][1]);
+	m_planes[PLANE_NEAR] = Plane({ m[0][3] + m[0][2], m[1][3] + m[1][2], m[2][3] + m[2][2] }, m[3][3] + m[3][2]);
+	m_planes[PLANE_FAR] = Plane({ m[0][3] - m[0][2], m[1][3] - m[1][2], m[2][3] - m[2][2] }, m[3][3] - m[3][2]);
+
+	for (int i = 0; i < 6; i++)
+		m_planes[i].Normalize();
+
+	calculateVertices(transform);
+}
+//-----------------------------------------------------------------------------
+void Frustum::SetOrtho(float scale, float aspectRatio, float n, float f, const glm::mat4& viewMatrix) noexcept
+{
+	glm::mat4 m = glm::ortho(-scale * aspectRatio, scale * aspectRatio, -scale, scale, n, f);
+	m = m * viewMatrix;
+	Set(m);
+}
+//-----------------------------------------------------------------------------
+void Frustum::Set(float fov, float aspectRatio, float n, float f, const glm::mat4& viewMatrix) noexcept
+{
+	float tangent = tan(fov * 0.5f);
+	float height = n * tangent;
+	float width = height * aspectRatio;
+
+	glm::mat4 m = glm::frustum(-width, width, -height, height, n, f);
+	m = m * viewMatrix;
+	Set(m);
+}
+//-----------------------------------------------------------------------------
+void Frustum::Transform(const glm::mat4& transform) noexcept
+{
+	for (int i = 0; i < 6; i++)
+		m_planes[i].Transform(transform);
+
+	for (int i = 0; i < 6; i++)
+		m_planes[i].Normalize();
+
+	calculateVertices(transform);
+}
+//-----------------------------------------------------------------------------
+bool Frustum::IsInside(const glm::vec3& point) const noexcept
+{
+	for (int i = 0; i < 6; i++)
+	{
+		if (m_planes[i].Distance(point) < 0.0f)
+			return false;
+	}
+
+	return true;
+}
+//-----------------------------------------------------------------------------
+bool Frustum::IsInside(const BoundingSphere& sphere) const noexcept
+{
+	for (int i = 0; i < 6; i++)
+	{
+		if (m_planes[i].Distance(sphere.center) < -sphere.radius)
+			return false;
+	}
+
+	return true;
+}
+//-----------------------------------------------------------------------------
+bool Frustum::IsInside(const BoundingAABB& box) const noexcept
+{
+	for (int i = 0; i < 6; i++)
+	{
+		glm::vec3 p = box.min, n = box.max;
+		glm::vec3 N = m_planes[i].normal;
+		if (N.x >= 0)
+		{
+			p.x = box.max.x;
+			n.x = box.min.x;
+		}
+		if (N.y >= 0)
+		{
+			p.y = box.max.y;
+			n.y = box.min.y;
+		}
+		if (N.z >= 0)
+		{
+			p.z = box.max.z;
+			n.z = box.min.z;
+		}
+
+		if (m_planes[i].Distance(p) < 0)
+			return false;
+	}
+	return true;
+}
+//-----------------------------------------------------------------------------
+bool Frustum::IsInside(const Plane& plane) const noexcept
+{
+	for (int i = 0; i < 6; i++)
+	{
+		if (m_planes[i].Distance(plane.normal) < 0.0f)
+			return false;
+	}
+
+	return true;
+}
+//-----------------------------------------------------------------------------
+bool Frustum::IsInside(const Ray& ray) const noexcept
+{
+	for (int i = 0; i < 6; i++)
+	{
+		if (m_planes[i].Distance(ray.position) < 0.0f)
+			return false;
+	}
+
+	return true;
+}
+//-----------------------------------------------------------------------------
+const Plane& Frustum::GetPlane(FrustumPlane plane) const noexcept
+{
+	return m_planes[plane];
+}
+//-----------------------------------------------------------------------------
+glm::vec3* Frustum::GetVerticies() noexcept
+{
+	return m_verticies;
+}
+//-----------------------------------------------------------------------------
+void Frustum::calculateVertices(const glm::mat4& transform) noexcept
+{
+	static const bool zerotoOne = false;
+	static const bool leftHand = true;
+
+	glm::mat4 transformInv = glm::inverse(transform);
+
+	m_verticies[0] = glm::vec4(-1.0f, -1.0f, zerotoOne ? 0.0f : -1.0f, 1.0f);
+	m_verticies[1] = glm::vec4(1.0f, -1.0f, zerotoOne ? 0.0f : -1.0f, 1.0f);
+	m_verticies[2] = glm::vec4(1.0f, 1.0f, zerotoOne ? 0.0f : -1.0f, 1.0f);
+	m_verticies[3] = glm::vec4(-1.0f, 1.0f, zerotoOne ? 0.0f : -1.0f, 1.0f);
+
+	m_verticies[4] = glm::vec4(-1.0f, -1.0f, 1.0f, 1.0f);
+	m_verticies[5] = glm::vec4(1.0f, -1.0f, 1.0f, 1.0f);
+	m_verticies[6] = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_verticies[7] = glm::vec4(-1.0f, 1.0f, 1.0f, 1.0f);
+
+	glm::vec4 temp;
+	for (int i = 0; i < 8; i++)
+	{
+		temp = transformInv * glm::vec4(m_verticies[i], 1.0f);
+		m_verticies[i] = temp / temp.w;
+	}
+}
 //-----------------------------------------------------------------------------
 namespace PlaneIndex
 {
@@ -130,7 +304,7 @@ ContainmentType OldBoundingFrustum::Contains(const glm::vec3& point) const noexc
 	// NOTE: fast mode
 	for( auto& plane : m_planes )
 	{
-		const auto distance = plane.DotCoordinate(point);
+		const auto distance = plane.Distance(point);
 		if( distance > 0.0f ) return ContainmentType::Disjoint;
 	}
 	return ContainmentType::Contains;
@@ -138,7 +312,7 @@ ContainmentType OldBoundingFrustum::Contains(const glm::vec3& point) const noexc
 	bool intersects = false;
 	for( auto& plane : m_planes )
 	{
-		const auto distance = plane.DotCoordinate(point);
+		const auto distance = plane.Distance(point);
 		if( distance > 0.0f ) return ContainmentType::Disjoint;
 		if( distance == 0.0f ) intersects = true;
 	}
@@ -171,23 +345,23 @@ ContainmentType OldBoundingFrustum::Contains(const BoundingAABB& box) const noex
 //-----------------------------------------------------------------------------
 ContainmentType OldBoundingFrustum::Contains(const OldBoundingFrustum& frustum) const noexcept
 {
-	bool intersects = false;
-	for( auto& plane : m_planes )
-	{
-		const auto planeIntersectionType = plane.Intersects(frustum);
-		if( planeIntersectionType == PlaneIntersectionType::Front )
-		{
-			return ContainmentType::Disjoint;
-		}
-		if( planeIntersectionType == PlaneIntersectionType::Intersecting )
-		{
-			intersects = true;
-		}
-	}
-	if( intersects )
-	{
-		return ContainmentType::Intersects;
-	}
+	//bool intersects = false;
+	//for( auto& plane : m_planes )
+	//{
+	//	const auto planeIntersectionType = plane.Intersects(frustum);
+	//	if( planeIntersectionType == PlaneIntersectionType::Front )
+	//	{
+	//		return ContainmentType::Disjoint;
+	//	}
+	//	if( planeIntersectionType == PlaneIntersectionType::Intersecting )
+	//	{
+	//		intersects = true;
+	//	}
+	//}
+	//if( intersects )
+	//{
+	//	return ContainmentType::Intersects;
+	//}
 	return ContainmentType::Contains;
 }
 //-----------------------------------------------------------------------------
@@ -227,15 +401,16 @@ bool OldBoundingFrustum::Intersects(const BoundingAABB& box) const noexcept
 //-----------------------------------------------------------------------------
 bool OldBoundingFrustum::Intersects(const OldBoundingFrustum& frustum) const noexcept
 {
-	for( auto& plane : m_planes )
-	{
-		const auto planeIntersectionType = plane.Intersects(frustum);
-		if( planeIntersectionType == PlaneIntersectionType::Front )
-		{
-			return false;
-		}
-	}
-	return true;
+	//for( auto& plane : m_planes )
+	//{
+	//	const auto planeIntersectionType = plane.Intersects(frustum);
+	//	if( planeIntersectionType == PlaneIntersectionType::Front )
+	//	{
+	//		return false;
+	//	}
+	//}
+	//return true;
+	return false;
 }
 //-----------------------------------------------------------------------------
 bool OldBoundingFrustum::Intersects(const BoundingSphere& sphere) const noexcept
@@ -271,7 +446,7 @@ std::optional<float> OldBoundingFrustum::Intersects(const Ray & ray) const noexc
 	{
 		auto& plane = m_planes[i];
 		const auto d = ray.Intersects(plane);
-		const auto distanceToRayPosition = plane.DotCoordinate(ray.position);
+		const auto distanceToRayPosition = plane.Distance(ray.position);
 		if( (distanceToRayPosition < 0.0f) && !d )
 		{
 			return std::nullopt;

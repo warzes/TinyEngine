@@ -226,13 +226,13 @@ bool BoundingSphere::Intersects(const BoundingAABB& aabb) const noexcept
 //-----------------------------------------------------------------------------
 bool BoundingSphere::Intersects(const BoundingOrientedBox& box) const noexcept
 {
-	assert(0); // TODO: Not Impl
+	assert(0); // TODO: нереализовано
 	return false;
 }
 //-----------------------------------------------------------------------------
 bool BoundingSphere::Intersects(const BoundingFrustum& fr) const noexcept
 {
-	assert(0); // TODO: Not Impl
+	assert(0); // TODO: нереализовано
 	return false;
 }
 //-----------------------------------------------------------------------------
@@ -244,6 +244,18 @@ PlaneIntersectionType BoundingSphere::Intersects(const Plane& plane) const noexc
 std::optional<float> BoundingSphere::Intersects(const Ray& ray) const noexcept
 {
 	return ray.Intersects(*this);
+}
+//-----------------------------------------------------------------------------
+std::optional<CollisionHit> BoundingSphere::Hit(const glm::vec3& point) const noexcept
+{
+	assert(0); // TODO: нереализовано
+	return std::optional<CollisionHit>();
+}
+//-----------------------------------------------------------------------------
+std::optional<CollisionHit> BoundingSphere::Hit(const Triangle& tri) const noexcept
+{
+	assert(0); // TODO: нереализовано
+	return std::optional<CollisionHit>();
 }
 //-----------------------------------------------------------------------------
 std::optional<CollisionHit> BoundingSphere::Hit(const BoundingSphere& sphere) const noexcept
@@ -261,5 +273,17 @@ std::optional<CollisionHit> BoundingSphere::Hit(const BoundingSphere& sphere) co
 	hit.depth = r - l;
 	hit.contactPoint = sphere.center - hit.normal * sphere.radius;
 	return hit;
+}
+//-----------------------------------------------------------------------------
+std::optional<CollisionHit> BoundingSphere::Hit(const BoundingAABB& aabb) const noexcept
+{
+	assert(0); // TODO: нереализовано
+	return std::optional<CollisionHit>();
+}
+//-----------------------------------------------------------------------------
+std::optional<CollisionHit> BoundingSphere::Hit(const BoundingOrientedBox& box) const noexcept
+{
+	assert(0); // TODO: нереализовано
+	return std::optional<CollisionHit>();
 }
 //-----------------------------------------------------------------------------

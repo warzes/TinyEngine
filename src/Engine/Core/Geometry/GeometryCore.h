@@ -1,13 +1,14 @@
 #pragma once
 
 class OldBoundingFrustum; // TODO: delete
+class BoundingFrustum; // TODO: delete
 
 class Plane;
 class Triangle;
 class Ray;
 class BoundingAABB;
 class BoundingOrientedBox;
-class BoundingFrustum;
+class Frustum;
 class BoundingSphere;
 
 // ContainmentType indicates whether a geometry object contains another one.

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Core/Geometry/GeometryCore.h"
 
@@ -21,36 +21,39 @@ public:
 	Plane& operator=(Plane&&) noexcept = default;
 	Plane& operator=(const Plane&) noexcept = default;
 
+	bool operator==(const Plane& rhs) const noexcept { return (normal == rhs.normal && distance == rhs.distance); }
+	bool operator!=(const Plane& rhs) const noexcept { return (normal != rhs.normal || distance != rhs.distance); }
+
 	[[nodiscard]] glm::vec4 ToVector4() const noexcept { return glm::vec4(normal, distance); }
 
-	[[nodiscard]] glm::vec3 GetOrigin() const noexcept;
+	void Transform(const glm::mat4& transform) noexcept;
+	Plane Transformed(const glm::mat4& transform) const noexcept;
 
 	void Normalize() noexcept;
 	[[nodiscard]] static Plane Normalize(const Plane& plane) noexcept;
 
 	[[nodiscard]] float Dot(const glm::vec4& vec) const noexcept;
-	[[nodiscard]] float DotCoordinate(const glm::vec3& vec) const noexcept;
 	[[nodiscard]] float DotNormal(const glm::vec3& vec) const noexcept;
 
 	// Project a point on the plane.
 	[[nodiscard]] glm::vec3 Project(const glm::vec3& point) const noexcept;
 
-	// Return signed distance to a point.
-	[[nodiscard]] float GetDistanceToPoint(const glm::vec3& point) const noexcept;
-
 	// Reflect a normalized direction vector.
 	[[nodiscard]] glm::vec3 Reflect(const glm::vec3& direction) const noexcept;
+
+	// Return signed distance to a point.
+	[[nodiscard]] float Distance(const glm::vec3& point) const noexcept;
+
+	[[nodiscard]] bool IsPointOnPlane(const glm::vec3& point) const noexcept;
 
 	[[nodiscard]] std::optional<float> Intersects(const Ray& ray) const noexcept;
 	[[nodiscard]] PlaneIntersectionType Intersects(const glm::vec3& point) const noexcept;
 	[[nodiscard]] PlaneIntersectionType Intersects(const BoundingAABB& aabb) const noexcept;
-	[[nodiscard]] PlaneIntersectionType Intersects(const OldBoundingFrustum& frustum) const noexcept;
+	[[nodiscard]] PlaneIntersectionType Intersects(const BoundingFrustum& frustum) const noexcept;
 	[[nodiscard]] PlaneIntersectionType Intersects(const BoundingSphere& sphere) const noexcept;
 
-	[[nodiscard]] static Plane Transform(const Plane& plane, const glm::mat4& matrix);
+	[[nodiscard]] glm::vec3 GetOrigin() const noexcept;
 
-	[[nodiscard]] static Plane CreateFromPointNormal(const glm::vec3& point, const glm::vec3& normal);
-
-	glm::vec3 normal = glm::vec3(0.0f); // Normal vector of the plane.
+	glm::vec3 normal{0.0f, 1.0f, 0.0f}; // Normal vector of the plane.
 	float distance = 0.0f;              // Signed distance to the origin of the coordinate system.
 };

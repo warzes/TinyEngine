@@ -27,7 +27,7 @@ public:
 	[[nodiscard]] glm::vec3 ClosestPoint(const Ray& ray) const;
 	
 	[[nodiscard]] std::optional<float> Intersects(const BoundingAABB& box) const noexcept;
-	[[nodiscard]] std::optional<float> Intersects(const OldBoundingFrustum& frustum) const noexcept;
+	[[nodiscard]] std::optional<float> Intersects(const BoundingFrustum& frustum) const noexcept;
 	[[nodiscard]] std::optional<float> Intersects(const BoundingSphere& sphere) const noexcept;
 	[[nodiscard]] std::optional<float> Intersects(const Plane& plane) const noexcept;
 	// Return hit distance to a triangle and optionally normal, or infinity if no hit.

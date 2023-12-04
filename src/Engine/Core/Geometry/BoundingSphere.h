@@ -44,7 +44,7 @@ public:
 
 	[[nodiscard]] std::optional<CollisionHit> Hit(const glm::vec3& point) const noexcept;  // TODO: нереализовано
 	[[nodiscard]] std::optional<CollisionHit> Hit(const Triangle& tri) const noexcept;  // TODO: нереализовано
-	[[nodiscard]] std::optional<CollisionHit> Hit(const BoundingSphere& sphere) const noexcept; // TODO: нереализовано
+	[[nodiscard]] std::optional<CollisionHit> Hit(const BoundingSphere& sphere) const noexcept;
 	[[nodiscard]] std::optional<CollisionHit> Hit(const BoundingAABB& aabb) const noexcept;  // TODO: нереализовано
 	[[nodiscard]] std::optional<CollisionHit> Hit(const BoundingOrientedBox& box) const noexcept;  // TODO: нереализовано
 	
