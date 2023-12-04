@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "BoundingSphere.h"
 #include "Core/Math/MathLib.h"
 #include "Triangle.h"
@@ -15,14 +15,140 @@ BoundingSphere::BoundingSphere(const glm::vec3& a, const glm::vec3& b) noexcept
 	radius = glm::length(a - b) * 0.5f + SphereEnlargeFactor;
 }
 //-----------------------------------------------------------------------------
-void BoundingSphere::Transform(BoundingSphere& Out, const glm::mat4& mat) noexcept
+BoundingSphere::BoundingSphere(const glm::vec3* points, size_t count) noexcept
 {
-	assert(0); // TODO: Not Impl
+	if (count == 0) return;
+
+	for (size_t i = 0; i < count; i++)
+		center += points[i];
+
+	center /= (float)count;
+
+	float maxDist = 0.0f;
+	for (size_t i = 0; i < count; i++)
+	{
+		float dist = glm::distance(points[i], center); // TODO: ???
+		if (dist > maxDist)
+			maxDist = dist;
+	}
+
+	radius = maxDist;
 }
 //-----------------------------------------------------------------------------
-void BoundingSphere::Transform(BoundingSphere& out, float scale, const glm::quat& rotation, const glm::vec3& translation) noexcept
+BoundingSphere::BoundingSphere(const glm::vec3* points, size_t count, const glm::vec3& inCenter) noexcept
 {
-	assert(0); // TODO: Not Impl
+	if (count == 0) return;
+
+	center = inCenter;
+
+	for (size_t i = 0; i < count; i++)
+		center += points[i];
+
+	center /= (float)count;
+
+	float maxDistSq = 0.0f;
+	for (size_t i = 0; i < count; i++)
+	{
+		float dist = glm::length(points[i] - center); // TODO: ???
+		if (dist > maxDistSq)
+			maxDistSq = dist;
+	}
+
+	radius = maxDistSq;
+}
+//-----------------------------------------------------------------------------
+void BoundingSphere::Merge(const BoundingSphere& other) noexcept
+{
+	float distance = glm::distance(other.center,center);
+
+	if (distance > radius + other.radius)
+		return;
+
+	if (distance <= radius - other.radius)
+	{
+		center = other.center;
+		radius = other.radius;
+		return;
+	}
+
+	if (distance <= other.radius - radius)
+		return;
+
+	float half = (distance + radius + other.radius) * 0.5f;
+	float scale = half / distance;
+	center = (center + other.center) * scale;
+	radius = half;
+}
+//-----------------------------------------------------------------------------
+void BoundingSphere::Merge(const glm::vec3& point) noexcept
+{
+	float distance = glm::distance(point, center);
+
+	if (distance > radius)
+		return;
+
+	if (distance <= 0.0f)
+	{
+		center = point;
+		radius = 0.0f;
+		return;
+	}
+
+	float half = (distance + radius) * 0.5f;
+	float scale = half / distance;
+	center = (center + point) * scale;
+	radius = half;
+}
+//-----------------------------------------------------------------------------
+void BoundingSphere::Merge(const glm::vec3* points, size_t count) noexcept
+{
+	if (count == 0)
+		return;
+
+	float tempRadius = 0.0f;
+	glm::vec3 tempCenter = points[0];
+
+	for (size_t i = 1; i < count; i++)
+	{
+		float distance = glm::distance(points[i], tempCenter);
+
+		if (distance > tempRadius)
+			tempRadius = distance;
+
+		tempCenter += points[i];
+	}
+
+	tempCenter /= (float)count;
+
+	float distance = glm::distance(tempCenter, center);
+
+	if (distance > radius)
+		return;
+
+	if (distance <= 0.0f)
+	{
+		center = tempCenter;
+		radius = 0.0f;
+		return;
+	}
+
+	float half = (distance + radius + tempRadius) * 0.5f;
+	float scale = half / distance;
+	center = (center + tempCenter) * scale;
+	radius = half;
+}
+//-----------------------------------------------------------------------------
+void BoundingSphere::Transform(const glm::mat4& transform) noexcept
+{
+	center = transform * glm::vec4(center, 1.0f);
+}
+//-----------------------------------------------------------------------------
+void BoundingSphere::Transform(float scale, const glm::quat& rotation, const glm::vec3& translation) noexcept
+{
+	glm::mat4 transform = glm::mat4(1.0f);
+	// TODO: провести все операции трансформации над матрицей
+	assert(0);
+	Transform(transform);
 }
 //-----------------------------------------------------------------------------
 ContainmentType BoundingSphere::Contains(const glm::vec3& point) const noexcept
@@ -36,7 +162,7 @@ ContainmentType BoundingSphere::Contains(const glm::vec3& point) const noexcept
 //-----------------------------------------------------------------------------
 ContainmentType BoundingSphere::Contains(const Triangle& tri) const noexcept
 {
-	assert(0); // TODO: Not Impl
+	assert(0); // TODO: нереализовано
 	return {};
 }
 //-----------------------------------------------------------------------------
@@ -66,25 +192,24 @@ ContainmentType BoundingSphere::Contains(const BoundingAABB& box) const noexcept
 //-----------------------------------------------------------------------------
 ContainmentType BoundingSphere::Contains(const BoundingOrientedBox& box) const noexcept
 {
-	assert(0); // TODO: Not Impl
+	assert(0); // TODO: нереализовано
 	return ContainmentType();
 }
 //-----------------------------------------------------------------------------
 ContainmentType BoundingSphere::Contains(const BoundingFrustum& fr) const noexcept
 {
-	assert(0); // TODO: Not Impl
+	assert(0); // TODO: нереализовано
 	return ContainmentType();
 }
 //-----------------------------------------------------------------------------
-ContainmentType BoundingSphere::ContainedBy(const Plane& plane0, const Plane& plane1, const Plane& plane2, const Plane& Plane3, const Plane& Plane4, const Plane& Plane5) const noexcept
+bool BoundingSphere::Intersects(const glm::vec3& point) const noexcept
 {
-	assert(0); // TODO: Not Impl
-	return ContainmentType();
+	return glm::distance2(point, center) <= radius * radius;
 }
 //-----------------------------------------------------------------------------
 bool BoundingSphere::Intersects(const Triangle& tri) const noexcept
 {
-	assert(0); // TODO: Not Impl
+	assert(0); // TODO: нереализовано
 	return false;
 }
 //-----------------------------------------------------------------------------

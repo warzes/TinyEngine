@@ -6,7 +6,7 @@
 #include "Core/Math/MathLib.h"
 #include "Core/Utilities/StringUtilities.h"
 //-----------------------------------------------------------------------------
-BoundingAABB::BoundingAABB(const glm::vec3* points, uint32_t numPoints) noexcept
+BoundingAABB::BoundingAABB(const glm::vec3* points, size_t numPoints) noexcept
 {
 	Set(points, numPoints);
 }
@@ -28,24 +28,24 @@ void BoundingAABB::Set(float fmin, float fmax) noexcept
 	max = glm::vec3(fmax);
 }
 //-----------------------------------------------------------------------------
-void BoundingAABB::Set(const glm::vec3* points, uint32_t numPoints) noexcept
+void BoundingAABB::Set(const glm::vec3* points, size_t numPoints) noexcept
 {
 	min = glm::vec3(FLT_MAX);
 	max = glm::vec3(-FLT_MAX);
 
-	for (uint32_t i = 0; i < numPoints; i++)
+	for (size_t i = 0; i < numPoints; i++)
 	{
 		min = glm::min(min, points[i]);
 		max = glm::max(max, points[i]);
 	}
 }
 //-----------------------------------------------------------------------------
-void BoundingAABB::Set(const glm::vec3* points, uint32_t numPoints, const glm::mat4& transform) noexcept
+void BoundingAABB::Set(const glm::vec3* points, size_t numPoints, const glm::mat4& transform) noexcept
 {
 	min = glm::vec3(FLT_MAX);
 	max = glm::vec3(-FLT_MAX);
 
-	for (uint32_t i = 0; i < numPoints; i++)
+	for (size_t i = 0; i < numPoints; i++)
 	{
 		const glm::vec3 transformed = transform * glm::vec4(points[i], 1.0f);
 
@@ -133,7 +133,7 @@ void BoundingAABB::Transform(const glm::mat4& transform) noexcept
 	max = newCenter + newEdge;
 }
 //-----------------------------------------------------------------------------
-void BoundingAABB::Transform(float scale, const glm::vec3& rotation, const glm::vec3& translation) noexcept
+void BoundingAABB::Transform(float /*scale*/, const glm::vec3& /*rotation*/, const glm::vec3& /*translation*/) noexcept
 {
 	glm::mat4 transform = glm::mat4(1.0f);
 	// TODO: провести все операции трансформации над матрицей
@@ -160,7 +160,7 @@ ContainmentType BoundingAABB::Contains(const glm::vec3& point) const noexcept
 	return ContainmentType::Contains;
 }
 //-----------------------------------------------------------------------------
-ContainmentType BoundingAABB::Contains(const Triangle& tri) const noexcept
+ContainmentType BoundingAABB::Contains(const Triangle& /*tri*/) const noexcept
 {
 	assert(0); // TODO: нереализовано
 	return ContainmentType();
@@ -199,19 +199,62 @@ ContainmentType BoundingAABB::Contains(const BoundingAABB& aabb) const noexcept
 	return ContainmentType::Intersects;
 }
 //-----------------------------------------------------------------------------
-ContainmentType BoundingAABB::Contains(const BoundingOrientedBox& box) const noexcept
+ContainmentType BoundingAABB::Contains(const BoundingOrientedBox& /*box*/) const noexcept
 {
 	assert(0); // TODO: нереализовано
 	return ContainmentType();
 }
 //-----------------------------------------------------------------------------
-ContainmentType BoundingAABB::Contains(const BoundingFrustum& fr) const noexcept
+ContainmentType BoundingAABB::Contains(const BoundingFrustum& /*fr*/) const noexcept
 {
 	assert(0); // TODO: нереализовано
 	return ContainmentType();
 }
 //-----------------------------------------------------------------------------
-bool BoundingAABB::Intersects(const Triangle& tri) const noexcept
+bool BoundingAABB::Intersects(const glm::vec3& point) const noexcept
+{
+	if (point.x >= min.x && point.x <= max.x &&
+		point.y >= min.y && point.y <= max.y &&
+		point.z >= min.z && point.z <= max.z)
+	{
+		return true;
+	}
+	return false;
+}
+//-----------------------------------------------------------------------------
+bool BoundingAABB::Intersects(const glm::vec3& point0, const glm::vec3& point1) const noexcept
+{
+	glm::vec3 c = GetCenter();
+	glm::vec3 e = GetSize();
+	glm::vec3 m = (point0 + point1) * 0.5f;
+	glm::vec3 d = point1 - m;
+	m = m - c;
+
+	float adx = fabsf(d.x);
+	if (fabsf(m.x) > e.x + adx)
+		return false;
+	float ady = fabsf(d.y);
+	if (fabsf(m.y) > e.y + ady)
+		return false;
+	float adz = fabsf(d.z);
+	if (fabsf(m.z) > e.z + adz)
+		return false;
+
+	const float kEps = 1e-6f;
+	adx += kEps;
+	ady += kEps;
+	adz += kEps;
+
+	if (fabsf(m.y * d.z - m.z * d.y) > e.y * adz + e.z * ady)
+		return false;
+	if (fabsf(m.z * d.x - m.x * d.z) > e.x * adz + e.z * adx)
+		return false;
+	if (fabsf(m.x * d.y - m.y * d.x) > e.x * ady + e.y * adx)
+		return false;
+	return true;
+}
+//-----------------------------------------------------------------------------
+bool BoundingAABB::Intersects(const Triangle& /*tri*/) const noexcept
 {
 	assert(0); // TODO: нереализовано
 	return false;
@@ -232,13 +275,13 @@ bool BoundingAABB::Intersects(const BoundingAABB& aabb) const noexcept
 		(max.z >= aabb.min.z && min.z <= aabb.max.z);
 }
 //-----------------------------------------------------------------------------
-bool BoundingAABB::Intersects(const BoundingOrientedBox& box) const noexcept
+bool BoundingAABB::Intersects(const BoundingOrientedBox& /*box*/) const noexcept
 {
 	assert(0); // TODO: нереализовано
 	return false;
 }
 //-----------------------------------------------------------------------------
-bool BoundingAABB::Intersects(const BoundingFrustum& fr) const noexcept
+bool BoundingAABB::Intersects(const BoundingFrustum& /*fr*/) const noexcept
 {
 	assert(0); // TODO: нереализовано
 	return false;
@@ -252,6 +295,36 @@ PlaneIntersectionType BoundingAABB::Intersects(const Plane& plane) const noexcep
 std::optional<float> BoundingAABB::Intersects(const Ray& ray) const noexcept
 {
 	return ray.Intersects(*this);
+}
+//-----------------------------------------------------------------------------
+std::optional<CollisionHit> BoundingAABB::Hit(const glm::vec3& point) const noexcept
+{
+	assert(0); // TODO: нереализовано
+	return std::optional<CollisionHit>();
+}
+//-----------------------------------------------------------------------------
+std::optional<CollisionHit> BoundingAABB::Hit(const Triangle& tri) const noexcept
+{
+	assert(0); // TODO: нереализовано
+	return std::optional<CollisionHit>();
+}
+//-----------------------------------------------------------------------------
+std::optional<CollisionHit> BoundingAABB::Hit(const BoundingSphere& sphere) const noexcept
+{
+	assert(0); // TODO: нереализовано
+	return std::optional<CollisionHit>();
+}
+//-----------------------------------------------------------------------------
+std::optional<CollisionHit> BoundingAABB::Hit(const BoundingAABB& aabb) const noexcept
+{
+	assert(0); // TODO: нереализовано
+	return std::optional<CollisionHit>();
+}
+//-----------------------------------------------------------------------------
+std::optional<CollisionHit> BoundingAABB::Hit(const BoundingOrientedBox& box) const noexcept
+{
+	assert(0); // TODO: нереализовано
+	return std::optional<CollisionHit>();
 }
 //-----------------------------------------------------------------------------
 std::array<glm::vec3, BoundingAABB::CornerCount> BoundingAABB::GetCorners() const noexcept
