@@ -21,8 +21,9 @@ public:
 		b = static_cast<std::uint8_t>((color & 0x0000FF00U) >> 8);
 		a = static_cast<std::uint8_t>( color & 0x000000FFU);
 	}
-	constexpr Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha = 0xFFU) noexcept : r(red), g(green), b(blue), a(alpha) {}
-	constexpr Color(float red, float green, float blue, float alpha = 1.0f) noexcept
+	explicit constexpr Color(int red, int green, int blue, int alpha = 0xFFU) noexcept : r((uint8_t)red), g((uint8_t)green), b((uint8_t)blue), a((uint8_t)alpha) {}
+	explicit constexpr Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha = 0xFFU) noexcept : r(red), g(green), b(blue), a(alpha) {}
+	explicit constexpr Color(float red, float green, float blue, float alpha = 1.0f) noexcept
 	{
 		r = static_cast<std::uint8_t>(red * 255.0f);
 		g = static_cast<std::uint8_t>(green * 255.0f);

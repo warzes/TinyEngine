@@ -16,7 +16,7 @@ public:
 	Image(Image&&) = delete;
 	Image(const Image&) = delete;
 	Image(const uint8_t* data, size_t dataSize);
-	Image(const std::string& fileName);
+	Image(const std::string& fileName, bool verticallyFlip = false);
 	~Image();
 
 	Image& operator=(Image&&) = delete;
@@ -24,7 +24,7 @@ public:
 
 	void Create(Image::PixelFormat imageFormat, int width, int height, uint8_t* pixelData);
 	bool LoadFromMemory(const uint8_t* data, size_t dataSize);
-	bool LoadFromFile(const std::string& fileName);
+	bool LoadFromFile(const std::string& fileName, bool verticallyFlip = false);
 
 	int GetWidth() const { return m_width; }
 	int GetHeight() const { return m_height; }

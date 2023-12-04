@@ -4,22 +4,6 @@
 #include "OpenGLTranslateToGL.h"
 #include "Core/IO/Image.h"
 //-----------------------------------------------------------------------------
-#if !PLATFORM_EMSCRIPTEN
-static_assert(sizeof(Uniform) == 8, "Uniform size changed!!!");
-static_assert(sizeof(glObject) == 4, "glObject size changed!!!");
-static_assert(sizeof(Shader) == 8, "Shader size changed!!!");
-static_assert(sizeof(ShaderProgram) == 4, "ShaderProgram size changed!!!");
-static_assert(sizeof(GPUBuffer) == 32, "GPUBuffer size changed!!!");
-static_assert(sizeof(VertexArray) == 48, "VertexArray size changed!!!");
-static_assert(sizeof(GeometryBuffer) == 16, "GeometryBuffer size changed!!!");
-static_assert(sizeof(Texture2D) == 16, "Texture2D size changed!!!");
-static_assert(sizeof(Renderbuffer) == 20, "Renderbuffer size changed!!!");
-static_assert(sizeof(Framebuffer) == 96, "Framebuffer size changed!!!");
-#	if USE_OPENGL_VERSION >= OPENGL40
-static_assert(sizeof(TransformFeedback) == 4, "TransformFeedback size changed!!!");
-#	endif // OPENGL40
-#endif // PLATFORM_EMSCRIPTEN
-//-----------------------------------------------------------------------------
 Shader::Shader(ShaderPipelineStage stage)
 {
 	m_handle = glCreateShader(TranslateToGL(stage));
@@ -180,7 +164,7 @@ Texture2DRef RenderSystem::CreateTexture2D(const char* fileName, bool useCache, 
 
 	LogPrint("Load texture: " + std::string(fileName));
 
-	Image imageLoad(fileName);
+	Image imageLoad(fileName, textureInfo.verticallyFlip);
 	auto* pixelData = imageLoad.GetTexels();
 	if( pixelData == nullptr )
 	{

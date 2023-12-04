@@ -232,6 +232,7 @@ enum MaterialMapIndex {
 
 // TEMP Func
 NewModel LoadModel(const std::string& fileName);
+NewModel LoadModelFromMesh(NewMesh mesh);
 ModelAnimation* LoadModelAnimations(const std::string& fileName, unsigned int& animCount);// Load model animations from file
 void UpdateModelAnimation(const NewModel& model, const ModelAnimation& anim, int frame); // Update model animation pose
 

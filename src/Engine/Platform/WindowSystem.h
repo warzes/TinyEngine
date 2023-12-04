@@ -39,6 +39,8 @@ public:
 
 	bool IsFocused() const;
 
+	void SetFullscreen(bool fullscreen);
+
 private:
 	WindowSystem(WindowSystem&&) = delete;
 	WindowSystem(const WindowSystem&) = delete;
@@ -51,6 +53,7 @@ private:
 	int m_windowHeight = 0;
 
 	bool m_focused = true;
+	bool m_isFullscreen = false;
 };
 
 WindowSystem& GetWindowSystem();

@@ -161,13 +161,7 @@
     <ClCompile Include="Core\Geometry\Polyhedron.cpp">
       <Filter>Core\Geometry\NewFilter1</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Geometry\Ray.cpp">
-      <Filter>Core\Geometry\NewFilter1</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Geometry\Rect.cpp">
-      <Filter>Core\Geometry\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Geometry\Triangle.cpp">
       <Filter>Core\Geometry\NewFilter1</Filter>
     </ClCompile>
     <ClCompile Include="Core\Geometry\BoundingSphere.cpp">
@@ -186,6 +180,12 @@
       <Filter>Platform</Filter>
     </ClCompile>
     <ClCompile Include="Core\Geometry\Plane.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\Ray.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\Triangle.cpp">
       <Filter>Core\Geometry</Filter>
     </ClCompile>
   </ItemGroup>
@@ -367,9 +367,6 @@
     <ClInclude Include="Core\Geometry\Polyhedron.h">
       <Filter>Core\Geometry\NewFilter1</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Geometry\Ray.h">
-      <Filter>Core\Geometry\NewFilter1</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Geometry\Rect.h">
       <Filter>Core\Geometry\NewFilter1</Filter>
     </ClInclude>
@@ -395,6 +392,9 @@
       <Filter>Platform</Filter>
     </ClInclude>
     <ClInclude Include="Core\Geometry\Plane.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Ray.h">
       <Filter>Core\Geometry</Filter>
     </ClInclude>
   </ItemGroup>

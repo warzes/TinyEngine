@@ -638,6 +638,7 @@ struct Texture2DInfo final
 	TextureAddressMode wrapS = TextureAddressMode::Repeat;
 	TextureAddressMode wrapT = TextureAddressMode::Repeat;
 
+	bool verticallyFlip = false; // TODO: пока работает только при загрузке stb image
 	bool mipmap = true;
 };
 
