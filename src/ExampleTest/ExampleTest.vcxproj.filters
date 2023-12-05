@@ -63,6 +63,9 @@
     <ClCompile Include="RenderDemo\003_MultipleLights.cpp">
       <Filter>RenderDemo</Filter>
     </ClCompile>
+    <ClCompile Include="PostEffectFrameBuffer.cpp">
+      <Filter>OtherRenderDemo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -126,6 +129,9 @@
     <ClInclude Include="RenderDemo\003_MultipleLights.h">
       <Filter>RenderDemo</Filter>
     </ClInclude>
+    <ClInclude Include="PostEffectFrameBuffer.h">
+      <Filter>OtherRenderDemo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="RenderExample">
@@ -136,6 +142,9 @@
     </Filter>
     <Filter Include="RenderDemo">
       <UniqueIdentifier>{4550f62a-fe34-4cdd-b5b9-abc025796e10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OtherRenderDemo">
+      <UniqueIdentifier>{310ec243-054d-4fb9-892d-941068ebdab5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

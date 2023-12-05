@@ -110,20 +110,26 @@ std::vector<ShaderAttributeInfo> RenderSystem::GetAttributesInfo(ShaderProgramRe
 	std::string name;
 	name.resize(static_cast<size_t>(maxNameLength));
 
-	std::vector<ShaderAttributeInfo> attribs(static_cast<size_t>(activeAttribsCount));
+	std::vector<ShaderAttributeInfo> attribs;
 	for (size_t i = 0; i < static_cast<size_t>(activeAttribsCount); i++)
 	{
 		GLint size;
 		GLenum type = 0;
 		glGetActiveAttrib(*program, (GLuint)i, maxNameLength, nullptr, &size, &type, name.data());
 
-		attribs[i] = {
+		std::size_t pos = name.find("gl_VertexID"); // выкидается из шейдера так как location = -1
+		if (pos != std::string::npos) continue;
+
+		int location = glGetAttribLocation(*program, name.c_str());
+		assert(location >= 0);
+
+		attribs.emplace_back(ShaderAttributeInfo{
 			.typeId = type,
 			.type = getAttributeType(type),
 			.numType = getAttributeSize(type),
 			.name = name,
-			.location = glGetAttribLocation(*program, name.c_str())
-		};
+			.location = location
+		});
 	}
 
 	std::sort(attribs.begin(), attribs.end(), [](const ShaderAttributeInfo& a, const ShaderAttributeInfo& b) {return a.location < b.location; });

@@ -96,6 +96,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PostEffectFrameBuffer.cpp" />
     <ClCompile Include="RenderDemo\001_PhongLighting.cpp" />
     <ClCompile Include="RenderDemo\002_PhongLightingTexture.cpp" />
     <ClCompile Include="RenderDemo\003_MultipleLights.cpp" />
@@ -122,6 +123,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="PostEffectFrameBuffer.h" />
     <ClInclude Include="RenderDemo\001_PhongLighting.h" />
     <ClInclude Include="RenderDemo\002_PhongLightingTexture.h" />
     <ClInclude Include="RenderDemo\003_MultipleLights.h" />
