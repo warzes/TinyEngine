@@ -309,6 +309,7 @@ void RenderSystem::Bind(FramebufferRef resource)
 	if( m_cache.CurrentFramebuffer == *resource ) return;
 	m_cache.CurrentFramebuffer = *resource;
 	glBindFramebuffer(GL_FRAMEBUFFER, *resource);
+	glViewport(0, 0, resource->size.x, resource->size.y);
 }
 //-----------------------------------------------------------------------------
 void RenderSystem::BindGLVertexBuffer(unsigned id)

@@ -63,7 +63,7 @@
     <ClCompile Include="RenderDemo\003_MultipleLights.cpp">
       <Filter>RenderDemo</Filter>
     </ClCompile>
-    <ClCompile Include="PostEffectFrameBuffer.cpp">
+    <ClCompile Include="OtherRenderDemo\PostEffectFrameBuffer.cpp">
       <Filter>OtherRenderDemo</Filter>
     </ClCompile>
   </ItemGroup>
@@ -129,8 +129,17 @@
     <ClInclude Include="RenderDemo\003_MultipleLights.h">
       <Filter>RenderDemo</Filter>
     </ClInclude>
-    <ClInclude Include="PostEffectFrameBuffer.h">
+    <ClInclude Include="OtherRenderDemo\PostEffectFrameBuffer.h">
       <Filter>OtherRenderDemo</Filter>
+    </ClInclude>
+    <ClInclude Include="OtherRenderDemo\Common\DemoPlane.h">
+      <Filter>OtherRenderDemo\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="OtherRenderDemo\Common\DemoCube.h">
+      <Filter>OtherRenderDemo\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="OtherRenderDemo\Common\DemoQuad.h">
+      <Filter>OtherRenderDemo\Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +154,9 @@
     </Filter>
     <Filter Include="OtherRenderDemo">
       <UniqueIdentifier>{310ec243-054d-4fb9-892d-941068ebdab5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OtherRenderDemo\Common">
+      <UniqueIdentifier>{3ccffcdc-fc63-40a7-8525-b1898505f1c3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

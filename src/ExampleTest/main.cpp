@@ -22,7 +22,7 @@
 #include "RenderDemo/002_PhongLightingTexture.h"
 #include "RenderDemo/003_MultipleLights.h"
 
-#include "PostEffectFrameBuffer.h"
+#include "OtherRenderDemo/PostEffectFrameBuffer.h"
 //-----------------------------------------------------------------------------
 #if defined(_MSC_VER)
 #	pragma comment( lib, "Engine.lib" )
