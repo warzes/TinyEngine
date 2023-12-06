@@ -523,6 +523,12 @@
 		internalFormat = GL_RGBA8;
 		oglType = GL_UNSIGNED_BYTE;
 	}
+	else if (inFormat == TexelsFormat::R_F32)
+	{
+		format = GL_RED;
+		internalFormat = GL_R32F;
+		oglType = GL_FLOAT;
+	}
 	else if (inFormat == TexelsFormat::RG_F32)
 	{
 		format = GL_RG;

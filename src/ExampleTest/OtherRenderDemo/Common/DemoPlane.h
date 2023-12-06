@@ -25,6 +25,36 @@ inline GeometryBufferRef CreateDemoPlane(ShaderProgramRef shader)
 		shader);
 }
 
+inline GeometryBufferRef CreateDemoPlaneTexture(ShaderProgramRef shader)
+{
+	struct Vert
+	{
+		glm::vec3 pos;
+		glm::vec2 tex;
+	};
+	Vert vpoint[] =
+	{
+		{{-1.0f, 0.0f,  1.0f }, {0.0f, 0.0f}},
+		{{ 1.0f, 0.0f,  1.0f }, {0.0f, 1.0f}},
+		{{ 1.0f, 0.0f, -1.0f }, {1.0f, 1.0f}},
+		{{-1.0f, 0.0f, -1.0f }, {1.0f, 0.0f}}
+	};
+
+	unsigned vpoint_index[] = {
+		0, 1, 2,
+		0, 2, 3
+	};
+
+	return GetRenderSystem().CreateGeometryBuffer(BufferUsage::StaticDraw,
+		static_cast<unsigned>(Countof(vpoint)),
+		static_cast<unsigned>(sizeof(Vert)),
+		vpoint,
+		static_cast<unsigned>(Countof(vpoint_index)),
+		IndexFormat::UInt32,
+		vpoint_index,
+		shader);
+}
+
 inline ShaderProgramRef CreateDemoPlaneShader()
 {
 	constexpr const char* vs = R"(

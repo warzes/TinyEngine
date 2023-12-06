@@ -22,6 +22,7 @@
 #include "RenderDemo/002_PhongLightingTexture.h"
 #include "RenderDemo/003_MultipleLights.h"
 
+#include "OtherRenderDemo/Bumpmapping.h"
 #include "OtherRenderDemo/PostEffectFrameBuffer.h"
 //-----------------------------------------------------------------------------
 #if defined(_MSC_VER)
@@ -59,6 +60,7 @@ int main(
 		std::cout << "    d3 - Multiple Lights" << std::endl;
 		std::cout << "OtherDemo:" << std::endl;
 		std::cout << "   od1 - PostEffectFrameBuffer" << std::endl;
+		std::cout << "   od2 - Bumpmapping" << std::endl;
 
 		std::cout << std::endl;
 
@@ -97,6 +99,7 @@ int main(
 		START_SCENE("d3", _003MultipleLights);
 		
 		START_SCENE("od1", PostEffectFrameBuffer);
+		START_SCENE("od2", Bumpmapping);
 
 #undef START_SCENE
 	}

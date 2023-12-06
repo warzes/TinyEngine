@@ -163,7 +163,7 @@ void RenderSystem::SetUniform(const Uniform& uniform, int value)
 	glUniform1i(uniform.location, value);
 }
 //-----------------------------------------------------------------------------
-void RenderSystem::SetUniform(const Uniform& uniform, unsigned int value)
+void RenderSystem::SetUniform(const Uniform& uniform, unsigned value)
 {
 	assert(IsReadyUniform(uniform));
 	glUniform1ui(uniform.location, value);

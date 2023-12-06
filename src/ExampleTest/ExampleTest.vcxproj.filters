@@ -66,6 +66,9 @@
     <ClCompile Include="OtherRenderDemo\PostEffectFrameBuffer.cpp">
       <Filter>OtherRenderDemo</Filter>
     </ClCompile>
+    <ClCompile Include="OtherRenderDemo\Bumpmapping.cpp">
+      <Filter>OtherRenderDemo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -139,6 +142,12 @@
       <Filter>OtherRenderDemo\Common</Filter>
     </ClInclude>
     <ClInclude Include="OtherRenderDemo\Common\DemoQuad.h">
+      <Filter>OtherRenderDemo\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="OtherRenderDemo\Bumpmapping.h">
+      <Filter>OtherRenderDemo</Filter>
+    </ClInclude>
+    <ClInclude Include="OtherRenderDemo\Common\NoiseGenerator.h">
       <Filter>OtherRenderDemo\Common</Filter>
     </ClInclude>
   </ItemGroup>

@@ -96,6 +96,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="OtherRenderDemo\Bumpmapping.cpp" />
     <ClCompile Include="OtherRenderDemo\PostEffectFrameBuffer.cpp" />
     <ClCompile Include="RenderDemo\001_PhongLighting.cpp" />
     <ClCompile Include="RenderDemo\002_PhongLightingTexture.cpp" />
@@ -123,9 +124,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="OtherRenderDemo\Bumpmapping.h" />
     <ClInclude Include="OtherRenderDemo\Common\DemoCube.h" />
     <ClInclude Include="OtherRenderDemo\Common\DemoPlane.h" />
     <ClInclude Include="OtherRenderDemo\Common\DemoQuad.h" />
+    <ClInclude Include="OtherRenderDemo\Common\NoiseGenerator.h" />
     <ClInclude Include="OtherRenderDemo\PostEffectFrameBuffer.h" />
     <ClInclude Include="RenderDemo\001_PhongLighting.h" />
     <ClInclude Include="RenderDemo\002_PhongLightingTexture.h" />
