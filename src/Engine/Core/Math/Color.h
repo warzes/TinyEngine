@@ -3,17 +3,19 @@
 class Color final
 {
 public:
-	inline static constexpr auto Black = { 0, 0, 0, 255 };
-	inline static constexpr auto Red = { 255, 0, 0, 255 };
-	inline static constexpr auto Magenta = { 255, 0, 255, 255 };
-	inline static constexpr auto Green = { 0, 255, 0, 255 };
-	inline static constexpr auto Cyan = { 0, 255, 255, 255 };
-	inline static constexpr auto Blue = { 0, 0, 255, 255 };
-	inline static constexpr auto Yellow = { 255, 255, 0, 255 };
-	inline static constexpr auto White = { 255, 255, 255, 255 };
-	inline static constexpr auto Gray = { 128, 128, 128, 255 };
+	static const Color Black;
+	static const Color Red;
+	static const Color Magenta;
+	static const Color Green;
+	static const Color Cyan;
+	static const Color Blue;
+	static const Color Yellow;
+	static const Color White;
+	static const Color Gray;
 
 	constexpr Color() noexcept = default;
+	constexpr Color(Color&&) noexcept = default;
+	constexpr Color(const Color&) noexcept = default;
 	explicit constexpr Color(uint32_t color) noexcept
 	{
 		r = static_cast<std::uint8_t>((color & 0xFF000000U) >> 24);
@@ -47,7 +49,8 @@ public:
 		a = static_cast<std::uint8_t>(std::round(v[3] * 255.0f));
 	}
 
-	Color& operator=(const Color&) = default;
+	constexpr Color& operator=(Color&&) = default;
+	constexpr Color& operator=(const Color&) = default;
 
 	[[nodiscard]] constexpr glm::vec4 GetNormColor() const noexcept
 	{
